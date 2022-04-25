@@ -124,7 +124,7 @@ public class SmartBulb extends SmartDevice {
         return consumoPorHora;
     }
 
-    public void setConsumoPorHora(double consumoPH) {
+    public void setConsumoPorHora(double consumoPorHora) {
         this.consumoPorHora = consumoPorHora;
     }
 

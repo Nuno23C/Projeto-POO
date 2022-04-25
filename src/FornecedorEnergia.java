@@ -10,7 +10,7 @@ public class FornecedorEnergia {
      */
     public FornecedorEnergia(){
         this.nomeEmpresa = "";
-        this.imposto = 0;
+        this.imposto = 1.23;
         this.valorBase = 0;
     }
 
@@ -22,7 +22,7 @@ public class FornecedorEnergia {
      */
     public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase){
         this.nomeEmpresa = nomeEmpresa;
-        this.imposto = imposto;
+        this.imposto = 1.23;
         this.valorBase = valorBase;
     }
 
@@ -63,7 +63,7 @@ public class FornecedorEnergia {
     }
 
     public double getPrecoPorDispositivo(SmartDevice sd){
-        return (this.valorBase*sd.getConsumoPorHora()*(1+this.imposto))*0.9;
+        return (this.valorBase * sd.getConsumoPorHora() * this.imposto) * 0.9;
     }
 
 

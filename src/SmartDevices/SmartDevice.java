@@ -43,11 +43,7 @@ public abstract class SmartDevice {
         return sb;
     }
 
-    /*
-    public SmartDevice clone() {
-        return new SmartDevice(this);
-    }
-    */
+    public abstract SmartDevice clone();
 
     public void turnOn() {
         this.estado = Estado.ON;
@@ -55,6 +51,10 @@ public abstract class SmartDevice {
 
     public void turnOff() {
         this.estado = Estado.OFF;
+    }
+
+    public void change_id(String id) {
+        this.id = id;
     }
 
     public abstract double getConsumoPorHora();

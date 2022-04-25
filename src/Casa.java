@@ -37,6 +37,7 @@ public class Casa {
         return new Casa(this);
     }
 
+
     // Getters and Setters
     public String getMorada() {
         return morada;

@@ -86,15 +86,6 @@ public class SmartCamera extends SmartDevice {
         return sc;
     }
 
-    public void change_Resolucao(double r) {
-        this.resolucao = r;
-    }
-
-    public void change_TamanhoPacote(double p) {
-        this.tamanhoPacote = p;
-    }
-
-
     // Getters and Setters
     public double getResolucao() {
         return resolucao;
