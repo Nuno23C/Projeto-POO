@@ -1,26 +1,18 @@
 package SmartDevices;
 
 public abstract class SmartDevice {
-    public enum Estado {
-        ON,
-        OFF
-    }
-    public Estado estado;
     public String id;
 
     public SmartDevice() {
         this.id = "";
-        this.estado = Estado.OFF;
     }
 
-    public SmartDevice(String id, Estado x) {
+    public SmartDevice(String id) {
         this.id = id;
-        this.estado = x;
     }
 
     public SmartDevice(SmartDevice dispositivo) {
         this.id = dispositivo.getId();
-        this.estado = dispositivo.getEstado();
     }
 
     public boolean equals(Object o) {
@@ -31,27 +23,21 @@ public abstract class SmartDevice {
             return false;
 
         SmartBulb sb = (SmartBulb) o;
-        return (sb.getId().equals(this.id) &&
-                sb.getEstado() == this.estado);
+        return (sb.getId().equals(this.id));
     }
 
     public String toString() {
 
-        String sb = "\n" + "id: " + this.id + "\n" +
-                    " Estado: " + this.estado + "\n";
+        String sb = "\n" + "id: " + this.id + "\n";
 
         return sb;
     }
 
     public abstract SmartDevice clone();
 
-    public void turnOn() {
-        this.estado = Estado.ON;
-    }
+    public abstract void turnOn();
 
-    public void turnOff() {
-        this.estado = Estado.OFF;
-    }
+    public abstract void turnOff();
 
     public abstract double getConsumoPorHora();
 
@@ -61,14 +47,6 @@ public abstract class SmartDevice {
 
 
     // Getters and Setters
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
-    }
-
     public String getId() {
         return id;
     }

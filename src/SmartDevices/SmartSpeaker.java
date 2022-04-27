@@ -1,6 +1,11 @@
 package SmartDevices;
 
 public class SmartSpeaker extends SmartDevice {
+    public enum Estado {
+        ON,
+        OFF
+    }
+    public Estado estado;
     public String marca;
     public int volume;
     public String radioOnline;
@@ -12,6 +17,7 @@ public class SmartSpeaker extends SmartDevice {
      */
     public SmartSpeaker() {
         super();
+        this.estado = Estado.ON;
         this.marca = "";
         this.volume = 0;
         this.radioOnline = "";
@@ -20,7 +26,8 @@ public class SmartSpeaker extends SmartDevice {
     }
 
     public SmartSpeaker(String id, Estado estado, String marca, int volume, String radioOnline, double consumoBase) {
-        super(id,estado);
+        super(id);
+        this.estado = estado;
         this.marca = marca;
         this.volume = volume;
         this.radioOnline = radioOnline;
@@ -34,6 +41,7 @@ public class SmartSpeaker extends SmartDevice {
     */
     public SmartSpeaker (SmartSpeaker ss) {
         super();
+        this.estado = getEstado();
         this.marca = ss.getMarca();
         this.volume = ss.getVolume();
         this.radioOnline = ss.getRadioOnline();
@@ -75,6 +83,14 @@ public class SmartSpeaker extends SmartDevice {
         return sb;
     }
 
+    public void turnOn() {
+        this.estado = Estado.ON;
+    }
+
+    public void turnOff() {
+        this.estado = Estado.OFF;
+    }
+
 
 
 
@@ -82,6 +98,14 @@ public class SmartSpeaker extends SmartDevice {
 
 
     // Getters and Setters
+    public Estado getEstado() {
+        return this.estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
     public String getMarca() {
         return marca;
     }

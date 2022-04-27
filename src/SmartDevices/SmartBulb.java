@@ -1,6 +1,11 @@
 package SmartDevices;
 
 public class SmartBulb extends SmartDevice {
+    public enum Estado {
+        ON,
+        OFF
+    }
+    public Estado estado;
     public enum Tonalidade {
         NEUTRAL,
         WARM,
@@ -16,6 +21,7 @@ public class SmartBulb extends SmartDevice {
     public SmartBulb() {
         super();
         this.tone = Tonalidade.NEUTRAL;
+        this.dimensões = 0;
         this.consumoPorHora = 0;
     }
 
@@ -25,17 +31,21 @@ public class SmartBulb extends SmartDevice {
      * @param estado Estado da SmartBulb.
      * @param tone Tonalidade da SmartBulb.
      */
-    public SmartBulb(String id, Estado estado, Tonalidade tone) {
-        super(id,estado);
+    public SmartBulb(String id, Estado estado, double dimensões, Tonalidade tone) {
+        super(id);
+        this.estado = estado;
         this.tone = tone;
-        if (tone == Tonalidade.WARM)
-            this.consumoPorHora = 30;
-        else if (tone == Tonalidade.NEUTRAL)
-            this.consumoPorHora = 20;
-        else if (tone == Tonalidade.COLD)
-            this.consumoPorHora = 10;
-        else
+        this.dimensões = dimensões;
+        if (estado == Estado.ON) {
+            if (tone == Tonalidade.WARM)
+                this.consumoPorHora = 30;
+            else if (tone == Tonalidade.NEUTRAL)
+                this.consumoPorHora = 20;
+            else if (tone == Tonalidade.COLD)
+                this.consumoPorHora = 10;
+        } else {
             this.consumoPorHora = 0;
+        }
     }
 
     /**
@@ -44,7 +54,9 @@ public class SmartBulb extends SmartDevice {
      */
     public SmartBulb(SmartBulb sb) { // SB de SmartBulb (usem SC e SS)
         super();
+        this.estado = sb.getEstado();
         this.tone = sb.getTone();
+        this.dimensões = sb.getDimensõEs();
         this.consumoPorHora = sb.getConsumoPorHora();
     }
 
@@ -64,6 +76,7 @@ public class SmartBulb extends SmartDevice {
         return (sb.getId().equals(this.id) &&
                 sb.getEstado() == this.estado &&
                 sb.getTone() == this.tone &&
+                sb.getDimensõEs() == this.dimensões &&
                 sb.getConsumoPorHora() == this.consumoPorHora);
     }
 
@@ -84,9 +97,19 @@ public class SmartBulb extends SmartDevice {
         String sb = "\n" + "id: " + this.id + "\n" +
                     "Estado: " + this.estado + "\n" +
                     "Tonalidade: " + this.tone + "\n" +
+                    "Dimensões: " + this.dimensões + "\n" +
                     "Consumo por hora: " + this.consumoPorHora + " \n";
 
         return sb;
+    }
+
+
+    public void turnOn() {
+        this.estado = Estado.ON;
+    }
+
+    public void turnOff() {
+        this.estado = Estado.OFF;
     }
 
     /**
@@ -114,13 +137,31 @@ public class SmartBulb extends SmartDevice {
 
 
 
+
+
     // Getters and Setters
+    public Estado getEstado() {
+        return this.estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
     public Tonalidade getTone() {
         return tone;
     }
 
     public void setTone(Tonalidade tone) {
         this.tone = tone;
+    }
+
+    public double getDimensõEs() {
+        return this.dimensões;
+    }
+
+    public void setDimensõEs(double dimensões) {
+        this.dimensões = dimensões;
     }
 
     public double getConsumoPorHora() {

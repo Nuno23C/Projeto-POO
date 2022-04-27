@@ -5,8 +5,8 @@ public class Casa {
     private String morada;
     private String nome;
     private String NIF;
-    private Map<String, SmartDevice> dispositivos;
-    private Map<String, List<String>> divisoes;
+    public Map<String, SmartDevice> dispositivos;
+    public Map<String, List<String>> divisoes;
 
     public Casa() {
         this.morada = "";
@@ -16,7 +16,7 @@ public class Casa {
         this.divisoes = new HashMap<>();
     }
 
-    public Casa(String morada, String nome, String NIF, HashMap<String, SmartDevice> dispositivos, HashMap<String, List<String>> divisoes) {
+    public Casa(String morada, String nome, String NIF, Map<String, SmartDevice> dispositivos, Map<String, List<String>> divisoes) {
         this.morada = morada;
         this.nome = nome;
         this.NIF = NIF;
@@ -36,26 +36,29 @@ public class Casa {
         return new Casa(this);
     }
 
+    // Map<String, List<String>> divisoes;
+    // Map<String, SmartDevice> dispositivos;
+
     public void turn_On_Divisao(String div) {
-        for(String deviceID: divisoes.get(div)){
+        for(String deviceID: this.divisoes.get(div)){
             dispositivos.get(deviceID).turnOn();
         }
     }
 
     public void turn_Off_Divisao(String div) {
-        for(String deviceID: divisoes.get(div)) {
+        for(String deviceID: this.divisoes.get(div)) {
             dispositivos.get(deviceID).turnOff();
         }
     }
 
     public void turn_On_Casa() {
-        for (SmartDevice disp: dispositivos.values()){
+        for (SmartDevice disp: this.dispositivos.values()){
             disp.turnOn();
         }
     }
 
     public void turn_Off_Casa() {
-        for (SmartDevice disp: dispositivos.values()){
+        for (SmartDevice disp: this.dispositivos.values()){
             disp.turnOff();
         }
     }
