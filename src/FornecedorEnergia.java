@@ -1,4 +1,8 @@
 import SmartDevices.SmartDevice;
+<<<<<<< HEAD
+=======
+
+>>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +14,11 @@ public class FornecedorEnergia {
     public double imposto;
     public double valorBase; //de cada dispositivo
     public double desconto;
+<<<<<<< HEAD
     private Map<String, Casa> conj_Casas; //id da casa e a casa
+=======
+    private Map<String, Casa> conj_Casas; //id da casa e a casa 
+>>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
     private Map<String, List<String>> faturas;  //lista de faturas
 
     /**
@@ -38,7 +46,11 @@ public class FornecedorEnergia {
         this.imposto = 1.23;
         this.valorBase = valorBase;
         this.desconto = desconto;
+<<<<<<< HEAD
         setConjCasas(conj_Casas);
+=======
+        setConjCasas(conj_Casas); 
+>>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
         setFatura(faturas);
     }
 
@@ -165,7 +177,11 @@ public class FornecedorEnergia {
 
     private void setConjCasas(HashMap<String, Casa> conj_Casas){
         Map<String, Casa> newCasa = new HashMap<>();
+<<<<<<< HEAD
         for(String NIF: conj_Casas.keySet()){
+=======
+        for(String NIF: conj_Casas.keySet()){ 
+>>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
             newCasa.put(NIF, conj_Casas.get(NIF).clone());
         }
         this.conj_Casas = newCasa;
