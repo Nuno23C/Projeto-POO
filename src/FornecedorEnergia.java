@@ -1,11 +1,20 @@
 import SmartDevices.SmartDevice;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class FornecedorEnergia {
     public String nomeEmpresa;
+<<<<<<< HEAD
     private double imposto;
     private double valorBase;
     private double desconto;
+=======
+    public double imposto;
+    public double valorBase; //de cada dispositivo
+    public double desconto;
+    private  Map<String, Casa> conj_Casas; //id da casa e a casa 
+>>>>>>> 20f300c2b7f0ccd10431b80c8b1243542faa4ad5
 
     /**
      * Construtor por omissão
@@ -15,6 +24,7 @@ public class FornecedorEnergia {
         this.imposto = 1.23;
         this.valorBase = 0;
         this.desconto = 0;
+        this.conj_Casas = new HashMap<>();
     }
 
     /**
@@ -23,13 +33,16 @@ public class FornecedorEnergia {
      * @param imposto
      * @param valorBase
      * @param desconto
+     * @param conj_Casas
      */
-    public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase, double desconto){
+    public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase, double desconto, HashMap<String, Casa> conj_Casas){
         this.nomeEmpresa = nomeEmpresa;
         this.imposto = 1.23;
         this.valorBase = valorBase;
         this.desconto = desconto;
+        setConjCasas(conj_Casas); 
     }
+
 
     /**
      * Constutor por cópia
@@ -40,7 +53,9 @@ public class FornecedorEnergia {
         this.imposto = fe.getImposto();
         this.valorBase = fe.getValorBase();
         this.desconto = fe.getDesconto();
+        this.conj_Casas = fe.getConjCasas();
     }
+
 
     public boolean equals (Object o) {
         if (this == o)
@@ -53,7 +68,8 @@ public class FornecedorEnergia {
         return (fe.getNomeEmpresa().equals(this.nomeEmpresa) &&
                 fe.getImposto() == this.imposto &&
                 fe.getValorBase() == this.valorBase &&
-                fe.getDesconto() == this.desconto);
+                fe.getDesconto() == this.desconto &&
+                fe.getConjCasas().equals(this.conj_Casas));
     }
 
     public FornecedorEnergia clone() {
@@ -65,8 +81,8 @@ public class FornecedorEnergia {
         String sb = "\n" + "Nome da Empresa: " + this.nomeEmpresa + "\n" +
                 "Imposto: " + this.imposto + "\n" +
                 "Valor Base: " + this.valorBase + "\n" +
-                "Desconto: " + this.desconto + "\n";
-
+                "Desconto: " + this.desconto + "\n" +
+                "Casas: " + this.conj_Casas + "\n";
         return sb;
     }
 
@@ -94,7 +110,21 @@ public class FornecedorEnergia {
         return consumoDaCasa;
     }
 
+    public Map<String, Casa> getConjCasas() {
+        Map<String, Casa> newCasa = new HashMap<>();
+        for(String NIF: this.conj_Casas.keySet()){
+            newCasa.put(NIF, this.conj_Casas.get(NIF).clone());
+        }
+        return newCasa;
+    }
 
+    private void setConjCasas(HashMap<String, Casa> conj_Casas){
+        Map<String, Casa> newCasa = new HashMap<>();
+        for(String NIF: conj_Casas.keySet()) {
+            newCasa.put(NIF, conj_Casas.get(NIF).clone());
+        }
+        this.conj_Casas = newCasa;
+    }
 
     // Getters and Setters
     public String getNomeEmpresa() {
