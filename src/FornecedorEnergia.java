@@ -3,9 +3,9 @@ import java.util.Map;
 
 public class FornecedorEnergia {
     public String nomeEmpresa;
-    public double imposto;
-    public double valorBase; //de cada dispositivo
-    public double desconto;
+    private double imposto;
+    private double valorBase;
+    private double desconto;
 
     /**
      * Construtor por omissão
@@ -69,7 +69,6 @@ public class FornecedorEnergia {
 
         return sb;
     }
-
 
     public double getPrecoPorDispositivo(SmartDevice sd){
         return (this.valorBase * sd.getConsumoPorHora() * this.imposto) * (1 - (this.desconto/100));
