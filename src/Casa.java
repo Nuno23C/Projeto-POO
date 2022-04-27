@@ -1,5 +1,4 @@
 import SmartDevices.SmartDevice;
-
 import java.util.*;
 
 public class Casa {
@@ -21,8 +20,8 @@ public class Casa {
         this.morada = morada;
         this.nome = nome;
         this.NIF = NIF;
-        this.dispositivos = dispositivos;
-        this.divisoes = divisoes;
+        setDispositivos(dispositivos);
+        setDivisoes(divisoes);
     }
 
     public Casa(Casa casa) {
@@ -36,6 +35,31 @@ public class Casa {
     public Casa clone() {
         return new Casa(this);
     }
+
+    public void turn_On_Divisao(String div) {
+        for(String deviceID: divisoes.get(div)){
+            dispositivos.get(deviceID).turnOn();
+        }
+    }
+
+    public void turn_Off_Divisao(String div) {
+        for(String deviceID: divisoes.get(div)) {
+            dispositivos.get(deviceID).turnOff();
+        }
+    }
+
+    public void turn_On_Casa() {
+        for (SmartDevice disp: dispositivos.values()){
+            disp.turnOn();
+        }
+    }
+
+    public void turn_Off_Casa() {
+        for (SmartDevice disp: dispositivos.values()){
+            disp.turnOff();
+        }
+    }
+
 
 
     // Getters and Setters

@@ -53,11 +53,12 @@ public abstract class SmartDevice {
         this.estado = Estado.OFF;
     }
 
-    public void change_id(String id) {
-        this.id = id;
-    }
-
     public abstract double getConsumoPorHora();
+
+
+
+
+
 
     // Getters and Setters
     public Estado getEstado() {

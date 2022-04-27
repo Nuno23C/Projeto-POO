@@ -75,23 +75,11 @@ public class SmartSpeaker extends SmartDevice {
         return sb;
     }
 
-    public void change_Volume(int v) {
-        this.volume = v;
-    }
 
-    public void change_Radio(String r) {
-        this.radioOnline = r;
-    }
 
-    // Não tem sentido mudar a marca e nao mudar o consumo...
-    public void change_Marca(String m) {
-        this.marca = m;
-    }
 
-    // same
-    public void change_ConsumoBase(double c) {
-        this.consumoBase = c;
-    }
+
+
 
     // Getters and Setters
     public String getMarca() {

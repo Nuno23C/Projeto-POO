@@ -111,6 +111,9 @@ public class SmartBulb extends SmartDevice {
     }
 
 
+
+
+
     // Getters and Setters
     public Tonalidade getTone() {
         return tone;
