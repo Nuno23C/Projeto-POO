@@ -17,7 +17,7 @@ public class SmartSpeaker extends SmartDevice {
      */
     public SmartSpeaker() {
         super();
-        this.estado = Estado.ON;
+        this.estado = Estado.OFF;
         this.marca = "";
         this.volume = 0;
         this.radioOnline = "";
@@ -41,7 +41,7 @@ public class SmartSpeaker extends SmartDevice {
     */
     public SmartSpeaker (SmartSpeaker ss) {
         super();
-        this.estado = getEstado();
+        this.estado = ss.getEstado();
         this.marca = ss.getMarca();
         this.volume = ss.getVolume();
         this.radioOnline = ss.getRadioOnline();
@@ -66,10 +66,6 @@ public class SmartSpeaker extends SmartDevice {
                 ss.getConsumoPorHora() == this.consumoPorHora);
     }
 
-    public SmartSpeaker clone() {
-        return new SmartSpeaker(this);
-    }
-
     public String toString() {
 
         String sb = "\n" + "id: " + this.id + "\n" +
@@ -81,6 +77,10 @@ public class SmartSpeaker extends SmartDevice {
                 "Consumo por hora: " + this.consumoPorHora + "\n";
 
         return sb;
+    }
+
+    public SmartSpeaker clone() {
+        return new SmartSpeaker(this);
     }
 
     public void turnOn() {

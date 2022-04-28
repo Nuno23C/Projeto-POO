@@ -22,8 +22,8 @@ public abstract class SmartDevice {
         if (o == null || o.getClass() != this.getClass())
             return false;
 
-        SmartBulb sb = (SmartBulb) o;
-        return (sb.getId().equals(this.id));
+        SmartDevice sd = (SmartDevice) o;
+        return (sd.getId().equals(this.id));
     }
 
     public String toString() {

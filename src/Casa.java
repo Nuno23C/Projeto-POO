@@ -24,6 +24,14 @@ public class Casa {
         setDivisoes(divisoes);
     }
 
+    public Casa(String morada, String nome, String NIF) {
+        this.morada = morada;
+        this.nome = nome;
+        this.NIF = NIF;
+        this.divisoes = new HashMap<String,List<String>>();
+        this.dispositivos = new HashMap<String,SmartDevice>();
+    }
+
     public Casa(Casa casa) {
         this.morada = casa.getMorada();
         this.nome = casa.getNome();
@@ -32,22 +40,48 @@ public class Casa {
         this.divisoes = casa.getDivisoes();
     }
 
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || o.getClass() != this.getClass())
+            return false;
+
+        Casa c = (Casa) o;
+        return (c.getMorada().equals(this.morada) &&
+                c.getNome().equals(this.nome) &&
+                c.getNIF().equals(this.NIF) &&
+                c.getDispositivos().equals(this.dispositivos) &&
+                c.getDivisoes().equals(this.divisoes));
+    }
+
+    public String toString() {
+        String sb = "\n" + "Morada: " + this.morada + "\n" +
+                    "Nome: " + this.nome + "\n" +
+                    "NIF: " + this.NIF + "\n" +
+                    "Divisões: " + this.divisoes + "\n" +
+                    "Dispositivos: " + this.dispositivos + "\n";
+
+        return sb;
+    }
+
     public Casa clone() {
         return new Casa(this);
     }
 
-    // Map<String, List<String>> divisoes;
-    // Map<String, SmartDevice> dispositivos;
-
     public void turn_On_Divisao(String div) {
-        for(String deviceID: this.divisoes.get(div)){
-            dispositivos.get(deviceID).turnOn();
+        if(this.divisoes.containsKey(div)) {
+            for(String deviceID: this.divisoes.get(div)) {
+                dispositivos.get(deviceID).turnOn();
+            }
         }
     }
 
     public void turn_Off_Divisao(String div) {
-        for(String deviceID: this.divisoes.get(div)) {
-            dispositivos.get(deviceID).turnOff();
+        if(this.divisoes.containsKey(div)) {
+            for(String deviceID: this.divisoes.get(div)) {
+                dispositivos.get(deviceID).turnOff();
+            }
         }
     }
 
@@ -61,7 +95,48 @@ public class Casa {
         for (SmartDevice disp: this.dispositivos.values()){
             disp.turnOff();
         }
+        //this.dispositivos.values().forEach(s->s.turnOff());
     }
+
+    public void add_Divisao(String div) {
+        if(!this.divisoes.containsKey(div)) {
+            List<String> ids = new ArrayList<>();
+            this.divisoes.put(div,ids);
+        }
+    }
+
+    public void remove_Desivao(String div) {
+        if(this.divisoes.containsKey(div)) {
+            this.divisoes.remove(div);
+            // FALTA REMOVER DISPOSITIVOS
+        }
+    }
+
+    public void add_Dispositivo_NaCasa(String div, SmartDevice disp){
+        if (this.divisoes.containsKey(div)){
+            List<String> ids = this.divisoes.get(div);
+            if (!ids.contains(disp.getId())){
+                ids.add(disp.getId());
+                this.dispositivos.put(disp.getId(), disp);
+            }
+        }
+        else{
+            add_Divisao(div);
+            List<String> ids = this.divisoes.get(div);
+            if (!ids.contains(disp.getId())){
+                ids.add(disp.getId());
+                this.dispositivos.put(disp.getId(), disp);
+            }
+        }
+    }
+
+    public void remove_Dispositivo(String disp) {
+
+    }
+
+
+
+
 
 
 

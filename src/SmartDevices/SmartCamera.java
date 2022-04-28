@@ -77,14 +77,6 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método que cria um clone da SmartCamera.
-     * @return Clone da SmartCamera.
-     */
-    public SmartCamera clone() {
-        return new SmartCamera(this);
-    }
-
-    /**
      * Método que representa a SmartCamera em formato de texto.
      * @return String com as características da SmartCamera.
      */
@@ -99,6 +91,14 @@ public class SmartCamera extends SmartDevice {
                     "Data atual: " + this.dataInicial + "\n";
 
         return sc;
+    }
+
+    /**
+     * Método que cria um clone da SmartCamera.
+     * @return Clone da SmartCamera.
+     */
+    public SmartCamera clone() {
+        return new SmartCamera(this);
     }
 
     public void turnOn() {

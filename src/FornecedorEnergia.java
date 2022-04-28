@@ -1,8 +1,4 @@
 import SmartDevices.SmartDevice;
-<<<<<<< HEAD
-=======
-
->>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +10,7 @@ public class FornecedorEnergia {
     public double imposto;
     public double valorBase; //de cada dispositivo
     public double desconto;
-<<<<<<< HEAD
     private Map<String, Casa> conj_Casas; //id da casa e a casa
-=======
-    private Map<String, Casa> conj_Casas; //id da casa e a casa 
->>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
     private Map<String, List<String>> faturas;  //lista de faturas
 
     /**
@@ -46,14 +38,18 @@ public class FornecedorEnergia {
         this.imposto = 1.23;
         this.valorBase = valorBase;
         this.desconto = desconto;
-<<<<<<< HEAD
         setConjCasas(conj_Casas);
-=======
-        setConjCasas(conj_Casas); 
->>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
         setFatura(faturas);
     }
 
+    public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase, double desconto){
+        this.nomeEmpresa = nomeEmpresa;
+        this.imposto = 1.23;
+        this.valorBase = valorBase;
+        this.desconto = desconto;
+        this.conj_Casas = new HashMap<String, Casa>();
+        this.faturas = new HashMap<String, List<String>>();
+    }
 
     /**
      * Constutor por cópia
@@ -90,7 +86,6 @@ public class FornecedorEnergia {
     }
 
     public String toString() {
-
         String sb = "\n" + "Nome da Empresa: " + this.nomeEmpresa + "\n" +
                 "Imposto: " + this.imposto + "\n" +
                 "Valor Base: " + this.valorBase + "\n" +
@@ -99,7 +94,6 @@ public class FornecedorEnergia {
                 "Fatura: " + this.faturas + "\n";
         return sb;
     }
-
 
     public double getPrecoPorDispositivo(SmartDevice sd){
         return (this.valorBase * sd.getConsumoPorHora() * this.imposto) * (1 - (this.desconto/100));
@@ -125,11 +119,11 @@ public class FornecedorEnergia {
         return consumoDaCasa;
     }
 
-    public void addCasa (String NIF, Casa casa){
+    public void add_Casa (String NIF, Casa casa){
         conj_Casas.put(NIF, casa);
     }
 
-    public void removeCasa (String NIF){
+    public void remove_Casa (String NIF){
         conj_Casas.remove(NIF);
     }
 
@@ -177,11 +171,7 @@ public class FornecedorEnergia {
 
     private void setConjCasas(HashMap<String, Casa> conj_Casas){
         Map<String, Casa> newCasa = new HashMap<>();
-<<<<<<< HEAD
         for(String NIF: conj_Casas.keySet()){
-=======
-        for(String NIF: conj_Casas.keySet()){ 
->>>>>>> e3848d33eb723c196c9e2ba7ccc568713e47633f
             newCasa.put(NIF, conj_Casas.get(NIF).clone());
         }
         this.conj_Casas = newCasa;
