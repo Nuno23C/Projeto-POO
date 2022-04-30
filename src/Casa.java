@@ -2,6 +2,7 @@ import SmartDevices.SmartDevice;
 import java.util.*;
 
 public class Casa {
+    private String idCasa;
     private String morada;
     private String nome;
     private String NIF;
@@ -9,6 +10,7 @@ public class Casa {
     public Map<String, List<String>> divisoes;
 
     public Casa() {
+        this.idCasa = "";
         this.morada = "";
         this.nome = "";
         this.NIF = "";
@@ -16,7 +18,8 @@ public class Casa {
         this.divisoes = new HashMap<>();
     }
 
-    public Casa(String morada, String nome, String NIF, Map<String, SmartDevice> dispositivos, Map<String, List<String>> divisoes) {
+    public Casa(String idCasa, String morada, String nome, String NIF, Map<String, SmartDevice> dispositivos, Map<String, List<String>> divisoes) {
+        this.idCasa = idCasa;
         this.morada = morada;
         this.nome = nome;
         this.NIF = NIF;
@@ -24,7 +27,8 @@ public class Casa {
         setDivisoes(divisoes);
     }
 
-    public Casa(String morada, String nome, String NIF) {
+    public Casa(String idCasa, String morada, String nome, String NIF) {
+        this.idCasa = idCasa;
         this.morada = morada;
         this.nome = nome;
         this.NIF = NIF;
@@ -33,6 +37,7 @@ public class Casa {
     }
 
     public Casa(Casa casa) {
+        this.idCasa = casa.getIdCasa();
         this.morada = casa.getMorada();
         this.nome = casa.getNome();
         this.NIF = casa.getNIF();
@@ -48,7 +53,8 @@ public class Casa {
             return false;
 
         Casa c = (Casa) o;
-        return (c.getMorada().equals(this.morada) &&
+        return (c.getIdCasa().equals(this.idCasa) &&
+                c.getMorada().equals(this.morada) &&
                 c.getNome().equals(this.nome) &&
                 c.getNIF().equals(this.NIF) &&
                 c.getDispositivos().equals(this.dispositivos) &&
@@ -56,7 +62,8 @@ public class Casa {
     }
 
     public String toString() {
-        String sb = "\n" + "Morada: " + this.morada + "\n" +
+        String sb = "\n" + "ID da Casa: " + this.idCasa + "\n" +
+                    "Morada: " + this.morada + "\n" +
                     "Nome: " + this.nome + "\n" +
                     "NIF: " + this.NIF + "\n" +
                     "Divisões: " + this.divisoes + "\n" +
@@ -141,6 +148,14 @@ public class Casa {
 
 
     // Getters and Setters
+    public String getIdCasa() {
+        return this.idCasa;
+    }
+
+    public void setIdCasa(String idCasa) {
+        this.idCasa = idCasa;
+    }
+
     public String getMorada() {
         return morada;
     }

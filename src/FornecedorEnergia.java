@@ -128,6 +128,9 @@ public class FornecedorEnergia {
     }
 
 
+
+
+
     // Getters and Setters
     public String getNomeEmpresa() {
         return nomeEmpresa;

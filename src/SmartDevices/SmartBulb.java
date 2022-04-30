@@ -31,7 +31,7 @@ public class SmartBulb extends SmartDevice {
      * @param estado Estado da SmartBulb.
      * @param tone Tonalidade da SmartBulb.
      */
-    public SmartBulb(String id, Estado estado, double dimensões, Tonalidade tone) {
+    public SmartBulb(String id, Estado estado, Tonalidade tone, double dimensões) {
         super(id);
         this.estado = estado;
         this.tone = tone;
