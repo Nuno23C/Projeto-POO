@@ -2,15 +2,18 @@ import SmartDevices.SmartBulb;
 import SmartDevices.SmartCamera;
 import SmartDevices.SmartDevice;
 import SmartDevices.SmartSpeaker;
+
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.HashMap;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
 
-        //Menu mainMenu = new Menu();
+        Menu mainMenu = new Menu();
 
+/*
         LocalDateTime dataInicial = LocalDateTime.now();
         System.out.println(dataInicial);
 
@@ -39,7 +42,7 @@ public class Main {
 
         // System.out.println("------------------------------------");
         // System.out.println(casa1.toString());
+    */
     }
-
 }
 
