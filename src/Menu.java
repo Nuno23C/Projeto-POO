@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Menu {
-    private Map<String, Casa> casas = new HashMap<>(); // Id da casa - Casa
-    private Map<String, SmartDevice> dispositivos = new HashMap<>(); // Id do device - Device
-    private Map<String, List<String>> divisoes; // Divisão - Lista de Ids dos Devices
+    private Map<String, Casa> casas = new HashMap<>(); // Todas as casas ---> Id da casa - Casa
+    private Map<String, FornecedorEnergia> fornecedores = new HashMap<>(); // Todos os fornecedores ---> nome do Fornecedor - Fornecedor
 
     public Menu(){
         mainMenu();
@@ -19,91 +18,90 @@ public class Menu {
 
     public void mainMenu(){
         Scanner scan = new Scanner(System.in);
+        String choice;
 
-        System.out.println("Menu:");
-        System.out.println("1 - Casa");
-        System.out.println("2 - Dispositivos");
-        System.out.println("3 - Divisões");
-        System.out.println("4 - Fornecedor de energia");
-        System.out.println("0 - Consultar");
-        System.out.print("Escolhe uma opção: ");
+        do {
+            System.out.println("Menu:");
+            System.out.println("1 - Casa");
+            System.out.println("2 - Dispositivos");
+            System.out.println("3 - Divisões");
+            System.out.println("4 - Fornecedor de energia");
+            System.out.println("5 - Consultar");
+            System.out.print("Escolhe uma opção: ");
+            choice = scan.next();
+            switch(choice) {
+                case("1"):
+                    System.out.println("1 - Criar casa");
+                    System.out.println("2 - Alterar casa");
+                    System.out.println("3 - Remover casa");
+                    switch(scan.next()) {
+                        case("1"):
+                            createCasa();
+                            break;
 
-        switch(scan.next()){
-            case("1"):
-                System.out.println("1 - Criar casa");
-                System.out.println("2 - Alterar casa");
-                System.out.println("3 - Remover casa");
-                switch(scan.next()) {
-                    case("1"):
-                        createCasa();
-                        break;
+                        case("2"):
+                            //alteraCasa();
+                            break;
 
-                    case("2"):
-                        //alteraDevice();
-                        break;
+                        case("3"):
+                            //removeCasa();
+                            break;
+                    }
+                    break;
 
-                    case("3"):
-                        //removeDevice();
-                        break;
-                }
-                break;
+                case("2"):
+                    System.out.println("1 - Criar dispositivo");
+                    System.out.println("2 - Alterar dispositivo");
+                    System.out.println("3 - Remover dispositivo");
+                    switch(scan.next()) {
+                        case("1"):
+                            //createDevice();
+                            break;
 
-            case("2"):
-                System.out.println("1 - Criar dispositivo");
-                System.out.println("2 - Alterar dispositivo");
-                System.out.println("3 - Remover dispositivo");
-                switch(scan.next()) {
-                    case("1"):
-                        createDevice();
-                        break;
+                        case("2"):
+                            //alteraDevice();
+                            break;
 
-                    case("2"):
-                        //alteraDevice();
-                        break;
+                        case("3"):
+                            //removeDevice();
+                            break;
 
-                    case("3"):
-                        //removeDevice();
-                        break;
+                    }
+                    break;
 
-                }
-                break;
+                case("3"):
+                    System.out.println("1 - Criar divisão");
+                    System.out.println("2 - Alterar divisão");
+                    System.out.println("3 - Remover divisão");
+                    switch(scan.next()) {
+                        case("1"):
+                            //createDivisao();
+                            break;
 
-            case("3"):
-                System.out.println("1 - Criar divisão");
-                System.out.println("2 - Alterar divisão");
-                System.out.println("3 - Remover divisão");
-                switch(scan.next()) {
-                    case("1"):
-                        //createDivisao();
-                        break;
+                        case("2"):
+                            //alteraDivisao();
+                            break;
 
-                    case("2"):
-                        //alteraDivisao();
-                        break;
-
-                    case("3"):
-                        //removeDisisao();
-                        break;
-
-                }
-                break;
+                        case("3"):
+                            //removeDivisao();
+                            break;
+                    }
+                    break;
 
 
-            case("0"):
-                System.out.println(dispositivos.toString());
+                case("5"):
+                    System.out.println(casas.toString());
+                    break;
 
-            default:
-                System.out.println("Opção invalida!");
-                break;
-        }
-
-        mainMenu();
-
-        //scan.close();
+                default:
+                    System.out.println("Opção invalida!");
+                    break;
+            }
+        } while(!choice.equals("1") || !choice.equals("2") || !choice.equals("3") || !choice.equals("4") || !choice.equals("5"));
     }
 
 
-    public void createCasa(){
+    public void createCasa() {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("Id da casa: ");
@@ -122,31 +120,108 @@ public class Menu {
         System.out.print("NIF: ");
         String NIF = scan.nextLine();
 
-        Casa casa = new Casa(idCasa, morada, nome, NIF);
+        Map<String, List<String>> divisoes = new HashMap<>();
+        Map<String, SmartDevice> dispositivos = new HashMap<>();
+        Casa casa = new Casa(idCasa, morada, nome, NIF, dispositivos, divisoes);
         casas.put(idCasa, casa);
 
-        //scan.close();
+        String choice;
+        do {
+            System.out.println("Do you pretend to add a division in this house?");
+            System.out.println("1 - Yes");
+            System.out.println("2 - No -> go back to menu");
+            System.out.print("Choose an option:");
+            choice = scan.next();
+            switch(choice) {
+                case("1"):
+                    createDivisao(casa);
+                    System.out.println("Do you pretend to add another division?");
+                    System.out.println("1 - Yes");
+                    System.out.println("2 - No");
+                    choice = scan.next();
+                    while(choice.equals("1")) {
+                        createDivisao(casa);
+                    }
+                    casa.add_Fornecedor(criaFornecedorEnergia());
+                    break;
+
+                case("2"):
+                    mainMenu();
+                    break;
+
+                default:
+                    System.out.println("Invalid option!");
+                    break;
+            }
+        } while(!choice.equals("1") || !choice.equals("2"));
     }
 
-    public void createDevice() {
+    public void createDivisao(Casa casa) {
         Scanner scan = new Scanner(System.in);
+
+        System.out.print("Disivion: ");
+        String nomeDivisao = scan.nextLine();
+        while(casas.containsKey(nomeDivisao)) {
+            System.out.println("This division is already created!");
+            nomeDivisao = scan.nextLine();
+        }
+
+        casa.add_Divisao(nomeDivisao);
+
+        String choice;
+        do {
+            System.out.println("Do you pretend to add a device?");
+            System.out.println("1 - Yes");
+            System.out.println("2 - No");
+            System.out.print("Choose an option:");
+            choice = scan.next();
+            switch(choice) {
+                case("1"):
+                    casa.add_DispositivoNaDivisao(nomeDivisao, createDevice(casa));
+                    System.out.println("Do you pretend to add another device?");
+                    System.out.println("1 - Yes");
+                    System.out.println("2 - No");
+                    choice = scan.next();
+                    while(choice.equals("1")) {
+                        casa.add_DispositivoNaDivisao(nomeDivisao, createDevice(casa));
+                        System.out.println("Do you pretend to add another device?");
+                        System.out.println("1 - Yes");
+                        System.out.println("2 - No");
+                        choice = scan.next();
+                    }
+                    break;
+
+                case("2"):
+                    mainMenu();
+                    break;
+
+                default:
+                    System.out.println("Invalid option!");
+                    break;
+            }
+        } while(!choice.equals("1") || !choice.equals("2"));
+    }
+
+    public SmartDevice createDevice(Casa casa) {
+        Scanner scan = new Scanner(System.in);
+        SmartDevice sd = null;
 
         System.out.println("1 - SmartBulb ");
         System.out.println("2 - SmartSpeaker");
         System.out.println("3 - SmartCamera");
-        System.out.println("0 - Voltar ao menu anterior");
-        System.out.print("Escolhe uma opção: ");
+        System.out.println("0 - Go back");
+        System.out.print("Choose an option: ");
         switch(scan.next()) {
             case("1"):
-                createSmartBulb();
+                sd = createSmartBulb(casa);
                 break;
 
             case("2"):
-                createSmartSpeaker();
+                sd = createSmartSpeaker(casa);
                 break;
 
             case("3"):
-                createSmartCamera();
+                sd = createSmartCamera(casa);
                 break;
 
             case("0"):
@@ -157,16 +232,17 @@ public class Menu {
                 System.out.println("Opção invalida!");
                 break;
         }
-        //scan.close();
+
+        return sd;
     }
 
 
-    public void createSmartBulb() {
+    public SmartDevice createSmartBulb(Casa casa) {
         Scanner scan = new Scanner(System.in);
 
-        System.out.print("Id da SmartBulb: ");
+        System.out.print("ID da SmartBulb: ");
         String id = scan.nextLine();
-        while(dispositivos.containsKey(id)) {
+        while(casa.dispositivos.containsKey(id)) {
             System.out.println("Este id já foi utilizado, por favor introduza outro!");
             id = scan.nextLine();
         }
@@ -174,7 +250,6 @@ public class Menu {
         System.out.println("Estado: ");
         System.out.println("1 - ON");
         System.out.println("2 - OFF");
-        System.out.println("0 - Voltar");
         System.out.print("Escolhe uma opção: ");
         SmartBulb.Estado estado = SmartBulb.Estado.OFF;
         switch(scan.next()){
@@ -187,6 +262,7 @@ public class Menu {
                 break;
 
             default:
+                System.out.println("Invalid option!");
                 break;
         }
 
@@ -218,15 +294,16 @@ public class Menu {
         double dimensões = scan.nextDouble();
 
         SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimensões);
-        dispositivos.put(id, sb);
+
+        return sb;
     }
 
-    public void createSmartSpeaker() {
+    public SmartDevice createSmartSpeaker(Casa casa) {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("Id do SmartSpeaker: ");
         String id = scan.nextLine();
-        while(dispositivos.containsKey(id)) {
+        while(casa.dispositivos.containsKey(id)) {
             System.out.println("Este id já foi utilizado, por favor introduza outro!");
             id = scan.nextLine();
         }
@@ -260,18 +337,17 @@ public class Menu {
         double consumoBase = scan.nextDouble();
 
         SmartDevice ss = new SmartSpeaker(id, estado, marca, volume, radioOnline, consumoBase);
-        dispositivos.put(id, ss);
 
-        //scan.close();
+        return ss;
     }
 
 
-    public void createSmartCamera(){
+    public SmartDevice createSmartCamera(Casa casa){
         Scanner scan = new Scanner(System.in);
 
         System.out.print("Id da SmartCamera: ");
         String id = scan.nextLine();
-        while(dispositivos.containsKey(id)) {
+        while(casa.dispositivos.containsKey(id)) {
             System.out.println("Este id já foi utilizado, por favor introduza outro!");
             id = scan.nextLine();
         }
@@ -295,45 +371,35 @@ public class Menu {
                 break;
         }
 
-        System.out.println("Resoluçao: ");
-        System.out.println("1 - 4k ");
-        System.out.println("2 - 1080 ");
-        System.out.println("3 - 720 ");
-        System.out.println("4 - 480 ");
-        System.out.println("5 - 144 ");
-        System.out.print("Escolhe uma opção: ");
-        double resolucao = 1080;
-        switch(scan.next()) {
-            case("1"):
-                resolucao = 4000;
-                break;
 
-            case("2"):
-                resolucao = 1080;
-                break;
-
-            case("3"):
-                resolucao = 720;
-                break;
-
-            case("4"):
-                resolucao = 480;
-                break;
-
-            case("5"):
-                resolucao = 144;
-                break;
-
-            default:
-                break;
-        }
+        System.out.println("Resolution: ");
+        System.out.println("x: ");
+        int x = scan.nextInt();
+        System.out.println("y: ");
+        int y = scan.nextInt();
 
         System.out.print("Data: ");
         LocalDateTime dataAtual = LocalDateTime.now();
         System.out.println(dataAtual);
 
-        SmartDevice sc = new SmartCamera(id, estado, resolucao, dataAtual);
-        dispositivos.put(id, sc);
+        SmartDevice sc = new SmartCamera(id, estado, x, y, dataAtual);
+
+        return sc;
     }
 
+    public FornecedorEnergia criaFornecedorEnergia() {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("Energy supplier: ");
+        String nomeFornecedor = scan.nextLine();
+
+        while(fornecedores.containsKey(nomeFornecedor)) {
+            System.out.println("This supplier already exits!");
+            nomeFornecedor = scan.nextLine();
+        }
+
+        FornecedorEnergia fe = new FornecedorEnergia(nomeFornecedor);
+
+        return fe;
+    }
 }

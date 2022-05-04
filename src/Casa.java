@@ -7,7 +7,8 @@ public class Casa {
     private String nome;
     private String NIF;
     public Map<String, SmartDevice> dispositivos;
-    public Map<String, List<String>> divisoes;
+    public Map<String, List<String>> divisoes; // Nome da divisão - Dispositivos
+    private FornecedorEnergia fornecedor;
 
     public Casa() {
         this.idCasa = "";
@@ -43,6 +44,7 @@ public class Casa {
         this.NIF = casa.getNIF();
         this.dispositivos = casa.getDispositivos();
         this.divisoes = casa.getDivisoes();
+        this.fornecedor = getFornecedor();
     }
 
     public boolean equals(Object o) {
@@ -58,7 +60,8 @@ public class Casa {
                 c.getNome().equals(this.nome) &&
                 c.getNIF().equals(this.NIF) &&
                 c.getDispositivos().equals(this.dispositivos) &&
-                c.getDivisoes().equals(this.divisoes));
+                c.getDivisoes().equals(this.divisoes) &&
+                c.getFornecedor().equals(this.fornecedor));
     }
 
     public String toString() {
@@ -67,7 +70,8 @@ public class Casa {
                     "Nome: " + this.nome + "\n" +
                     "NIF: " + this.NIF + "\n" +
                     "Divisões: " + this.divisoes + "\n" +
-                    "Dispositivos: " + this.dispositivos + "\n";
+                    "Dispositivos: " + this.dispositivos + "\n" +
+                    "Fornecedor: " + this.fornecedor + "\n";
 
         return sb;
     }
@@ -102,7 +106,6 @@ public class Casa {
         for (SmartDevice disp: this.dispositivos.values()){
             disp.turnOff();
         }
-        //this.dispositivos.values().forEach(s->s.turnOff());
     }
 
     public void add_Divisao(String div) {
@@ -112,33 +115,40 @@ public class Casa {
         }
     }
 
-    public void remove_Desivao(String div) {
+    public void remove_Devisao(String div) {
         if(this.divisoes.containsKey(div)) {
             this.divisoes.remove(div);
             // FALTA REMOVER DISPOSITIVOS
         }
     }
 
-    public void add_Dispositivo_NaCasa(String div, SmartDevice disp){
+    public void add_DispositivoNaDivisao(String div, SmartDevice sd){
         if (this.divisoes.containsKey(div)){
             List<String> ids = this.divisoes.get(div);
-            if (!ids.contains(disp.getId())){
-                ids.add(disp.getId());
-                this.dispositivos.put(disp.getId(), disp);
+            if (!ids.contains(sd.getId())){
+                ids.add(sd.getId());
+                this.dispositivos.put(sd.getId(), sd);
             }
         }
         else{
             add_Divisao(div);
             List<String> ids = this.divisoes.get(div);
-            if (!ids.contains(disp.getId())){
-                ids.add(disp.getId());
-                this.dispositivos.put(disp.getId(), disp);
+            if (!ids.contains(sd.getId())){
+                ids.add(sd.getId());
+                this.dispositivos.put(sd.getId(), sd);
             }
         }
     }
 
-    public void remove_Dispositivo(String disp) {
+    public void remove_DispositivoNaDivisao(String id, String div) {
+        if (this.dispositivos.containsKey(id)) {
+            divisoes.get(div).remove(id);
+            dispositivos.remove(id);
+        }
+    }
 
+    public void add_Fornecedor(FornecedorEnergia fornecedor) {
+        this.fornecedor = fornecedor;
     }
 
 
@@ -226,5 +236,11 @@ public class Casa {
         this.divisoes = newDev;
     }
 
+    public FornecedorEnergia getFornecedor() {
+        return this.fornecedor;
+    }
 
+    public void setFornecedor(FornecedorEnergia fornecedor) {
+        this.fornecedor = fornecedor;
+    }
 }

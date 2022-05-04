@@ -1,23 +1,33 @@
 import SmartDevices.SmartDevice;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.time.temporal.ChronoUnit;
 
 public class FornecedorEnergia {
     public String nomeEmpresa;
     public double imposto;
-    public double valorBase; //de cada dispositivo
+    public double valorBase;
     public double desconto;
-    private Map<String, Casa> conj_Casas; //id da casa e a casa
-    private Map<String, List<String>> faturas;  //lista de faturas
-
+    private Map<String, Casa> conj_Casas; //Id da casa - Casa
+    private Map<String, List<String>> faturas;  //Id da casa - Lista de faturas
     /**
      * Construtor por omissão
      */
     public FornecedorEnergia(){
         this.nomeEmpresa = "";
+        this.imposto = 1.23;
+        this.valorBase = 0;
+        this.desconto = 0;
+        this.conj_Casas = new HashMap<>();
+        this.faturas = new HashMap<>();
+    }
+
+    public FornecedorEnergia(String nome){
+        this.nomeEmpresa = nome;
         this.imposto = 1.23;
         this.valorBase = 0;
         this.desconto = 0;
@@ -33,7 +43,7 @@ public class FornecedorEnergia {
      * @param desconto
      * @param faturas
      */
-    public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase, double desconto, HashMap<String, Casa> conj_Casas, Map<String, List<String>> faturas ){
+    public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase, double desconto, HashMap<String, Casa> conj_Casas, Map<String, List<String>> faturas){
         this.nomeEmpresa = nomeEmpresa;
         this.imposto = 1.23;
         this.valorBase = valorBase;
@@ -42,7 +52,7 @@ public class FornecedorEnergia {
         setFatura(faturas);
     }
 
-    public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase, double desconto){
+    public FornecedorEnergia(String nomeEmpresa, double valorBase, double desconto){
         this.nomeEmpresa = nomeEmpresa;
         this.imposto = 1.23;
         this.valorBase = valorBase;
@@ -81,10 +91,6 @@ public class FornecedorEnergia {
                 fe.getFaturas().equals(this.faturas));
     }
 
-    public FornecedorEnergia clone() {
-        return new FornecedorEnergia(this);
-    }
-
     public String toString() {
         String sb = "\n" + "Nome da Empresa: " + this.nomeEmpresa + "\n" +
                 "Imposto: " + this.imposto + "\n" +
@@ -95,36 +101,85 @@ public class FornecedorEnergia {
         return sb;
     }
 
-    public double getPrecoPorDispositivo(SmartDevice sd){
+    public FornecedorEnergia clone() {
+        return new FornecedorEnergia(this);
+    }
+
+    //public void adicionarFornec
+
+    public void add_Casa (String idCasa, Casa casa){
+        conj_Casas.put(idCasa, casa);
+    }
+
+    public void remove_Casa (String idCasa){
+        conj_Casas.remove(idCasa);
+    }
+
+
+
+
+    // Map<String, Casa> conj_Casas
+    // Map<String, SmartDevice> dispositivos
+
+    public double getPrecoDispositivoPorHora(SmartDevice sd){
         return (this.valorBase * sd.getConsumoPorHora() * this.imposto) * (1 - (this.desconto/100));
     }
 
-    public double getConsumoDivisao(Map<String, SmartDevice> div){
-        double consumoDivisao = 0;
+    // Quando recebe a casa
+    public double getPrecoCasaPorHora(Casa casa) {
+        double precoTotal = 0;
 
-        for(SmartDevice disp: div.values()) {
-            consumoDivisao += disp.getConsumoPorHora();
+        for(SmartDevice sd: casa.getDispositivos().values()) {
+            precoTotal += getPrecoDispositivoPorHora(sd);
         }
 
-        return consumoDivisao;
+        return precoTotal;
     }
 
-    public double getConsumoDaCasa(Casa c){
-        double consumoDaCasa = 0;
+    // Quando recebe os dispositivos da casa
+    public double getPrecoCasaPorHora(Map<String, SmartDevice> dispositivos) {
+        double precoTotal = 0;
 
-        for(SmartDevice device: c.getDispositivos().values()){
-            consumoDaCasa += getPrecoPorDispositivo(device);
+        for(SmartDevice sd: dispositivos.values()) {
+            precoTotal += getPrecoDispositivoPorHora(sd);
         }
 
-        return consumoDaCasa;
+        return precoTotal;
     }
 
-    public void add_Casa (String NIF, Casa casa){
-        conj_Casas.put(NIF, casa);
+    // Quando recebe a casa
+    public double getConsumoCasaPorHora(Casa casa) {
+        double consumoTotal = 0;
+
+        for(SmartDevice sd: casa.getDispositivos().values()) {
+            consumoTotal += getPrecoDispositivoPorHora(sd);
+        }
+
+        return consumoTotal;
     }
 
-    public void remove_Casa (String NIF){
-        conj_Casas.remove(NIF);
+    // Quando recebe os dispositivos da casa
+    public double getConsumoCasaPorHora(Map<String, SmartDevice> dispositivos) {
+        double consumoTotal = 0;
+
+        for(SmartDevice sd: dispositivos.values()) {
+            consumoTotal += sd.getConsumoPorHora();
+        }
+
+        return consumoTotal;
+    }
+
+
+    public String faturaDaCasa(String idCasa, LocalDateTime dataInicial, LocalDateTime dataFinal) {
+        long horasEntre = dataInicial.until(dataInicial.plusDays(dataFinal.getHour()), ChronoUnit.HOURS);
+
+        String sb = "Id da casa: " + idCasa + "\n" +
+                    "Data inicial: " + dataInicial + "\n" +
+                    "Data final: " + dataFinal + "\n" +
+                    "Consumo da casa durante o período de tempo: " + getConsumoCasaPorHora(conj_Casas.get(idCasa))*horasEntre + "W" + "\n" +
+                    "Custo: " + getPrecoCasaPorHora(conj_Casas.get(idCasa))*horasEntre + "€" + "\n";
+
+        return sb;
     }
 
 

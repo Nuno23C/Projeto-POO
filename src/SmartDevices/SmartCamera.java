@@ -8,7 +8,8 @@ public class SmartCamera extends SmartDevice {
         OFF
     }
     public Estado estado;
-    public double resolucao;
+    public int x;
+    public int y;
     public long tempoLigada;
     public double tamanhoPacote;
     public double consumoPorHora;
@@ -20,7 +21,8 @@ public class SmartCamera extends SmartDevice {
     public SmartCamera() {
         super();
         this.estado = Estado.OFF;
-        this.resolucao = 0;
+        this.x = 0;
+        this.y = 0;
         this.tempoLigada = 0;
         this.tamanhoPacote = 0;
         this.consumoPorHora = 0;
@@ -34,10 +36,11 @@ public class SmartCamera extends SmartDevice {
      * @param resolucao
      * @param dataAtual
      */
-    public SmartCamera(String id, Estado estado, double resolucao, LocalDateTime dataAtual){
+    public SmartCamera(String id, Estado estado, int x, int y, LocalDateTime dataAtual){
         super(id);
         this.estado = estado;
-        this.resolucao = resolucao;
+        this.x = x;
+        this.y = y;
         this.dataInicial = dataAtual;
     }
 
@@ -48,7 +51,8 @@ public class SmartCamera extends SmartDevice {
     public SmartCamera(SmartCamera sc) { // SC de SmartCamera
         super();
         this.estado = sc.getEstado();
-        this.resolucao = sc.getResolucao();
+        this.x = sc.getX();
+        this.y = sc.getY();
         this.tempoLigada = sc.getTempoLigada();
         this.tamanhoPacote = sc.getTamanhoPacote();
         this.consumoPorHora = sc.getConsumoPorHora();
@@ -70,7 +74,8 @@ public class SmartCamera extends SmartDevice {
         SmartCamera sc = (SmartCamera) o;
         return (sc.getId().equals(this.id) &&
                 sc.getEstado() == this.estado &&
-                sc.getResolucao() == this.resolucao &&
+                sc.getX() == this.x &&
+                sc.getY() == this.y &&
                 sc.getTamanhoPacote() == this.tamanhoPacote &&
                 sc.getConsumoPorHora() == this.consumoPorHora &&
                 sc.getDataInicial().equals(this.dataInicial));
@@ -84,7 +89,8 @@ public class SmartCamera extends SmartDevice {
 
         String sc = "\n" + "id: " + this.id + "\n" +
                     "Estado: " + this.estado + "\n" +
-                    "Resolucao: " + this.resolucao + "\n" +
+                    "Resolucao x: " + this.x + "\n" +
+                    "Resolucao y: " + this.y + "\n" +
                     "Tempo Ligada " + this.tempoLigada + "\n" +
                     "Tamanho do Pacote: " + this.tamanhoPacote + "\n" +
                     "Consumo por hora: " + this.consumoPorHora + " \n" +
@@ -116,7 +122,7 @@ public class SmartCamera extends SmartDevice {
     public void atualizarCamera(LocalDateTime dataPretendida) {
         this.tempoLigada = dataInicial.until(dataInicial.plusDays(dataPretendida.getHour()), ChronoUnit.HOURS);
         this.tamanhoPacote = tempoLigada * 0.5;
-        this.consumoPorHora = resolucao * this.tamanhoPacote/tempoLigada;
+        this.consumoPorHora = (x * y) * 0.2 * this.tamanhoPacote/tempoLigada;
     }
 
 
@@ -133,12 +139,20 @@ public class SmartCamera extends SmartDevice {
         this.estado = estado;
     }
 
-    public double getResolucao() {
-        return resolucao;
+    public int getX() {
+        return x;
     }
 
-    public void setResolucao(double resolucao) {
-        this.resolucao = resolucao;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public long getTempoLigada() {
