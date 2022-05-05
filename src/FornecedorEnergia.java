@@ -43,7 +43,7 @@ public class FornecedorEnergia {
      * @param desconto
      * @param faturas
      */
-    public FornecedorEnergia(String nomeEmpresa, double imposto, double valorBase, double desconto, HashMap<String, Casa> conj_Casas, Map<String, List<String>> faturas){
+    public FornecedorEnergia(String nomeEmpresa, double valorBase, double desconto, HashMap<String, Casa> conj_Casas, Map<String, List<String>> faturas){
         this.nomeEmpresa = nomeEmpresa;
         this.imposto = 1.23;
         this.valorBase = valorBase;
