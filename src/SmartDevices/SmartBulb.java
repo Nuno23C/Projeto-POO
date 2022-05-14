@@ -97,7 +97,7 @@ public class SmartBulb extends SmartDevice {
         String sb = "\n" + "id: " + this.id + "\n" +
                     "Estado: " + this.estado + "\n" +
                     "Tonalidade: " + this.tone + "\n" +
-                    "Dimensões: " + this.dimensões + "\n" +
+                    "Dimensões: " + this.dimensões +  "cm" + "\n" +
                     "Consumo por hora: " + this.consumoPorHora + " \n";
 
         return sb;

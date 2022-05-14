@@ -1,11 +1,10 @@
 import SmartDevices.SmartDevice;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.time.temporal.ChronoUnit;
+
 
 public class FornecedorEnergia {
     public String nomeEmpresa;
@@ -14,6 +13,7 @@ public class FornecedorEnergia {
     public double desconto;
     private Map<String, Casa> conj_Casas; //Id da casa - Casa
     private Map<String, List<String>> faturas;  //Id da casa - Lista de faturas
+
     /**
      * Construtor por omissão
      */
@@ -107,14 +107,6 @@ public class FornecedorEnergia {
 
     //public void adicionarFornec
 
-    public void add_Casa (String idCasa, Casa casa){
-        conj_Casas.put(idCasa, casa);
-    }
-
-    public void remove_Casa (String idCasa){
-        conj_Casas.remove(idCasa);
-    }
-
 
 
 
@@ -167,19 +159,6 @@ public class FornecedorEnergia {
         }
 
         return consumoTotal;
-    }
-
-
-    public String faturaDaCasa(String idCasa, LocalDateTime dataInicial, LocalDateTime dataFinal) {
-        long horasEntre = dataInicial.until(dataInicial.plusDays(dataFinal.getHour()), ChronoUnit.HOURS);
-
-        String sb = "Id da casa: " + idCasa + "\n" +
-                    "Data inicial: " + dataInicial + "\n" +
-                    "Data final: " + dataFinal + "\n" +
-                    "Consumo da casa durante o período de tempo: " + getConsumoCasaPorHora(conj_Casas.get(idCasa))*horasEntre + "W" + "\n" +
-                    "Custo: " + getPrecoCasaPorHora(conj_Casas.get(idCasa))*horasEntre + "€" + "\n";
-
-        return sb;
     }
 
 

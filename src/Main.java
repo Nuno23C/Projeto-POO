@@ -3,15 +3,18 @@ import SmartDevices.SmartCamera;
 import SmartDevices.SmartDevice;
 import SmartDevices.SmartSpeaker;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws UnsupportedEncodingException {
-
-        Menu mainMenu = new Menu();
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Scanner scan = new Scanner(System.in);
+        Cidade cidade = new Cidade();
+        Menu mainMenu = new Menu(cidade, scan);
 
 /*
         LocalDateTime dataInicial = LocalDateTime.now();
