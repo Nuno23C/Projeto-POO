@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.io.*;
 
-public class Cidade {
+public class Cidade implements Serializable {
     public Map<String, Casa> casas = new HashMap<>(); // Todas as casas ---> Id da casa - Casa
     public Map<String, List<String>> fornecedores = new HashMap<>(); // Todos os fornecedores e as casas ---> nome do Fornecedor - Lista de casas
     private Map<String, List<String>> faturas = new HashMap<>(); // Todas as faturas de todas as casas ---> nome da Casas - Lista de faturas
@@ -29,9 +29,10 @@ public class Cidade {
     public Cidade loadState(String nameOfFile) throws FileNotFoundException,IOException, ClassNotFoundException{
         FileInputStream fis = new FileInputStream(nameOfFile);
         ObjectInputStream oos = new ObjectInputStream(fis);
-        Cidade cit =(Cidade) oos.readObject();
+        Cidade cidade =(Cidade) oos.readObject();
         oos.close();
-        return cit;
+
+        return cidade;
     }
 
     public Cidade() {

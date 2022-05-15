@@ -1,4 +1,6 @@
 import SmartDevices.SmartDevice;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -6,7 +8,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 
-public class FornecedorEnergia {
+public class FornecedorEnergia implements Serializable {
     public String nomeEmpresa;
     public double imposto;
     public double valorBase;
@@ -19,15 +21,6 @@ public class FornecedorEnergia {
      */
     public FornecedorEnergia(){
         this.nomeEmpresa = "";
-        this.imposto = 1.23;
-        this.valorBase = 0;
-        this.desconto = 0;
-        this.conj_Casas = new HashMap<>();
-        this.faturas = new HashMap<>();
-    }
-
-    public FornecedorEnergia(String nome){
-        this.nomeEmpresa = nome;
         this.imposto = 1.23;
         this.valorBase = 0;
         this.desconto = 0;

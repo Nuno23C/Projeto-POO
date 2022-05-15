@@ -1,7 +1,10 @@
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import SmartDevices.SmartBulb;
@@ -13,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Menu {
+public class Menu implements Serializable {
     Scanner scan;
 
     public Menu(Cidade cidade, Scanner s) throws IOException, InterruptedException{
@@ -42,6 +45,30 @@ public class Menu {
        } catch(IOException e) {
            System.out.println("Error saving state!");
        }
+    }
+
+    public void loadState(Cidade cidade, Scanner scan) {
+        System.out.println("Insira o path para o ficheiro que pretende carregar:");
+        StringBuilder path = new StringBuilder();
+        path.append(scan.nextLine());
+        cidade = (Cidade) ReadObjectFromFile(path.toString()); //createMenuLine devolve a cidade guardada no ficheiro
+    }
+
+    public Object ReadObjectFromFile(String filepath) {
+        try {
+            FileInputStream fileIn = new FileInputStream(filepath);
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+
+            Object obj = objectIn.readObject();
+
+            System.out.println("Estado carregado com sucesso!");
+            objectIn.close();
+            return obj;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public void mainMenu(Scanner scan) throws IOException, InterruptedException {
@@ -79,16 +106,19 @@ public class Menu {
         System.out.println("Create, change or remove:");
         System.out.println("1 - Houses");
         System.out.println("2 - Devices");
-        System.out.println("3 - Energy supplier");
-        System.out.println("- - - - - - - - - - - - - - - -");
-        System.out.println("5 - Save state");
-        System.out.println("6 - Load state");
+        System.out.println("3 - Energy suppliers");
+        System.out.print("\n");
+        System.out.println("7 - Save state");
+        System.out.println("8 - Load state");
+        System.out.print("\n");
         System.out.println("9 - Check");
+        System.out.print("\n");
         System.out.println("0 - Go back");
+        System.out.print("\n");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("9") && !choice.equals("0")) {
-            System.out.print("Choose a valid option (1/2/3/4/5/9/0): ");
+        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("7") && !choice.equals("8") && !choice.equals("9") && !choice.equals("0")) {
+            System.out.print("Choose a valid option (1/2/3/7/8/9/0): ");
             choice = scan.nextLine();
         }
 
@@ -142,15 +172,15 @@ public class Menu {
                 break;
 
             case("2"): // Devices
+                System.out.println("What do you want to do?");
                 System.out.println("1 - Create device");
-                System.out.println("2 - Change device");
+                System.out.println("2 - Change some device");
                 System.out.println("3 - Remove device");
-                System.out.println("4 - Turn On/Off a specific device");
-                System.out.println("3 - Go back");
+                System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("0")) {
-                    System.out.print("Choose a valid option (1/2/3): ");
+                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("0")) {
+                    System.out.print("Choose a valid option (1/2/3/0): ");
                     choice = scan.nextLine();
                 }
 
@@ -158,50 +188,29 @@ public class Menu {
 
                 switch(choice) {
                     case("1"):
-                        // createDevice();
-                        // adicionar a uma divisao
+                        //createDevice();
+                        //adicionar a uma divisao
                         break;
 
                     case("2"):
-                        //alteraDevice();
+                        //changeDevice();
+                        //Turn On/Off a specific device
                         break;
 
                     case("3"):
                         //removeDevice();
                         break;
 
-                    case("4"):
-                        System.out.println("1 - Turn On");
-                        System.out.println("2 - Turn Off");
-                        System.out.print("Choose an option: ");
-                        choice = scan.nextLine();
-                        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("0")) {
-                            System.out.print("Choose a valid option (1/2/3): ");
-                            choice = scan.nextLine();
-                        }
-
-                        System.out.print("\n");
-
-                        switch(choice) {
-                            case("1"):
-                                System.out.println("What device do you want to turn on?");
-                                System.out.println();
-                                System.out.println("Id of Device:");
-                                break;
-
-                            case("2"):
-                                break;
-                        }
-
-
                     }
 
                 break;
 
-            case("3"):
-                System.out.println("1 - Creat ");
-                System.out.println("2 - Change ");
-                System.out.println("3 - Remove ");
+            case("3"): //Energy suppliers
+                System.out.println("What do you want to do?");
+                System.out.println("1 - Creat an energy supplier");
+                System.out.println("2 - Change some energy supplier");
+                System.out.println("3 - Remove some energy supplier");
+                System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 choice = scan.nextLine();
                 while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
@@ -213,22 +222,27 @@ public class Menu {
 
                 switch(choice) {
                     case("1"):
-                        //createDivisao();
+                        //create();
                         break;
 
                     case("2"):
-                        //alteraDivisao();
+                        //change();
                         break;
 
                     case("3"):
-                        //removeDivisao();
+                        //remove();
                         break;
                 }
                 break;
 
-            case("5"):
+            case("7"):
                 saveState(cidade, scan);
                 System.out.println("Saved!");
+                break;
+
+            case("8"):
+                loadState(cidade, scan);
+                System.out.println("\nDone");
                 break;
 
             case("9"):
@@ -243,34 +257,7 @@ public class Menu {
         createCidade(cidade, scan);
     }
 
-    public void changeCasa(Casa casa, Cidade cidade, Scanner scan) {
-        System.out.print("\n");
-
-        System.out.println("What do you want to do?");
-        System.out.println("1 - Add a new division");
-        System.out.println("2 - Change division");
-        System.out.println("3 - Turn On/Off all devices in the house");
-        System.out.println("Choose an option:");
-        String choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
-            System.out.print("Choose a valid option (1/2/3): ");
-            choice = scan.nextLine();
-        }
-
-        System.out.print("\n");
-
-        switch(choice) {
-            case ("1"):
-                //createDivisao();
-                break;
-
-            case("2"):
-                //changeDivisão
-        }
-    }
-
     public void createCasa(Cidade cidade, Scanner scan) throws IOException, InterruptedException {
-        //Scanner scan = new Scanner(System.in);
         String choice;
 
         System.out.print("House's id: ");
@@ -311,7 +298,7 @@ public class Menu {
 
         System.out.println("Do you pretend to add a division in this house?");
         System.out.println("1 - Yes");
-        System.out.println("2 - No -> go back to menu");
+        System.out.println("2 - No");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
         while(!choice.equals("1") && !choice.equals("2")) {
@@ -344,22 +331,18 @@ public class Menu {
                     System.out.println("Do you pretend to add another division?");
                     System.out.println("1 - Yes");
                     System.out.println("2 - No");
-                    System.out.print("Choose an option:");
+                    System.out.print("Choose an option: ");
                     choice = scan.nextLine();
 
                     System.out.print("\n");
                 }
-
-                casa.add_Fornecedor(criaFornecedorEnergia(cidade, scan));
-
                 break;
 
             case("2"):
-                casa.add_Fornecedor(criaFornecedorEnergia(cidade, scan));
-
                 break;
         }
 
+        casa.add_Fornecedor(criaFornecedorEnergia(cidade, scan));
         clearConsole();
         createCidade(cidade, scan);
     }
@@ -378,14 +361,14 @@ public class Menu {
     }
 */
 
-    public void createDivisao(Casa casa, Cidade cidade, Scanner scan) {
-        //Scanner scan = new Scanner(System.in);
+    public void createDivisao(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         String choice;
 
-        System.out.print("Disivion: ");
+        System.out.print("Disivion name: ");
         String nomeDivisao = scan.nextLine();
         while(casa.getDivisoes().containsKey(nomeDivisao)) {
             System.out.println("This division already exists!");
+            System.out.print("Try another one:");
             nomeDivisao = scan.nextLine();
         }
 
@@ -405,53 +388,26 @@ public class Menu {
 
         System.out.print("\n");
 
-        switch(choice) {
-            case("1"):
-                SmartDevice device = createDevice(casa, cidade, scan);
+        while(choice.equals("1")) {
+            SmartDevice device = createDevice(casa, cidade, scan);
 
-                if (device != null)
-                    casa.add_DispositivoNaDivisao(nomeDivisao, device);
+            if (device != null)
+                casa.add_DispositivoNaDivisao(nomeDivisao, device);
 
-                System.out.println("Do you pretend to add another device?");
-                System.out.println("1 - Yes");
-                System.out.println("2 - No");
-                System.out.print("Choose an option: ");
-                choice = scan.next();
-                while(!choice.equals("1") && !choice.equals("2")) {
-                    System.out.print("Choose a valid option (1/2): ");
-                    choice = scan.nextLine();
-                }
+            System.out.print("\n");
 
-                System.out.print("\n");
+            System.out.println("Do you pretend to add another device?");
+            System.out.println("1 - Yes");
+            System.out.println("2 - No");
+            System.out.print("Choose an option: ");
+            choice = scan.next();
+            while(!choice.equals("1") && !choice.equals("2")) {
+                System.out.print("Choose a valid option (1/2): ");
+                choice = scan.nextLine();
+            }
 
-                while(choice.equals("1")) {
-                    device = createDevice(casa, cidade, scan);
-
-                    if (device != null)
-                        casa.add_DispositivoNaDivisao(nomeDivisao, device);
-
-                    System.out.print("\n");
-
-                    System.out.println("Do you pretend to add another device?");
-                    System.out.println("1 - Yes");
-                    System.out.println("2 - No");
-                    System.out.print("Choose an option: ");
-                    choice = scan.next();
-                    while(!choice.equals("1") && !choice.equals("2")) {
-                        System.out.print("Choose a valid option (1/2): ");
-                        choice = scan.nextLine();
-                    }
-
-                    System.out.print("\n");
-                }
-                break;
-
-            case("2"):
-                //mainMenu();
-                break;
+            System.out.print("\n");
         }
-
-        //mainMenu();
     }
 
     public SmartDevice createDevice(Casa casa, Cidade cidade, Scanner scan) {
@@ -459,6 +415,7 @@ public class Menu {
         SmartDevice sd = null;
         String choice;
 
+        System.out.println("What do you want to create?");
         System.out.println("1 - SmartBulb ");
         System.out.println("2 - SmartSpeaker");
         System.out.println("3 - SmartCamera");
@@ -593,6 +550,11 @@ public class Menu {
             choice=scan.nextLine();
         }
 
+        if(choice.equals("1")) {
+            estado = SmartSpeaker.Estado.ON;
+        }
+
+/*
         switch(choice) {
             case("1"):
                 estado = SmartSpeaker.Estado.ON;
@@ -602,11 +564,13 @@ public class Menu {
                 estado = SmartSpeaker.Estado.OFF;
                 break;
         }
+*/
 
         System.out.print("\n");
 
+        System.out.println("Only one word please! ");
         System.out.print("SmartSpeaker brand: ");
-        String marca = scan.nextLine();
+        String marca = scan.next();
 
         System.out.print("\n");
 
@@ -619,8 +583,9 @@ public class Menu {
 
         System.out.print("\n");
 
+        System.out.println("Only one word please! ");
         System.out.print("Online radio: ");
-        String radioOnline = scan.nextLine();
+        String radioOnline = scan.next();
 
         System.out.print("\n");
 
@@ -717,30 +682,34 @@ public class Menu {
         return fe;
     }
 
-    public void alteraCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
-        //Scanner scan = new Scanner(System.in);
-        String choice;
+    public void changeCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+        System.out.print("\n");
 
-        System.out.println("What do you want to change?");
-        System.out.println("1 - Id");
-        System.out.println("2 - Adress");
-        System.out.println("3 - Name");
-        System.out.println("4 - NIF");
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Change house ID");
+        System.out.println("2 - Change house adress");
+        System.out.println("3 - Change house owner name");
+        System.out.println("4 - Change house NIF");
+        System.out.println("5 - Add a new division");
+        System.out.println("6 - Change division");
+        System.out.println("7 - Remove division");
+        System.out.println("8 - Change energy supplier");
+        System.out.println("9 - Turn On/Off all devices in the house");
         System.out.println("0 - Go back");
-        System.out.println("Choose an option: ");
-        choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("0")) {
-            System.out.print("Choose a valid option (1/2/3/4/0): ");
+        System.out.println("Choose an option:");
+        String choice = scan.nextLine();
+        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("6") && !choice.equals("7") && !choice.equals("8") && !choice.equals("9") && !choice.equals("0")) {
+            System.out.print("Choose a valid option (1/2/3/4/5/6/7/8/9/0): ");
             choice = scan.nextLine();
         }
 
         System.out.print("\n");
 
-        switch(choice){
+        switch(choice) {
             case("1"):
                 System.out.print("New Id: ");
-                String novoid = scan.next();
-                casa.setIdCasa(novoid);
+                String novoID = scan.next();
+                casa.setIdCasa(novoID);
 
                 System.out.print("\n");
 
@@ -773,10 +742,97 @@ public class Menu {
 
                 break;
 
+            case("5"):
+                clearConsole();
+                createDivisao(casa, cidade, scan);
+                break;
+
+            case("6"):
+                clearConsole();
+                changeDivisao(casa, cidade, scan);
+                break;
+
+            case("7"):
+                System.out.println("What division do you want to remove?");
+                System.out.print("Division name: ");
+                String nomeDivisao = scan.nextLine();
+                while(!casa.getDivisoes().containsKey(nomeDivisao)) {
+                    System.out.println("This division does not exists!");
+                    System.out.println("Do you want to try again?");
+                    System.out.println("1 - Yes");
+                    System.out.println("2 - No");
+                    System.out.print("Choose an option: ");
+                    choice = scan.nextLine();
+                    while(!choice.equals("1") && !choice.equals("2")) {
+                        System.out.print("Choose a valid option (1/2): ");
+                        choice = scan.nextLine();
+                    }
+                    switch(choice) {
+                        case("1"):
+                            System.out.print("Division name: ");
+                            nomeDivisao = scan.nextLine();
+                            break;
+
+                        case("2"):
+                            changeCasa(casa, cidade, scan);
+                            break;
+                    }
+                }
+                casa.remove_Divisao(nomeDivisao);
+                System.out.println("\nDone");
+                break;
+
+            case("8"):
+
+                break;
+
+            case("9"):
+                System.out.println("Turn On/Off");
+                System.out.println("1 - On");
+                System.out.println("2 - Off");
+                System.out.println("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2")) {
+                    System.out.print("Choose a valid option (1/2): ");
+                    choice = scan.nextLine();
+                }
+                switch(choice) {
+                    case("1"):
+                        casa.turn_On_Casa();
+                        System.out.println("\nDone!");
+                        break;
+
+                    case("2"):
+                        casa.turn_Off_Casa();
+                        System.out.println("\nDone!");
+                        break;
+                }
+                break;
+
             case("0"):
                 break;
+
         }
 
-        createCidade(cidade, scan);
+        //createCidade(cidade, scan);
+    }
+
+    public void changeDivisao(Casa casa, Cidade cidade, Scanner scan) {
+        System.out.print("\n");
+
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Change division name");
+        System.out.println("3 - Add device");
+        System.out.println("2 - Change device");
+        System.out.println("4 - Remove device");
+        System.out.println("6 - Turn On/Off a division");
+        System.out.println("6 - Turn On/Off a specific device");
+        System.out.println("0 - Go back");
+        System.out.println("Choose an option:");
+        String choice = scan.nextLine();
+        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("6") && !choice.equals("7") && !choice.equals("8") && !choice.equals("0")) {
+            System.out.print("Choose a valid option (1/2/0): ");
+            choice = scan.nextLine();
+        }
     }
 }

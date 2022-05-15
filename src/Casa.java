@@ -1,7 +1,9 @@
 import SmartDevices.SmartDevice;
+
+import java.io.Serializable;
 import java.util.*;
 
-public class Casa {
+public class Casa implements Serializable {
     private String idCasa;
     private String morada;
     private String nome;
@@ -115,10 +117,13 @@ public class Casa {
         }
     }
 
-    public void remove_Devisao(String div) {
+    public void remove_Divisao(String div) {
         if(this.divisoes.containsKey(div)) {
+            List<String> ids = this.divisoes.get(div);
+            for(String sd_ID: ids) {
+                divisoes.get(div).remove(sd_ID);
+            }
             this.divisoes.remove(div);
-            // FALTA REMOVER DISPOSITIVOS
         }
     }
 

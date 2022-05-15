@@ -1,6 +1,8 @@
 package SmartDevices;
 
-public abstract class SmartDevice {
+import java.io.Serializable;
+
+public abstract class SmartDevice implements Serializable {
     public String id;
 
     public SmartDevice() {
