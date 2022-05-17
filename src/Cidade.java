@@ -11,8 +11,9 @@ import java.io.*;
 
 public class Cidade implements Serializable {
     public Map<String, Casa> casas = new HashMap<>(); // Todas as casas ---> Id da casa - Casa
-    public Map<String, List<String>> fornecedores = new HashMap<>(); // Todos os fornecedores e as casas ---> nome do Fornecedor - Lista de casas
-    private Map<String, List<String>> faturas = new HashMap<>(); // Todas as faturas de todas as casas ---> nome da Casas - Lista de faturas
+    public Map<String, List<String>> fornecedoresCasas = new HashMap<>(); // Todos os fornecedores e as casas ---> nome do Fornecedor - Lista de casas
+    public Map<String, FornecedorEnergia> fornecedores = new HashMap<>(); // ---> Nome do fornecedor - Fornecedor
+    public Map<String, List<String>> faturas = new HashMap<>(); // Todas as faturas de todas as casas ---> nome da Casas - Lista de faturas
 
     public void saveState(String nameOfFile) throws FileNotFoundException,IOException {
         try {
@@ -37,19 +38,19 @@ public class Cidade implements Serializable {
 
     public Cidade() {
         this.casas = new HashMap<>();
-        this.fornecedores = new HashMap<>();
+        this.fornecedoresCasas = new HashMap<>();
         this.faturas = new HashMap<>();
     }
 
     public Cidade(Map<String, Casa> casas, Map<String, List<String>> fornecedores, Map<String, List<String>> faturas) {
         this.casas = casas;
-        this.fornecedores = fornecedores;
+        this.fornecedoresCasas = fornecedores;
         this.faturas = faturas;
     }
 
     public Cidade(Cidade cidade) {
         this.casas = cidade.getCasas();
-        this.fornecedores = cidade.getFornecedores();
+        this.fornecedoresCasas = cidade.getFornecedores();
         this.faturas = cidade.getFaturas();
     }
 
@@ -61,7 +62,11 @@ public class Cidade implements Serializable {
             sb.append(casa.toString());
             sb.append("\n");
         }
-       // sb.append("\nFornecedores:\n");
+       sb.append("\nFornecedores:\n");
+       for (FornecedorEnergia fe: this.fornecedores.values()){
+            sb.append(fe.toString());
+            sb.append("\n");
+        }
 
         return sb.toString();
     }
@@ -75,7 +80,7 @@ public class Cidade implements Serializable {
 
         Cidade c = (Cidade) o;
         return (this.casas.equals(c.getCasas()) &&
-                this.fornecedores.equals(c.getFornecedores()) &&
+                this.fornecedoresCasas.equals(c.getFornecedores()) &&
                 this.faturas.equals(c.getFaturas()));
     }
 
@@ -140,8 +145,8 @@ public class Cidade implements Serializable {
 
     public Map<String, List<String>> getFornecedores() {
         Map<String, List<String>> newFornecedores = new HashMap<>();
-        for(String f: this.fornecedores.keySet()) {
-            List<String> lista = this.fornecedores.get(f);
+        for(String f: this.fornecedoresCasas.keySet()) {
+            List<String> lista = this.fornecedoresCasas.get(f);
             List<String> novaLista = new ArrayList<String>();
             ListIterator<String> iter = lista.listIterator();
             while(iter.hasNext())
@@ -161,6 +166,6 @@ public class Cidade implements Serializable {
                 novaLista.add(iter.next());
             newFornecedores.put(f, novaLista);
         }
-        this.fornecedores = newFornecedores;
+        this.fornecedoresCasas = newFornecedores;
     }
 }

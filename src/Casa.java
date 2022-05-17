@@ -122,10 +122,21 @@ public class Casa implements Serializable {
             List<String> ids = this.divisoes.get(div);
             for(String sd_ID: ids) {
                 divisoes.get(div).remove(sd_ID);
+                dispositivos.remove(sd_ID);
             }
             this.divisoes.remove(div);
         }
     }
+
+
+    public void setNomeDaDivisao(String divName, String newDivName) {
+        if (this.divisoes.containsKey(divName)) {
+            List<String> ids = this.divisoes.get(divName);
+            this.divisoes.remove(divName);
+            divisoes.put(divName, ids);
+        }
+    }
+
 
     public void add_DispositivoNaDivisao(String div, SmartDevice sd){
         if (this.divisoes.containsKey(div)){
@@ -195,50 +206,20 @@ public class Casa implements Serializable {
         this.NIF = NIF;
     }
 
-    // NÃO TESTADO
     public Map<String, SmartDevice> getDispositivos() {
-        Map<String, SmartDevice> newDev = new HashMap<>();
-        for(String id: this.dispositivos.keySet()){
-            newDev.put(id, this.dispositivos.get(id).clone());
-        }
-        return newDev;
+        return this.dispositivos;
     }
 
-    // NÃO TESTADO
     public void setDispositivos(Map<String, SmartDevice> dispositivos) {
-        Map<String, SmartDevice> newDev = new HashMap<>();
-        for(String id: dispositivos.keySet()) {
-            newDev.put(id, dispositivos.get(id).clone());
-        }
-        this.dispositivos = newDev;
+        this.dispositivos = dispositivos;
     }
 
-    // NÃO TESTADO
     public Map<String, List<String>> getDivisoes() {
-        Map<String, List<String>> newDev = new HashMap<>();
-        for(String div: this.divisoes.keySet()) {
-            List<String> lista = this.divisoes.get(div);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newDev.put(div, novaLista);
-        }
-        return newDev;
+        return this.divisoes;
     }
 
-    // NÃO TESTADO
     public void setDivisoes(Map<String, List<String>> divisoes) {
-        Map<String, List<String>> newDev = new HashMap<>();
-        for(String div: divisoes.keySet()) {
-            List<String> lista = divisoes.get(div);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newDev.put(div, novaLista);
-        }
-        this.divisoes = newDev;
+        this.divisoes = divisoes;
     }
 
     public FornecedorEnergia getFornecedor() {

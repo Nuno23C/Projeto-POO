@@ -111,7 +111,7 @@ public class Menu implements Serializable {
         System.out.println("7 - Save state");
         System.out.println("8 - Load state");
         System.out.print("\n");
-        System.out.println("9 - Check");
+        System.out.println("9 - Check State");
         System.out.print("\n");
         System.out.println("0 - Go back");
         System.out.print("\n");
@@ -156,6 +156,7 @@ public class Menu implements Serializable {
                             System.out.print("Try again: ");
                             houseID = scan.nextLine();
                         }
+                        clearConsole();
                         changeCasa(cidade.casas.get(houseID), cidade, scan);
                         break;
 
@@ -188,13 +189,19 @@ public class Menu implements Serializable {
 
                 switch(choice) {
                     case("1"):
-                        //createDevice();
+                        Casa casa = new Casa();
+                        cidade.add_Casa("1", casa);
+                        createDevice(casa, cidade, scan);
                         //adicionar a uma divisao
                         break;
 
                     case("2"):
-                        //changeDevice();
-                        //Turn On/Off a specific device
+                        System.out.println("What do you want to do?");
+                        System.out.println("1 - SmartBulb");
+                        System.out.println("2 - Smart");
+                        System.out.println("3 - Remove device");
+                        System.out.println("0 - Go back");
+                        System.out.print("Choose an option: ");
                         break;
 
                     case("3"):
@@ -222,7 +229,7 @@ public class Menu implements Serializable {
 
                 switch(choice) {
                     case("1"):
-                        //create();
+                        criaFornecedorEnergia(cidade, scan);
                         break;
 
                     case("2"):
@@ -308,41 +315,61 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
+        while(choice.equals("1")) {
+            createDivisao(casa, cidade, scan);
+
+            System.out.print("\n");
+
+            System.out.println("Do you pretend to add another division?");
+            System.out.println("1 - Yes");
+            System.out.println("2 - No");
+            System.out.print("Choose an option: ");
+            choice = scan.next();
+            while(!choice.equals("1") && !choice.equals("2")) {
+                System.out.print("Choose a valid option (1/2): ");
+                choice = scan.nextLine();
+            }
+
+            System.out.print("\n");
+        }
+
+        System.out.println("Join an energy supplier");
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Create energy supplier");
+        System.out.println("2 - Choose an existing energy supplier");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+        while(!choice.equals("1") && !choice.equals("2")) {
+            System.out.print("Choose a valid option (1/2): ");
+            choice = scan.nextLine();
+        }
+
+        System.out.print("\n");
+
         switch(choice) {
             case("1"):
-                createDivisao(casa, cidade, scan);
-                System.out.println("Do you pretend to add another division?");
-                System.out.println("1 - Yes");
-                System.out.println("2 - No");
-                System.out.print("Choose an option: ");
-                choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2")) {
-                    System.out.print("Choose a valid option (1/2): ");
-                    choice = scan.nextLine();
-                }
-
-                System.out.print("\n");
-
-                while(choice.equals("1")) {
-                    createDivisao(casa, cidade, scan);
-
-                    System.out.print("\n");
-
-                    System.out.println("Do you pretend to add another division?");
-                    System.out.println("1 - Yes");
-                    System.out.println("2 - No");
-                    System.out.print("Choose an option: ");
-                    choice = scan.nextLine();
-
-                    System.out.print("\n");
-                }
+                casa.add_Fornecedor(criaFornecedorEnergia(cidade, scan));
                 break;
 
             case("2"):
+                System.out.println(cidade.toString());
+
+                System.out.print("\n");
+
+                System.out.println("Wich one?");
+                System.out.print("Energy supplier name: ");
+                String nomeFornecedor = scan.nextLine();
+                while(!cidade.fornecedores.containsKey(nomeFornecedor)) {
+                    System.out.println("This supplier does not exists!");
+                    nomeFornecedor = scan.nextLine();
+                    System.out.print("\n");
+                }
+
+                casa.add_Fornecedor(cidade.fornecedores.get(nomeFornecedor));
+
                 break;
         }
 
-        casa.add_Fornecedor(criaFornecedorEnergia(cidade, scan));
         clearConsole();
         createCidade(cidade, scan);
     }
@@ -368,7 +395,6 @@ public class Menu implements Serializable {
         String nomeDivisao = scan.nextLine();
         while(casa.getDivisoes().containsKey(nomeDivisao)) {
             System.out.println("This division already exists!");
-            System.out.print("Try another one:");
             nomeDivisao = scan.nextLine();
         }
 
@@ -517,17 +543,23 @@ public class Menu implements Serializable {
         }
 
         System.out.print("Dimension: ");
-        double dimensões = scan.nextDouble();
+        double dimensoes = -1;
+        while(dimensoes < 0) {
+            try {
+                dimensoes = Double.parseDouble(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
 
         System.out.print("\n");
 
-        SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimensões);
+        SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimensoes);
 
         return sb;
     }
 
     public SmartDevice createSmartSpeaker(Casa casa, Cidade cidade, Scanner scan) {
-        //Scanner scan = new Scanner(System.in);
         String choice;
 
         System.out.print("SmartSpeaker ID: ");
@@ -656,11 +688,9 @@ public class Menu implements Serializable {
     }
 
     public FornecedorEnergia criaFornecedorEnergia(Cidade cidade, Scanner scan) {
-        //Scanner scan = new Scanner(System.in);
-
         System.out.print("Energy supplier name: ");
         String nomeFornecedor = scan.nextLine();
-        while(cidade.fornecedores.containsKey(nomeFornecedor)) {
+        while(cidade.fornecedoresCasas.containsKey(nomeFornecedor)) {
             System.out.println("This supplier already exits!");
             nomeFornecedor = scan.nextLine();
         }
@@ -679,6 +709,8 @@ public class Menu implements Serializable {
 
         FornecedorEnergia fe = new FornecedorEnergia(nomeFornecedor, valorBase, desconto);
 
+        cidade.fornecedores.put(nomeFornecedor, fe);
+
         return fe;
     }
 
@@ -696,7 +728,7 @@ public class Menu implements Serializable {
         System.out.println("8 - Change energy supplier");
         System.out.println("9 - Turn On/Off all devices in the house");
         System.out.println("0 - Go back");
-        System.out.println("Choose an option:");
+        System.out.print("Choose an option: ");
         String choice = scan.nextLine();
         while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("6") && !choice.equals("7") && !choice.equals("8") && !choice.equals("9") && !choice.equals("0")) {
             System.out.print("Choose a valid option (1/2/3/4/5/6/7/8/9/0): ");
@@ -707,8 +739,14 @@ public class Menu implements Serializable {
 
         switch(choice) {
             case("1"):
+                clearConsole();
                 System.out.print("New Id: ");
-                String novoID = scan.next();
+                String novoID = scan.nextLine();
+                while(cidade.casas.containsKey(novoID)) {
+                    System.out.println("This division is already created!");
+                    System.out.print("Try another one: ");
+                    novoID = scan.nextLine();
+                }
                 casa.setIdCasa(novoID);
 
                 System.out.print("\n");
@@ -716,17 +754,19 @@ public class Menu implements Serializable {
                 break;
 
             case("2"):
+                clearConsole();
                 System.out.print("New Adress: ");
-                String novoMorada = scan.next();
-                casa.setMorada(novoMorada);
+                String novaMorada = scan.nextLine();
+                casa.setMorada(novaMorada);
 
                 System.out.print("\n");
 
                 break;
 
             case("3"):
+                clearConsole();
                 System.out.print("New Name: ");
-                String novoNome = scan.next();
+                String novoNome = scan.nextLine();
                 casa.setNome(novoNome);
 
                 System.out.print("\n");
@@ -734,8 +774,9 @@ public class Menu implements Serializable {
                 break;
 
             case("4"):
+                clearConsole();
                 System.out.print("New NIF: ");
-                String novoNIF = scan.next();
+                String novoNIF = scan.nextLine();
                 casa.setNIF(novoNIF);
 
                 System.out.print("\n");
@@ -749,10 +790,19 @@ public class Menu implements Serializable {
 
             case("6"):
                 clearConsole();
-                changeDivisao(casa, cidade, scan);
+                System.out.println("What division do you want to change?");
+                System.out.print("Division name: ");
+                String divName = scan.nextLine();
+                while(!casa.getDivisoes().containsKey(divName)) {
+                    System.out.println("This division does not exists!");
+                    divName = scan.nextLine();
+                }
+                clearConsole();
+                changeDivisao(divName, casa, cidade, scan);
                 break;
 
             case("7"):
+                clearConsole();
                 System.out.println("What division do you want to remove?");
                 System.out.print("Division name: ");
                 String nomeDivisao = scan.nextLine();
@@ -783,10 +833,235 @@ public class Menu implements Serializable {
                 break;
 
             case("8"):
+                clearConsole();
+                System.out.println("What do you want to do?");
+                System.out.println("1 - Create a new energy supplier");
+                System.out.println("2 - Choose an existing energy supplier");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2")) {
+                    System.out.print("Choose a valid option (1/2): ");
+                    choice = scan.nextLine();
+                }
+
+                System.out.print("\n");
+
+                switch(choice) {
+                    case("1"):
+                        casa.setFornecedor(criaFornecedorEnergia(cidade, scan));
+                        break;
+
+                    case("2"):
+                        System.out.println(cidade.toString());
+
+                        System.out.print("\n");
+
+                        System.out.println("Wich one?");
+                        System.out.print("Energy supplier name: ");
+                        String nomeFornecedor = scan.nextLine();
+                        while(!cidade.fornecedores.containsKey(nomeFornecedor)) {
+                            System.out.println("This supplier does not exists!");
+                            nomeFornecedor = scan.nextLine();
+                            System.out.print("\n");
+                        }
+
+                        casa.setFornecedor(cidade.fornecedores.get(nomeFornecedor));
+                        break;
+
+                    case("0"):
+                        break;
+                }
 
                 break;
 
             case("9"):
+                clearConsole();
+                System.out.println("Turn On/Off");
+                System.out.println("1 - On");
+                System.out.println("2 - Off");
+                System.out.println("0 - Go back");
+                System.out.println("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
+                    System.out.print("Choose a valid option (1/2): ");
+                    choice = scan.nextLine();
+                }
+
+                System.out.print("\n");
+
+                switch(choice) {
+                    case("1"):
+                        casa.turn_On_Casa();
+                        System.out.println("Done!");
+                        break;
+
+                    case("2"):
+                        casa.turn_Off_Casa();
+                        System.out.println("Done!");
+                        break;
+
+                    case("0"):
+                        break;
+                }
+                break;
+
+            case("0"):
+                clearConsole();
+                break;
+
+        }
+
+        //createCidade(cidade, scan);
+    }
+
+    public void changeDivisao(String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+        System.out.print("\n");
+
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Change division name");
+        System.out.println("2 - Add device");
+        System.out.println("3 - Change device");
+        System.out.println("4 - Remove device");
+        System.out.println("5 - Turn On/Off a division");
+        System.out.println("0 - Go back");
+        System.out.println("Choose an option:");
+        String choice = scan.nextLine();
+        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("6") && !choice.equals("0")) {
+            System.out.print("Choose a valid option (1/2/3/4/5/6/0): ");
+            choice = scan.nextLine();
+        }
+
+        System.out.print("\n");
+
+        switch(choice) {
+            case("1"):
+                clearConsole();
+                System.out.print("New Id: ");
+                String newDivName = scan.nextLine();
+                while(casa.getDivisoes().containsKey(newDivName)) {
+                    System.out.println("This division already exists!");
+                    newDivName = scan.nextLine();
+                }
+                casa.setNomeDaDivisao(divName, newDivName);
+
+                System.out.print("\n");
+
+                break;
+
+            case("2"):
+                clearConsole();
+                SmartDevice device = createDevice(casa, cidade, scan);
+
+                if(device != null)
+                    casa.add_DispositivoNaDivisao(divName, device);
+
+                break;
+
+            case("3"):
+                clearConsole();
+                //changeDevice();
+                break;
+
+            case("4"):
+                clearConsole();
+                System.out.print("SmartDevice ID: ");
+                String id = scan.nextLine();
+                while(casa.getDispositivos().containsKey(id)) {
+                    System.out.println("This device does not exists!");
+                    newDivName = scan.nextLine();
+                }
+                casa.remove_DispositivoNaDivisao(id, divName);
+                break;
+
+            case("5"):
+                clearConsole();
+                System.out.println("Turn On/Off");
+                System.out.println("1 - On");
+                System.out.println("2 - Off");
+                System.out.println("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2")) {
+                    System.out.print("Choose a valid option (1/2): ");
+                    choice = scan.nextLine();
+                }
+
+                System.out.print("\n");
+
+                switch(choice) {
+                    case("1"):
+                        casa.turn_On_Divisao(divName);
+                        System.out.println("Done!");
+                        break;
+
+                    case("2"):
+                        casa.turn_Off_Divisao(divName);
+                        System.out.println("Done!");
+                        break;
+                }
+                break;
+
+            case("0"):
+                clearConsole();
+                break;
+        }
+    }
+
+    public void changeSmartBulb(SmartBulb sb, Casa casa, Cidade cidade, Scanner scan){
+        System.out.print("\n");
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Change SmartBulb ID ");
+        System.out.println("2 - Change Tone:");
+        System.out.println("3 - Change Mode: ");
+        System.out.println("Choose an option:");
+        String choice = scan.nextLine();
+        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
+            System.out.print("Choose a valid option (1/2/3): ");
+            choice = scan.nextLine();
+        }
+        switch(choice){
+            case("1"):
+                System.out.print("New Id: ");
+                String novoID = scan.next();
+                while(casa.getDispositivos().containsKey(novoID)){
+                    System.out.println("This device already exists!");
+                    novoID = scan.next();
+                }
+                sb.setId(novoID);
+                System.out.print("\n");
+
+                break;
+
+            case("2"):
+                System.out.println("New Tone: ");
+                System.out.println("1 - Cold: ");
+                System.out.println("2 - Neutral: ");
+                System.out.println("3 - Warm: ");
+                System.out.println("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
+                    System.out.print("Choose a valid option (1/2/3): ");
+                    choice = scan.nextLine();
+                }
+                switch(choice){
+                    case("1"):
+                        sb.turn_COLD();
+                        break;
+
+                    case("2"):
+                        sb.turn_NEUTRAL();
+                        break;
+
+                    case("3"):
+                        sb.turn_WARM();
+                        break;
+                }
+
+                System.out.print("\n");
+
+                break;
+
+            case("3"):
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
                 System.out.println("2 - Off");
@@ -798,41 +1073,146 @@ public class Menu implements Serializable {
                 }
                 switch(choice) {
                     case("1"):
-                        casa.turn_On_Casa();
+                        sb.turnOn();
                         System.out.println("\nDone!");
                         break;
 
                     case("2"):
-                        casa.turn_Off_Casa();
+                        sb.turnOff();
+                        System.out.println("\nDone!");
+                        break;
+                }
+                break;
+        }
+    }
+
+    public void changeSmartSpeaker(SmartSpeaker ss, Casa casa, Cidade cidade, Scanner scan){
+        System.out.print("\n");
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Change SmartSpeaker ID ");
+        System.out.println("2 - Change Brand:");
+        System.out.println("3 - Change Mode: ");
+        System.out.println("4 - Change Radio: ");
+        System.out.println("Choose an option:");
+        String choice = scan.nextLine();
+        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4")) {
+            System.out.print("Choose a valid option (1/2/3/4): ");
+            choice = scan.nextLine();
+        }
+        switch(choice){
+            case("1"):
+                System.out.print("New Id: ");
+                String novoID = scan.next();
+                while(casa.getDispositivos().containsKey(novoID)){
+                    System.out.println("This device already exists!");
+                    novoID = scan.next();
+                }
+                ss.setId(novoID);
+                System.out.print("\n");
+                break;
+
+            case("2"):
+                System.out.println("New brand: ");
+                String NovaMarca = scan.nextLine();
+                ss.setMarca(NovaMarca);
+                break;
+
+            case("3"):
+                System.out.println("Turn On/Off");
+                System.out.println("1 - On");
+                System.out.println("2 - Off");
+                System.out.println("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2")) {
+                    System.out.print("Choose a valid option (1/2): ");
+                    choice = scan.nextLine();
+                }
+                switch(choice) {
+                    case("1"):
+                        sb.turnOn();
+                        System.out.println("\nDone!");
+                        break;
+
+                    case("2"):
+                        sb.turnOff();
                         System.out.println("\nDone!");
                         break;
                 }
                 break;
 
-            case("0"):
+            case("4"):
+                System.out.println("New Radio: ");
+                String novaRadio = scan.nextLine();
+                ss.setRadioOnline(novaRadio);
                 break;
-
         }
-
-        //createCidade(cidade, scan);
     }
 
-    public void changeDivisao(Casa casa, Cidade cidade, Scanner scan) {
+    public void changeSmartCamera(SmartCamera sc, Casa casa, Cidade cidade, Scanner scan){
         System.out.print("\n");
-
         System.out.println("What do you want to do?");
-        System.out.println("1 - Change division name");
-        System.out.println("3 - Add device");
-        System.out.println("2 - Change device");
-        System.out.println("4 - Remove device");
-        System.out.println("6 - Turn On/Off a division");
-        System.out.println("6 - Turn On/Off a specific device");
-        System.out.println("0 - Go back");
+        System.out.println("1 - Change SmartCamera ID ");
+        System.out.println("2 - Change Resolution:");
+        System.out.println("3 - Change Mode: ");
+        System.out.println("4 - Change Package Size: ");
         System.out.println("Choose an option:");
         String choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("6") && !choice.equals("7") && !choice.equals("8") && !choice.equals("0")) {
-            System.out.print("Choose a valid option (1/2/0): ");
+        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4")) {
+            System.out.print("Choose a valid option (1/2/3/4): ");
             choice = scan.nextLine();
         }
+        switch(choice){
+            case("1"):
+                System.out.print("New Id: ");
+                String novoID = scan.next();
+                while(casa.getDispositivos().containsKey(novoID)){
+                    System.out.println("This device already exists!");
+                    novoID = scan.next();
+                }
+                sc.setId(novoID);
+                System.out.print("\n");
+                break;
+
+            case("2"):
+                System.out.println("New X:");
+                String novoX = scan.next();
+                sc.setX(novoX);
+
+                System.out.println("New Y:");
+                String novoY = scan.next();
+                sc.setY(novoY);
+
+                break;
+
+            case("3"):
+                System.out.println("Turn On/Off");
+                System.out.println("1 - On");
+                System.out.println("2 - Off");
+                System.out.println("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2")) {
+                    System.out.print("Choose a valid option (1/2): ");
+                    choice = scan.nextLine();
+                }
+                switch(choice) {
+                    case("1"):
+                        sb.turnOn();
+                        System.out.println("\nDone!");
+                        break;
+
+                    case("2"):
+                        sb.turnOff();
+                        System.out.println("\nDone!");
+                        break;
+                }
+                break;
+
+            case("4"):
+                System.out.println("New Package Size: ");
+                String NovoTamanhoPacote = scan.nextLine();
+                sc.setTamanhoPacote(NovoTamanhoPacote);
+                break;
+        }
     }
+
 }
