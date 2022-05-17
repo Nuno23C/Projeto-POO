@@ -86,27 +86,29 @@ public class Menu implements Serializable {
         System.out.println("2 - Import a log file");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2")) {
-            System.out.print("Choose a valid option (1/2): ");
-            choice = scan.nextLine();
-        }
 
         switch(choice) {
             case("1"):
                 clearConsole();
                 createCidade(cidade, scan);
                 break;
+
+            case("2"):
+                break;
+
+            default:
+                break;
         }
     }
 
     public void createCidade(Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+        clearConsole();
         String choice;
 
         System.out.println("What do you want to do?\n");
         System.out.println("Create, change or remove:");
         System.out.println("1 - Houses");
-        System.out.println("2 - Devices");
-        System.out.println("3 - Energy suppliers");
+        System.out.println("2 - Energy suppliers");
         System.out.print("\n");
         System.out.println("7 - Save state");
         System.out.println("8 - Load state");
@@ -117,15 +119,10 @@ public class Menu implements Serializable {
         System.out.print("\n");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("7") && !choice.equals("8") && !choice.equals("9") && !choice.equals("0")) {
-            System.out.print("Choose a valid option (1/2/3/7/8/9/0): ");
-            choice = scan.nextLine();
-        }
-
-        clearConsole();
 
         switch(choice) {
             case("1"): // House
+                clearConsole();
                 System.out.println("What do you want to do?");
                 System.out.println("1 - Create house");
                 System.out.println("2 - Change some house");
@@ -133,10 +130,6 @@ public class Menu implements Serializable {
                 System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("0")) {
-                    System.out.print("Choose a valid option (1/2/3/0): ");
-                    choice = scan.nextLine();
-                }
 
                 System.out.print("\n");
 
@@ -161,58 +154,24 @@ public class Menu implements Serializable {
                         break;
 
                     case("3"):
+                        clearConsole();
                         System.out.print("House's id that you want to remove: ");
-                        String idCasaR = scan.next();
+                        String idCasaR = scan.nextLine();
                         cidade.casas.remove(idCasaR);
                         break;
 
                     case("0"):
+                        clearConsole();
+                        break;
+
+                    default:
+                        clearConsole();
                         break;
                 }
-
                 break;
 
-            case("2"): // Devices
-                System.out.println("What do you want to do?");
-                System.out.println("1 - Create device");
-                System.out.println("2 - Change some device");
-                System.out.println("3 - Remove device");
-                System.out.println("0 - Go back");
-                System.out.print("Choose an option: ");
-                choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("0")) {
-                    System.out.print("Choose a valid option (1/2/3/0): ");
-                    choice = scan.nextLine();
-                }
-
-                System.out.print("\n");
-
-                switch(choice) {
-                    case("1"):
-                        Casa casa = new Casa();
-                        cidade.add_Casa("1", casa);
-                        createDevice(casa, cidade, scan);
-                        //adicionar a uma divisao
-                        break;
-
-                    case("2"):
-                        System.out.println("What do you want to do?");
-                        System.out.println("1 - SmartBulb");
-                        System.out.println("2 - Smart");
-                        System.out.println("3 - Remove device");
-                        System.out.println("0 - Go back");
-                        System.out.print("Choose an option: ");
-                        break;
-
-                    case("3"):
-                        //removeDevice();
-                        break;
-
-                    }
-
-                break;
-
-            case("3"): //Energy suppliers
+            case("2"): //Energy suppliers
+                clearConsole();
                 System.out.println("What do you want to do?");
                 System.out.println("1 - Creat an energy supplier");
                 System.out.println("2 - Change some energy supplier");
@@ -229,35 +188,57 @@ public class Menu implements Serializable {
 
                 switch(choice) {
                     case("1"):
+                        clearConsole();
                         criaFornecedorEnergia(cidade, scan);
                         break;
 
                     case("2"):
+                        clearConsole();
                         //change();
                         break;
 
                     case("3"):
+                        clearConsole();
                         //remove();
+                        break;
+
+                    case("0"):
+                        clearConsole();
+                        break;
+
+                    default:
                         break;
                 }
                 break;
 
             case("7"):
+                clearConsole();
                 saveState(cidade, scan);
                 System.out.println("Saved!");
                 break;
 
             case("8"):
+                clearConsole();
                 loadState(cidade, scan);
                 System.out.println("\nDone");
                 break;
 
             case("9"):
+                clearConsole();
                 System.out.println(cidade.toString());
+
+                System.out.println("Press enter to continue");
+                try{System.in.read();}
+                catch(Exception e){}
+
                 break;
 
             case("0"):
+                clearConsole();
                 mainMenu(scan);
+                break;
+
+            default:
                 break;
         }
 
@@ -270,8 +251,7 @@ public class Menu implements Serializable {
         System.out.print("House's id: ");
         String idCasa = scan.nextLine();
         while(cidade.casas.containsKey(idCasa)) {
-            System.out.println("This division is already created!");
-            System.out.print("Try another one: ");
+            System.out.println("This id has already been used, try again!");
             idCasa = scan.nextLine();
         }
 
@@ -324,7 +304,7 @@ public class Menu implements Serializable {
             System.out.println("1 - Yes");
             System.out.println("2 - No");
             System.out.print("Choose an option: ");
-            choice = scan.next();
+            choice = scan.nextLine();
             while(!choice.equals("1") && !choice.equals("2")) {
                 System.out.print("Choose a valid option (1/2): ");
                 choice = scan.nextLine();
@@ -334,7 +314,6 @@ public class Menu implements Serializable {
         }
 
         System.out.println("Join an energy supplier");
-        System.out.println("What do you want to do?");
         System.out.println("1 - Create energy supplier");
         System.out.println("2 - Choose an existing energy supplier");
         System.out.print("Choose an option: ");
@@ -352,25 +331,17 @@ public class Menu implements Serializable {
                 break;
 
             case("2"):
-                System.out.println(cidade.toString());
-
-                System.out.print("\n");
-
                 System.out.println("Wich one?");
                 System.out.print("Energy supplier name: ");
                 String nomeFornecedor = scan.nextLine();
                 while(!cidade.fornecedores.containsKey(nomeFornecedor)) {
-                    System.out.println("This supplier does not exists!");
+                    System.out.println("This supplier does not exists, try again!");
                     nomeFornecedor = scan.nextLine();
-                    System.out.print("\n");
                 }
-
                 casa.add_Fornecedor(cidade.fornecedores.get(nomeFornecedor));
-
                 break;
         }
 
-        clearConsole();
         createCidade(cidade, scan);
     }
 
@@ -394,7 +365,7 @@ public class Menu implements Serializable {
         System.out.print("Disivion name: ");
         String nomeDivisao = scan.nextLine();
         while(casa.getDivisoes().containsKey(nomeDivisao)) {
-            System.out.println("This division already exists!");
+            System.out.println("This division already exists, try again!");
             nomeDivisao = scan.nextLine();
         }
 
@@ -426,7 +397,7 @@ public class Menu implements Serializable {
             System.out.println("1 - Yes");
             System.out.println("2 - No");
             System.out.print("Choose an option: ");
-            choice = scan.next();
+            choice = scan.nextLine();
             while(!choice.equals("1") && !choice.equals("2")) {
                 System.out.print("Choose a valid option (1/2): ");
                 choice = scan.nextLine();
@@ -437,7 +408,6 @@ public class Menu implements Serializable {
     }
 
     public SmartDevice createDevice(Casa casa, Cidade cidade, Scanner scan) {
-        //Scanner scan = new Scanner(System.in);
         SmartDevice sd = null;
         String choice;
 
@@ -448,10 +418,6 @@ public class Menu implements Serializable {
         System.out.println("0 - Go back");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("0")) {
-            System.out.print("Choose a valid option (1/2/3/0): ");
-            choice = scan.nextLine();
-        }
 
         System.out.print("\n");
 
@@ -477,7 +443,6 @@ public class Menu implements Serializable {
 
 
     public SmartDevice createSmartBulb(Casa casa, Cidade cidade, Scanner scan) {
-        //Scanner scan = new Scanner(System.in);
         String choice;
 
         System.out.print("SmartBulb ID: ");
@@ -513,8 +478,6 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        SmartBulb.Tonalidade tonalidade = SmartBulb.Tonalidade.NEUTRAL;
-
         System.out.println("Tone:");
         System.out.println("1 - Cold");
         System.out.println("2 - Neutral");
@@ -528,6 +491,7 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
+        SmartBulb.Tonalidade tonalidade = SmartBulb.Tonalidade.NEUTRAL;
         switch(choice) {
             case("1"):
                 tonalidade = SmartBulb.Tonalidade.COLD;
@@ -543,10 +507,10 @@ public class Menu implements Serializable {
         }
 
         System.out.print("Dimension: ");
-        double dimensoes = -1;
-        while(dimensoes < 0) {
+        double dimension = -1;
+        while(dimension <= 0) {
             try {
-                dimensoes = Double.parseDouble(scan.nextLine());
+                dimension = Double.parseDouble(scan.nextLine());
             } catch(NumberFormatException e) {
                 System.out.println("Invalid option, try again!");
             }
@@ -554,7 +518,7 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimensoes);
+        SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimension);
 
         return sb;
     }
@@ -571,22 +535,17 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        SmartSpeaker.Estado estado = SmartSpeaker.Estado.OFF;
         System.out.println("Mode: ");
         System.out.println("1 - ON");
         System.out.println("2 - OFF");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2")){
-            System.out.println("Choose a valid option (1/2):");
-            choice=scan.nextLine();
+        while(!choice.equals("1") && !choice.equals("2")) {
+            System.out.print("Choose a valid option (1/2): ");
+            choice = scan.nextLine();
         }
 
-        if(choice.equals("1")) {
-            estado = SmartSpeaker.Estado.ON;
-        }
-
-/*
+        SmartSpeaker.Estado estado = SmartSpeaker.Estado.OFF;
         switch(choice) {
             case("1"):
                 estado = SmartSpeaker.Estado.ON;
@@ -596,33 +555,42 @@ public class Menu implements Serializable {
                 estado = SmartSpeaker.Estado.OFF;
                 break;
         }
-*/
 
         System.out.print("\n");
 
-        System.out.println("Only one word please! ");
-        System.out.print("SmartSpeaker brand: ");
-        String marca = scan.next();
+        System.out.print("Brand: ");
+        String marca = scan.nextLine();
 
         System.out.print("\n");
+
 
         System.out.print("Volume (0 to 100): ");
-        int volume = scan.nextInt();
-        if(volume < 0 && volume > 100) {
-            System.out.print("Choose a valid option: ");
-            volume = scan.nextInt();
+        int volume = -1;
+        while(volume < 0 || volume > 100) {
+            try {
+                volume = Integer.parseInt(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
         }
 
         System.out.print("\n");
 
-        System.out.println("Only one word please! ");
         System.out.print("Online radio: ");
-        String radioOnline = scan.next();
+        String radioOnline = scan.nextLine();
 
         System.out.print("\n");
 
+
         System.out.print("Device base consumption: ");
-        double consumoBase = scan.nextDouble();
+        double consumoBase = -1;
+        while(consumoBase < 0) {
+            try {
+                consumoBase = Double.parseDouble(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
 
         System.out.print("\n");
 
@@ -632,7 +600,6 @@ public class Menu implements Serializable {
     }
 
     public SmartDevice createSmartCamera(Casa casa, Cidade cidade, Scanner scan){
-        //Scanner scan = new Scanner(System.in);
         String choice;
 
         System.out.print("SmartCamera ID: ");
@@ -651,10 +618,6 @@ public class Menu implements Serializable {
         System.out.println("2 - OFF: ");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2")) {
-            System.out.print("Choose a valid option (1/2): ");
-            choice = scan.nextLine();
-        }
 
         switch(choice) {
             case("1"):
@@ -664,6 +627,9 @@ public class Menu implements Serializable {
             case("2"):
                 estado = SmartCamera.Estado.OFF;
                 break;
+
+            default:
+                break;
         }
 
         System.out.print("\n");
@@ -671,8 +637,10 @@ public class Menu implements Serializable {
         System.out.println("Resolution: ");
         System.out.print("x: ");
         int x = scan.nextInt();
+        scan.nextLine();
         System.out.print("y: ");
         int y = scan.nextInt();
+        scan.nextLine();
 
         System.out.print("\n");
 
@@ -699,11 +667,13 @@ public class Menu implements Serializable {
 
         System.out.print("Base value: ");
         double valorBase = scan.nextDouble();
+        scan.nextLine();
 
         System.out.print("\n");
 
         System.out.print("Discount: ");
         double desconto = scan.nextDouble();
+        scan.nextLine();
 
         System.out.print("\n");
 
@@ -715,8 +685,6 @@ public class Menu implements Serializable {
     }
 
     public void changeCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
-        System.out.print("\n");
-
         System.out.println("What do you want to do?");
         System.out.println("1 - Change house ID");
         System.out.println("2 - Change house adress");
@@ -730,12 +698,6 @@ public class Menu implements Serializable {
         System.out.println("0 - Go back");
         System.out.print("Choose an option: ");
         String choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("6") && !choice.equals("7") && !choice.equals("8") && !choice.equals("9") && !choice.equals("0")) {
-            System.out.print("Choose a valid option (1/2/3/4/5/6/7/8/9/0): ");
-            choice = scan.nextLine();
-        }
-
-        System.out.print("\n");
 
         switch(choice) {
             case("1"):
@@ -840,8 +802,8 @@ public class Menu implements Serializable {
                 System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2")) {
-                    System.out.print("Choose a valid option (1/2): ");
+                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
+                    System.out.print("Choose a valid option (1/2/0): ");
                     choice = scan.nextLine();
                 }
 
@@ -853,10 +815,7 @@ public class Menu implements Serializable {
                         break;
 
                     case("2"):
-                        System.out.println(cidade.toString());
-
-                        System.out.print("\n");
-
+                        //Lista de fornecedores
                         System.out.println("Wich one?");
                         System.out.print("Energy supplier name: ");
                         String nomeFornecedor = scan.nextLine();
@@ -870,9 +829,10 @@ public class Menu implements Serializable {
                         break;
 
                     case("0"):
+                        clearConsole();
+                        changeCasa(casa, cidade, scan);
                         break;
                 }
-
                 break;
 
             case("9"):
@@ -902,22 +862,25 @@ public class Menu implements Serializable {
                         break;
 
                     case("0"):
+                        clearConsole();
+                        changeCasa(casa, cidade, scan);
                         break;
                 }
                 break;
 
             case("0"):
                 clearConsole();
+                createCidade(cidade, scan);
                 break;
 
+            default:
+                clearConsole();
+                changeCasa(casa, cidade, scan);
+                break;
         }
-
-        //createCidade(cidade, scan);
     }
 
     public void changeDivisao(String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
-        System.out.print("\n");
-
         System.out.println("What do you want to do?");
         System.out.println("1 - Change division name");
         System.out.println("2 - Add device");
@@ -927,12 +890,6 @@ public class Menu implements Serializable {
         System.out.println("0 - Go back");
         System.out.println("Choose an option:");
         String choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4") && !choice.equals("5") && !choice.equals("6") && !choice.equals("0")) {
-            System.out.print("Choose a valid option (1/2/3/4/5/6/0): ");
-            choice = scan.nextLine();
-        }
-
-        System.out.print("\n");
 
         switch(choice) {
             case("1"):
@@ -960,7 +917,10 @@ public class Menu implements Serializable {
 
             case("3"):
                 clearConsole();
-                //changeDevice();
+                System.out.println("Which device do you want to change?");
+                System.out.print("SmartDevice ID: ");
+                String idDevice = scan.nextLine();
+                changeDevice(casa.dispositivos.get(idDevice), divName, casa, cidade, scan);
                 break;
 
             case("4"):
@@ -1003,46 +963,87 @@ public class Menu implements Serializable {
 
             case("0"):
                 clearConsole();
+                changeCasa(casa, cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                changeDivisao(divName, casa, cidade, scan);
                 break;
         }
     }
 
-    public void changeSmartBulb(SmartBulb sb, Casa casa, Cidade cidade, Scanner scan){
-        System.out.print("\n");
+    public void changeDevice(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+        clearConsole();
         System.out.println("What do you want to do?");
-        System.out.println("1 - Change SmartBulb ID ");
-        System.out.println("2 - Change Tone:");
-        System.out.println("3 - Change Mode: ");
-        System.out.println("Choose an option:");
+        System.out.println("1 - Change SmartBulb");
+        System.out.println("2 - Change SmartSpeaker");
+        System.out.println("3 - Change SmartCamera");
+        System.out.println("0 - Go back");
+        System.out.print("Choose an option: ");
         String choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
-            System.out.print("Choose a valid option (1/2/3): ");
-            choice = scan.nextLine();
-        }
-        switch(choice){
-            case("1"):
-                System.out.print("New Id: ");
-                String novoID = scan.next();
-                while(casa.getDispositivos().containsKey(novoID)){
-                    System.out.println("This device already exists!");
-                    novoID = scan.next();
-                }
-                sb.setId(novoID);
-                System.out.print("\n");
 
+        switch(choice) {
+            case("1"):
+                clearConsole();
+                changeSmartBulb(sd, divName, casa, cidade, scan);
                 break;
 
             case("2"):
-                System.out.println("New Tone: ");
-                System.out.println("1 - Cold: ");
-                System.out.println("2 - Neutral: ");
-                System.out.println("3 - Warm: ");
-                System.out.println("Choose an option: ");
-                choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
-                    System.out.print("Choose a valid option (1/2/3): ");
-                    choice = scan.nextLine();
+                clearConsole();
+                changeSmartSpeaker(sd, divName, casa, cidade, scan);
+                break;
+
+            case("3"):
+                clearConsole();
+                changeSmartCamera(sd, divName, casa, cidade, scan);
+                break;
+
+            case("0"):
+                clearConsole();
+                changeDivisao(divName, casa, cidade, scan);
+
+            default:
+                clearConsole();
+                changeDevice(sd, divName, casa, cidade, scan);
+        }
+    }
+
+    public void changeSmartBulb(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Change SmartBulb ID");
+        System.out.println("2 - Change Tone");
+        System.out.println("3 - Change Mode");
+        System.out.println("");
+        System.out.println("0 - Go back");
+        System.out.print("Choose an option: ");
+        String choice = scan.nextLine();
+
+        SmartBulb sb = (SmartBulb) sd;
+        switch(choice) {
+            case("1"):
+                clearConsole();
+                System.out.print("New Id: ");
+                String novoID = scan.nextLine();
+                while(casa.getDispositivos().containsKey(novoID)){
+                    System.out.println("This id has already been used, try again!");
+                    novoID = scan.nextLine();
                 }
+                sd.setId(novoID);
+                break;
+
+            case("2"):
+                clearConsole();
+                System.out.println("New Tone:");
+                System.out.println("1 - Cold");
+                System.out.println("2 - Neutral");
+                System.out.println("3 - Warm");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
+                choice = scan.nextLine();
+
+                System.out.print("\n");
+
                 switch(choice){
                     case("1"):
                         sb.turn_COLD();
@@ -1055,163 +1056,212 @@ public class Menu implements Serializable {
                     case("3"):
                         sb.turn_WARM();
                         break;
+
+                    default:
+                        clearConsole();
+                        changeSmartBulb(sd, divName, casa, cidade, scan);
+                        break;
                 }
 
-                System.out.print("\n");
-
+                sd = (SmartDevice) sb;
                 break;
 
             case("3"):
+                clearConsole();
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
                 System.out.println("2 - Off");
-                System.out.println("Choose an option: ");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
                 choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2")) {
-                    System.out.print("Choose a valid option (1/2): ");
-                    choice = scan.nextLine();
-                }
+
+                System.out.print("\n");
+
                 switch(choice) {
                     case("1"):
-                        sb.turnOn();
-                        System.out.println("\nDone!");
+                        sd.turnOn();
+                        System.out.println("Done!");
                         break;
 
                     case("2"):
-                        sb.turnOff();
-                        System.out.println("\nDone!");
+                        sd.turnOff();
+                        System.out.println("Done!");
+                        break;
+
+                    default:
+                        clearConsole();
+                        changeSmartBulb(sd, divName, casa, cidade, scan);
                         break;
                 }
+                break;
+
+            case("0"):
+                clearConsole();
+                changeDevice(sd, divName, casa, cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                changeSmartBulb(sd, divName, casa, cidade, scan);
                 break;
         }
     }
 
-    public void changeSmartSpeaker(SmartSpeaker ss, Casa casa, Cidade cidade, Scanner scan){
-        System.out.print("\n");
+    public void changeSmartSpeaker(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
         System.out.println("What do you want to do?");
-        System.out.println("1 - Change SmartSpeaker ID ");
-        System.out.println("2 - Change Brand:");
-        System.out.println("3 - Change Mode: ");
-        System.out.println("4 - Change Radio: ");
-        System.out.println("Choose an option:");
+        System.out.println("1 - Change SmartSpeaker ID");
+        System.out.println("2 - Change Brand");
+        System.out.println("3 - Change Mode");
+        System.out.println("4 - Change Radio");
+        System.out.println("0 - Go back");
+        System.out.println("Choose an option: ");
         String choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4")) {
-            System.out.print("Choose a valid option (1/2/3/4): ");
-            choice = scan.nextLine();
-        }
+
+        SmartSpeaker ss = (SmartSpeaker) sd;
         switch(choice){
             case("1"):
+                clearConsole();
                 System.out.print("New Id: ");
-                String novoID = scan.next();
+                String novoID = scan.nextLine();
                 while(casa.getDispositivos().containsKey(novoID)){
-                    System.out.println("This device already exists!");
-                    novoID = scan.next();
+                    System.out.println("This id has already been used, try again!");
+                    novoID = scan.nextLine();
                 }
-                ss.setId(novoID);
-                System.out.print("\n");
+                sd.setId(novoID);
                 break;
 
             case("2"):
-                System.out.println("New brand: ");
+                clearConsole();
+                System.out.print("New brand: ");
                 String NovaMarca = scan.nextLine();
                 ss.setMarca(NovaMarca);
+                sd = (SmartDevice) ss;
                 break;
 
             case("3"):
+                clearConsole();
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
                 System.out.println("2 - Off");
-                System.out.println("Choose an option: ");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
                 choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2")) {
-                    System.out.print("Choose a valid option (1/2): ");
-                    choice = scan.nextLine();
-                }
+
+                System.out.print("\n");
+
                 switch(choice) {
                     case("1"):
-                        sb.turnOn();
-                        System.out.println("\nDone!");
+                        sd.turnOn();
+                        System.out.println("Done!");
                         break;
 
                     case("2"):
-                        sb.turnOff();
-                        System.out.println("\nDone!");
+                        sd.turnOff();
+                        System.out.println("Done!");
+                        break;
+
+                    default:
+                        clearConsole();
+                        changeSmartSpeaker(sd, divName, casa, cidade, scan);
                         break;
                 }
                 break;
 
             case("4"):
-                System.out.println("New Radio: ");
+                clearConsole();
+                System.out.print("New Radio: ");
                 String novaRadio = scan.nextLine();
                 ss.setRadioOnline(novaRadio);
+                sd = (SmartDevice) ss;
+                break;
+
+            case("0"):
+                clearConsole();
+                changeDevice(sd, divName, casa, cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                changeSmartSpeaker(sd, divName, casa, cidade, scan);
                 break;
         }
     }
 
-    public void changeSmartCamera(SmartCamera sc, Casa casa, Cidade cidade, Scanner scan){
-        System.out.print("\n");
+    public void changeSmartCamera(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
         System.out.println("What do you want to do?");
-        System.out.println("1 - Change SmartCamera ID ");
-        System.out.println("2 - Change Resolution:");
-        System.out.println("3 - Change Mode: ");
-        System.out.println("4 - Change Package Size: ");
-        System.out.println("Choose an option:");
+        System.out.println("1 - Change SmartCamera ID");
+        System.out.println("2 - Change Resolution");
+        System.out.println("3 - Change Mode");
+        System.out.println("4 - Change Package Size");
+        System.out.println("0 - Go back");
+        System.out.print("Choose an option: ");
         String choice = scan.nextLine();
-        while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3") && !choice.equals("4")) {
-            System.out.print("Choose a valid option (1/2/3/4): ");
-            choice = scan.nextLine();
-        }
+
+        SmartCamera sc = (SmartCamera) sd;
         switch(choice){
             case("1"):
+                clearConsole();
                 System.out.print("New Id: ");
-                String novoID = scan.next();
+                String novoID = scan.nextLine();
                 while(casa.getDispositivos().containsKey(novoID)){
-                    System.out.println("This device already exists!");
-                    novoID = scan.next();
+                    System.out.println("This id has already been used, try again!");
+                    novoID = scan.nextLine();
                 }
-                sc.setId(novoID);
-                System.out.print("\n");
+                sd.setId(novoID);
                 break;
 
             case("2"):
-                System.out.println("New X:");
-                String novoX = scan.next();
+                clearConsole();
+                System.out.print("New X: ");
+                int novoX = scan.nextInt();
+                scan.nextLine();
                 sc.setX(novoX);
 
-                System.out.println("New Y:");
-                String novoY = scan.next();
+                System.out.println("New Y: ");
+                int novoY = scan.nextInt();
+                scan.nextLine();
                 sc.setY(novoY);
 
+                sd = (SmartDevice) sc;
                 break;
 
             case("3"):
+                clearConsole();
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
                 System.out.println("2 - Off");
-                System.out.println("Choose an option: ");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
                 choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2")) {
-                    System.out.print("Choose a valid option (1/2): ");
-                    choice = scan.nextLine();
-                }
+
+                System.out.print("\n");
+
                 switch(choice) {
                     case("1"):
-                        sb.turnOn();
-                        System.out.println("\nDone!");
+                        sd.turnOn();
+                        System.out.println("Done!");
                         break;
 
                     case("2"):
-                        sb.turnOff();
-                        System.out.println("\nDone!");
+                        sd.turnOff();
+                        System.out.println("Done!");
+                        break;
+
+                    default:
+                        clearConsole();
+                        changeSmartCamera(sd, divName, casa, cidade, scan);
                         break;
                 }
                 break;
 
-            case("4"):
-                System.out.println("New Package Size: ");
-                String NovoTamanhoPacote = scan.nextLine();
-                sc.setTamanhoPacote(NovoTamanhoPacote);
+            case("0"):
+                clearConsole();
+                changeDevice(sd, divName, casa, cidade, scan);
                 break;
+
+            default:
+                clearConsole();
+                changeSmartCamera(sd, divName, casa, cidade, scan);
         }
     }
 

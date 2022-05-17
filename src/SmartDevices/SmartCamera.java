@@ -159,16 +159,8 @@ public class SmartCamera extends SmartDevice {
         return this.tempoLigada;
     }
 
-    public void setTempoLigada(long tempoLigada) {
-        this.tempoLigada = tempoLigada;
-    }
-
     public double getTamanhoPacote() {
         return tamanhoPacote;
-    }
-
-    public void setTamanhoPacote(double tamanhoPacote) {
-        this.tamanhoPacote = tamanhoPacote;
     }
 
     public double getConsumoPorHora() {

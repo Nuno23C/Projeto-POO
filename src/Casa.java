@@ -119,10 +119,9 @@ public class Casa implements Serializable {
 
     public void remove_Divisao(String div) {
         if(this.divisoes.containsKey(div)) {
-            List<String> ids = this.divisoes.get(div);
-            for(String sd_ID: ids) {
-                divisoes.get(div).remove(sd_ID);
-                dispositivos.remove(sd_ID);
+            for(String sd_ID: this.divisoes.get(div)) {
+                this.divisoes.remove(sd_ID);
+                this.dispositivos.remove(sd_ID);
             }
             this.divisoes.remove(div);
         }
