@@ -13,7 +13,6 @@ public class SmartCamera extends SmartDevice {
     public long tempoLigada;
     public double tamanhoPacote;
     public double consumoPorHora;
-    public LocalDateTime dataInicial;
 
     /**
      * Construtor por omissão.
@@ -26,7 +25,6 @@ public class SmartCamera extends SmartDevice {
         this.tempoLigada = 0;
         this.tamanhoPacote = 0;
         this.consumoPorHora = 0;
-        this.dataInicial = LocalDateTime.now();
     }
 
     /**
@@ -34,14 +32,13 @@ public class SmartCamera extends SmartDevice {
      * @param id
      * @param estado
      * @param resolucao
-     * @param dataAtual
      */
-    public SmartCamera(String id, Estado estado, int x, int y, LocalDateTime dataAtual){
+    public SmartCamera(String id, int x, int y, double tamanhoPacote, double consumoPorHora){
         super(id);
-        this.estado = estado;
         this.x = x;
         this.y = y;
-        this.dataInicial = dataAtual;
+        this.tamanhoPacote = tamanhoPacote;
+        this.consumoPorHora = consumoPorHora;
     }
 
     /**
@@ -56,7 +53,6 @@ public class SmartCamera extends SmartDevice {
         this.tempoLigada = sc.getTempoLigada();
         this.tamanhoPacote = sc.getTamanhoPacote();
         this.consumoPorHora = sc.getConsumoPorHora();
-        this.dataInicial = sc.getDataInicial();
     }
 
     /**
@@ -77,8 +73,7 @@ public class SmartCamera extends SmartDevice {
                 sc.getX() == this.x &&
                 sc.getY() == this.y &&
                 sc.getTamanhoPacote() == this.tamanhoPacote &&
-                sc.getConsumoPorHora() == this.consumoPorHora &&
-                sc.getDataInicial().equals(this.dataInicial));
+                sc.getConsumoPorHora() == this.consumoPorHora);
     }
 
     /**
@@ -93,8 +88,7 @@ public class SmartCamera extends SmartDevice {
                     "Resolucao y: " + this.y + "\n" +
                     "Tempo Ligada " + this.tempoLigada + "\n" +
                     "Tamanho do Pacote: " + this.tamanhoPacote + "\n" +
-                    "Consumo por hora: " + this.consumoPorHora + " \n" +
-                    "Data atual: " + this.dataInicial + "\n";
+                    "Consumo por hora: " + this.consumoPorHora + " \n";
 
         return sc;
     }
@@ -113,16 +107,6 @@ public class SmartCamera extends SmartDevice {
 
     public void turnOff() {
         this.estado = Estado.OFF;
-    }
-
-    /**
-     * Método que atualiza a camêra quando uma nova data for introduzida.
-     * @param dataPretendida
-     */
-    public void atualizarCamera(LocalDateTime dataPretendida) {
-        this.tempoLigada = dataInicial.until(dataInicial.plusDays(dataPretendida.getHour()), ChronoUnit.HOURS);
-        this.tamanhoPacote = tempoLigada * 0.5;
-        this.consumoPorHora = (x * y) * 0.2 * this.tamanhoPacote/tempoLigada;
     }
 
 
@@ -169,13 +153,5 @@ public class SmartCamera extends SmartDevice {
 
     public void setConsumoPorHora(double consumoPorHora) {
         this.consumoPorHora = consumoPorHora;
-    }
-
-    public LocalDateTime getDataInicial() {
-        return this.dataInicial;
-    }
-
-    public void setDataAtual(LocalDateTime dataInicial) {
-        this.dataInicial = dataInicial;
     }
 }
