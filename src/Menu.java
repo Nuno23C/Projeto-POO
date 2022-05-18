@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import SmartDevices.SmartBulb;
 import SmartDevices.SmartCamera;
@@ -76,6 +75,9 @@ public class Menu implements Serializable {
                 break;
 
             case("2"):
+                Parser parser = new Parser(cidade);
+                parser.parse();
+                createCidade(cidade, scan);
                 break;
 
             default:
@@ -525,7 +527,17 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimension);
+        System.out.print("Base value: ");
+        double consumoBase = -1;
+        while(consumoBase < 0) {
+            try {
+                consumoBase = Double.parseDouble(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
+
+        SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimension, consumoBase);
 
         return sb;
     }
@@ -651,13 +663,30 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        System.out.print("Data: ");
-        LocalDateTime dataAtual = LocalDateTime.now();
-        System.out.println(dataAtual);
+        System.out.print("File size: ");
+        double tamanhoPacote = -1;
+        while(tamanhoPacote <= 0) {
+            try {
+                tamanhoPacote = Double.parseDouble(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
 
         System.out.print("\n");
 
-        SmartDevice sc = new SmartCamera(id, estado, x, y, dataAtual);
+        System.out.print("Base value: ");
+        double valorBase = -1;
+        while(valorBase <= 0) {
+            try {
+                valorBase = Double.parseDouble(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
+
+
+        SmartDevice sc = new SmartCamera(id, estado, x, y, tamanhoPacote, valorBase);
 
         return sc;
     }

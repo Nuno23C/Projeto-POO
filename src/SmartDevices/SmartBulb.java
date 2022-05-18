@@ -31,21 +31,12 @@ public class SmartBulb extends SmartDevice {
      * @param estado Estado da SmartBulb.
      * @param tone Tonalidade da SmartBulb.
      */
-    public SmartBulb(String id, Estado estado, Tonalidade tone, double dimensões) {
+    public SmartBulb(String id, Estado estado, Tonalidade tone, double dimensões, double consumoPorHora) {
         super(id);
         this.estado = estado;
         this.tone = tone;
         this.dimensões = dimensões;
-        if (estado == Estado.ON) {
-            if (tone == Tonalidade.WARM)
-                this.consumoPorHora = 30;
-            else if (tone == Tonalidade.NEUTRAL)
-                this.consumoPorHora = 20;
-            else if (tone == Tonalidade.COLD)
-                this.consumoPorHora = 10;
-        } else {
-            this.consumoPorHora = 0;
-        }
+        this.consumoPorHora = consumoPorHora;
     }
 
     /**

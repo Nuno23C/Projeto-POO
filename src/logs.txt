@@ -1,17 +1,17 @@
-Fornecedor:EDP Comercial
-Fornecedor:Galp Energia
-Fornecedor:Iberdrola
-Fornecedor:Endesa
-Fornecedor:Gold Energy
-Fornecedor:Coopernico
-Fornecedor:Enat
-Fornecedor:YIce
-Fornecedor:MEO Energia
-Fornecedor:Muon
-Fornecedor:Luzboa
-Fornecedor:Energia Simples
-Fornecedor:SU Electricidade
-Fornecedor:EDA
+Fornecedor:EDP Comercial,5.3,10
+Fornecedor:Galp Energia,6.3,15
+Fornecedor:Iberdrola,6.5,11
+Fornecedor:Endesa,4.8,10
+Fornecedor:Gold Energy,6.8,15
+Fornecedor:Coopernico,5,11
+Fornecedor:Enat,6.1,12
+Fornecedor:YIce,7,16
+Fornecedor:MEO Energia,4.2,8
+Fornecedor:Muon,5.1,12
+Fornecedor:Luzboa,6.3,15
+Fornecedor:Energia Simples,7,16
+Fornecedor:SU Electricidade,5.2,12
+Fornecedor:EDA,6.3,15
 Casa:Vicente de Carvalho Castro,365597405,Iberdrola
 Divisao:Sala de Jantar
 SmartBulb:Warm,11,4.57
