@@ -11,6 +11,7 @@ public class Casa implements Serializable {
     public Map<String, SmartDevice> dispositivos;
     public Map<String, List<String>> divisoes; // Nome da divisão - Dispositivos
     private FornecedorEnergia fornecedor;
+    private String Nomefornecedor;
 
     public Casa() {
         this.idCasa = "";
@@ -41,14 +42,13 @@ public class Casa implements Serializable {
         setDivisoes(divisoes);
     }
 
-    public Casa(String idCasa, String morada, String nome, String NIF, FornecedorEnergia fornecedor) {
+    public Casa(String idCasa, String nome, String NIF, String Nomefornecedor) {
         this.idCasa = idCasa;
-        this.morada = morada;
         this.nome = nome;
         this.NIF = NIF;
         this.divisoes = new HashMap<String,List<String>>();
         this.dispositivos = new HashMap<String,SmartDevice>();
-        this.fornecedor = fornecedor;
+        this.Nomefornecedor = Nomefornecedor;
     }
 
     public Casa(Casa casa) {

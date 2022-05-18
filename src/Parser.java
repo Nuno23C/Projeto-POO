@@ -13,6 +13,9 @@ import SmartDevices.SmartDevice;
 import SmartDevices.SmartSpeaker;
 
 public class Parser {
+    private int houseID = 0;
+    private int deviceID = 0;
+
     public void parse(){
         Path path = Path.of("logs.txt");
         String conteudo = Files.readString(path);
@@ -75,12 +78,11 @@ public class Parser {
 
     public Casa parseCasa(String input) {
         String[] campos = input.split(",");
-        String casaID = campos[0];
-        String morada = campos[1];
-        String nome = campos[2];
-        String NIF = campos[3];
-        String fornecedor = campos[1];
-        return new casa(casaID, nome, NIF, fornecedor);
+        String nome = campos[0];
+        String NIF = campos[1];
+        String fornecedor = campos[2];
+        this.houseID++;
+        return new Casa(Integer.toString(houseID), nome, NIF, fornecedor);
     }
 
     public SmartBulb parseSmartBulb(String input, Casa casa){
@@ -89,7 +91,8 @@ public class Parser {
         int dimensoes = Integer.parseInt(campos[1]);
         double consumo = Double.parseDouble(campos[2]);
         return new SmartBulb(id,estado, dimensoes,consumo);
-        //não sei como por o id pq no log não há um campo de id, temos de ser nós a introduzir no terminal
+        //Esta Sara nao faz um caralho
+        //O choca parece a Sara
     }
 
     public SmartSpeaker parseSmartSpeaker(String input, Casa casa) {

@@ -7,10 +7,10 @@ import java.util.Map;
 
 
 public class FornecedorEnergia implements Serializable {
-    public String nomeEmpresa;
-    public double imposto;
-    public double valorBase;
-    public double desconto;
+    private String nomeEmpresa;
+    private double imposto;
+    private double valorBase;
+    private double desconto;
     private Map<String, Casa> casasDoFornecedor; //Id da casa - Casa
     private Map<String, List<Fatura>> faturas;  //Id da casa - Lista de faturas
 
