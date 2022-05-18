@@ -1,9 +1,10 @@
 import java.util.Scanner;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 public class Menu implements Serializable {
     Scanner scan;
 
-    public Menu(Cidade cidade, Scanner s) throws IOException, InterruptedException{
+    public Menu(Cidade cidade, Scanner s) throws IOException, InterruptedException, ClassNotFoundException{
         this.scan = s;
         clearConsole();
         mainMenu(scan);
@@ -29,17 +30,13 @@ public class Menu implements Serializable {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 
-    public void saveState(Cidade cidade, Scanner scan) {
+    public void saveState(Cidade cidade, String nomeFicheiro) {
        try {
-           System.out.println("Give the file a name:");
-           String nomeDoFicheiro = scan.nextLine();
-           File f = new File("./output/" + nomeDoFicheiro);
-           while(f.exists()){
-                System.out.println("Give a valid name!");
-                nomeDoFicheiro = scan.nextLine();
-                f = new File("./output/" + nomeDoFicheiro);
-           }
-           cidade.saveState(nomeDoFicheiro);
+           FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+           ObjectOutputStream oos = new ObjectOutputStream(fos);
+           oos.writeObject(cidade);
+           oos.flush();
+           oos.close();
        } catch(FileNotFoundException e) {
            System.out.println("Error creating file with that name!");
        } catch(IOException e) {
@@ -47,39 +44,24 @@ public class Menu implements Serializable {
        }
     }
 
-    public void loadState(Cidade cidade, Scanner scan) {
-        System.out.println("Insira o path para o ficheiro que pretende carregar:");
-        StringBuilder path = new StringBuilder();
-        path.append(scan.nextLine());
-        cidade = (Cidade) ReadObjectFromFile(path.toString()); //createMenuLine devolve a cidade guardada no ficheiro
+    public Cidade loadState(String nomeFicheiro) throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(nomeFicheiro);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Cidade c = (Cidade) ois.readObject();
+        ois.close();
+        return c;
     }
 
-    public Object ReadObjectFromFile(String filepath) {
-        try {
-            FileInputStream fileIn = new FileInputStream(filepath);
-            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-
-            Object obj = objectIn.readObject();
-
-            System.out.println("Estado carregado com sucesso!");
-            objectIn.close();
-            return obj;
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public void mainMenu(Scanner scan) throws IOException, InterruptedException {
+    public void mainMenu(Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
         String choice;
 
         Map<String, Casa> casas = new HashMap<>();
-        Map<String, List<String>> fornecedores = new HashMap<>();
-        Map<String, List<String>> faturas = new HashMap<>();
+        Map<String, FornecedorEnergia> fornecedorDaCasa = new HashMap<>();
+        Map<String, FornecedorEnergia> fornecedores = new HashMap<>();
+        Map<String, List<Fatura>> faturas = new HashMap<>();
 
-        Cidade cidade = new Cidade(casas, fornecedores, faturas);
+        Cidade cidade = new Cidade(casas, fornecedorDaCasa, fornecedores, faturas);
 
         System.out.println("Menu:");
         System.out.println("1 - Create a city");
@@ -97,11 +79,13 @@ public class Menu implements Serializable {
                 break;
 
             default:
+                clearConsole();
+                mainMenu(scan);
                 break;
         }
     }
 
-    public void createCidade(Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+    public void createCidade(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
         String choice;
 
@@ -194,12 +178,24 @@ public class Menu implements Serializable {
 
                     case("2"):
                         clearConsole();
-                        //change();
+                        System.out.print("Energy supplier name: ");
+                        String nomeFornecedor = scan.nextLine();
+                        while(!cidade.fornecedores.containsKey(nomeFornecedor)) {
+                            System.out.println("Invalid name, try again!");
+                            nomeFornecedor = scan.nextLine();
+                        }
+                        changeFornecedorEnergia(cidade.getFornecedor(nomeFornecedor), cidade, scan);
                         break;
 
                     case("3"):
                         clearConsole();
-                        //remove();
+                        System.out.print("Energy supplier name: ");
+                        nomeFornecedor = scan.nextLine();
+                        int flag = cidade.removeFornecedor(nomeFornecedor);
+                        if(flag == 1)
+                            System.out.println("Energy supplier removed successfully!");
+                        else
+                            System.out.println("Error, the supplier was not removed because there are still houses with a contract!");
                         break;
 
                     case("0"):
@@ -207,25 +203,31 @@ public class Menu implements Serializable {
                         break;
 
                     default:
+                        clearConsole();
                         break;
                 }
                 break;
 
             case("7"):
                 clearConsole();
-                saveState(cidade, scan);
+                System.out.print("Give the file a name: ");
+                String nomeFicheiro = scan.nextLine();
+                saveState(cidade, nomeFicheiro);
                 System.out.println("Saved!");
                 break;
 
             case("8"):
                 clearConsole();
-                loadState(cidade, scan);
+                System.out.print("Insert the name file: ");
+                nomeFicheiro = scan.nextLine();
+                cidade = loadState(nomeFicheiro);
                 System.out.println("\nDone");
                 break;
 
             case("9"):
                 clearConsole();
-                System.out.println(cidade.toString());
+                //System.out.println(cidade.toString());
+                System.out.println(cidade.listaInfoCasa("casa1"));
 
                 System.out.println("Press enter to continue");
                 try{System.in.read();}
@@ -245,7 +247,7 @@ public class Menu implements Serializable {
         createCidade(cidade, scan);
     }
 
-    public void createCasa(Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+    public void createCasa(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
 
         System.out.print("House's id: ");
@@ -327,7 +329,10 @@ public class Menu implements Serializable {
 
         switch(choice) {
             case("1"):
-                casa.add_Fornecedor(criaFornecedorEnergia(cidade, scan));
+                FornecedorEnergia fe = criaFornecedorEnergia(cidade, scan);
+                casa.add_Fornecedor(fe);
+                cidade.fornecedorDaCasa.put(casa.getIdCasa(), fe);
+
                 break;
 
             case("2"):
@@ -338,7 +343,9 @@ public class Menu implements Serializable {
                     System.out.println("This supplier does not exists, try again!");
                     nomeFornecedor = scan.nextLine();
                 }
-                casa.add_Fornecedor(cidade.fornecedores.get(nomeFornecedor));
+                casa.add_Fornecedor(cidade.getFornecedor(nomeFornecedor));
+                cidade.fornecedorDaCasa.put(casa.getIdCasa(), cidade.getFornecedor(nomeFornecedor));
+
                 break;
         }
 
@@ -658,7 +665,7 @@ public class Menu implements Serializable {
     public FornecedorEnergia criaFornecedorEnergia(Cidade cidade, Scanner scan) {
         System.out.print("Energy supplier name: ");
         String nomeFornecedor = scan.nextLine();
-        while(cidade.fornecedoresCasas.containsKey(nomeFornecedor)) {
+        while(cidade.fornecedores.containsKey(nomeFornecedor)) {
             System.out.println("This supplier already exits!");
             nomeFornecedor = scan.nextLine();
         }
@@ -666,14 +673,26 @@ public class Menu implements Serializable {
         System.out.print("\n");
 
         System.out.print("Base value: ");
-        double valorBase = scan.nextDouble();
-        scan.nextLine();
+        double valorBase = -1;
+        while(valorBase < 0) {
+            try {
+                valorBase = Double.parseDouble(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
 
         System.out.print("\n");
 
         System.out.print("Discount: ");
-        double desconto = scan.nextDouble();
-        scan.nextLine();
+        double desconto = -1;
+        while(desconto < 0) {
+            try {
+                desconto = Double.parseDouble(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
 
         System.out.print("\n");
 
@@ -684,7 +703,7 @@ public class Menu implements Serializable {
         return fe;
     }
 
-    public void changeCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+    public void changeCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         System.out.println("What do you want to do?");
         System.out.println("1 - Change house ID");
         System.out.println("2 - Change house adress");
@@ -880,7 +899,7 @@ public class Menu implements Serializable {
         }
     }
 
-    public void changeDivisao(String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+    public void changeDivisao(String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         System.out.println("What do you want to do?");
         System.out.println("1 - Change division name");
         System.out.println("2 - Add device");
@@ -973,7 +992,7 @@ public class Menu implements Serializable {
         }
     }
 
-    public void changeDevice(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+    public void changeDevice(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartBulb");
@@ -1009,7 +1028,7 @@ public class Menu implements Serializable {
         }
     }
 
-    public void changeSmartBulb(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
+    public void changeSmartBulb(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartBulb ID");
         System.out.println("2 - Change Tone");
@@ -1107,7 +1126,7 @@ public class Menu implements Serializable {
         }
     }
 
-    public void changeSmartSpeaker(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
+    public void changeSmartSpeaker(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartSpeaker ID");
         System.out.println("2 - Change Brand");
@@ -1187,7 +1206,7 @@ public class Menu implements Serializable {
         }
     }
 
-    public void changeSmartCamera(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
+    public void changeSmartCamera(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartCamera ID");
         System.out.println("2 - Change Resolution");
@@ -1262,6 +1281,67 @@ public class Menu implements Serializable {
             default:
                 clearConsole();
                 changeSmartCamera(sd, divName, casa, cidade, scan);
+        }
+    }
+
+    public void changeFornecedorEnergia(FornecedorEnergia fe, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
+        System.out.println("What do you want to do?");
+        System.out.println("1 - Change name");
+        System.out.println("2 - Change base value");
+        System.out.println("3 - Change discount");
+        System.out.println("0 - Go back");
+        System.out.print("Choose an option: ");
+        String choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                clearConsole();
+                System.out.print("New name: ");
+                String novoNome = scan.nextLine();
+                while(cidade.getFornecedores().containsKey(novoNome)){
+                    System.out.println("This id has already been used, try again!");
+                    novoNome = scan.nextLine();
+                }
+                fe.setNomeEmpresa(novoNome);
+                break;
+
+            case("2"):
+                clearConsole();
+                System.out.print("New base value: ");
+                double novoValorBase = -1;
+                while(novoValorBase < 0) {
+                    try {
+                        novoValorBase = Double.parseDouble(scan.nextLine());
+                    } catch(NumberFormatException e) {
+                        System.out.println("Invalid option, try again!");
+                    }
+                }
+                fe.setValorBase(novoValorBase);
+                break;
+
+            case("3"):
+                clearConsole();
+                System.out.print("New discount: ");
+                double novoDesconto = -1;
+                while(novoDesconto < 0) {
+                    try {
+                        novoValorBase = Double.parseDouble(scan.nextLine());
+                    } catch(NumberFormatException e) {
+                        System.out.println("Invalid option, try again!");
+                    }
+                }
+                fe.setValorBase(novoDesconto);
+                break;
+
+            case("0"):
+                clearConsole();
+                createCidade(cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                changeFornecedorEnergia(fe, cidade, scan);
+                break;
         }
     }
 

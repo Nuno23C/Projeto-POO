@@ -1,10 +1,8 @@
 import SmartDevices.SmartDevice;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -13,8 +11,8 @@ public class FornecedorEnergia implements Serializable {
     public double imposto;
     public double valorBase;
     public double desconto;
-    private Map<String, Casa> conj_Casas; //Id da casa - Casa
-    private Map<String, List<String>> faturas;  //Id da casa - Lista de faturas
+    private Map<String, Casa> casasDoFornecedor; //Id da casa - Casa
+    private Map<String, List<Fatura>> faturas;  //Id da casa - Lista de faturas
 
     /**
      * Construtor por omissão
@@ -24,7 +22,7 @@ public class FornecedorEnergia implements Serializable {
         this.imposto = 1.23;
         this.valorBase = 0;
         this.desconto = 0;
-        this.conj_Casas = new HashMap<>();
+        this.casasDoFornecedor = new HashMap<>();
         this.faturas = new HashMap<>();
     }
 
@@ -36,13 +34,13 @@ public class FornecedorEnergia implements Serializable {
      * @param desconto
      * @param faturas
      */
-    public FornecedorEnergia(String nomeEmpresa, double valorBase, double desconto, HashMap<String, Casa> conj_Casas, Map<String, List<String>> faturas){
+    public FornecedorEnergia(String nomeEmpresa, double valorBase, double desconto, HashMap<String, Casa> casas, Map<String, List<Fatura>> faturas){
         this.nomeEmpresa = nomeEmpresa;
         this.imposto = 1.23;
         this.valorBase = valorBase;
         this.desconto = desconto;
-        setConjCasas(conj_Casas);
-        setFatura(faturas);
+        this.casasDoFornecedor = casas;
+        this.faturas = faturas;
     }
 
     public FornecedorEnergia(String nomeEmpresa, double valorBase, double desconto){
@@ -50,8 +48,8 @@ public class FornecedorEnergia implements Serializable {
         this.imposto = 1.23;
         this.valorBase = valorBase;
         this.desconto = desconto;
-        this.conj_Casas = new HashMap<String, Casa>();
-        this.faturas = new HashMap<String, List<String>>();
+        this.casasDoFornecedor = new HashMap<String, Casa>();
+        this.faturas = new HashMap<String, List<Fatura>>();
     }
 
     /**
@@ -63,7 +61,7 @@ public class FornecedorEnergia implements Serializable {
         this.imposto = fe.getImposto();
         this.valorBase = fe.getValorBase();
         this.desconto = fe.getDesconto();
-        this.conj_Casas = fe.getConjCasas();
+        this.casasDoFornecedor = fe.getCasasDoFornecedor();
         this.faturas = fe.getFaturas();
     }
 
@@ -80,31 +78,28 @@ public class FornecedorEnergia implements Serializable {
                 fe.getImposto() == this.imposto &&
                 fe.getValorBase() == this.valorBase &&
                 fe.getDesconto() == this.desconto &&
-                fe.getConjCasas().equals(this.conj_Casas) &&
+                fe.getCasasDoFornecedor().equals(this.casasDoFornecedor) &&
                 fe.getFaturas().equals(this.faturas));
     }
 
     public String toString() {
-        String sb = "\n" + "Nome da Empresa: " + this.nomeEmpresa + "\n" +
-                "Imposto: " + this.imposto + "\n" +
-                "Valor Base: " + this.valorBase + "\n" +
-                "Desconto: " + this.desconto + "\n" +
-                "Casas: " + this.conj_Casas + "\n" +
-                "Fatura: " + this.faturas + "\n";
-        return sb;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Nome da Empresa: " + this.nomeEmpresa + "\n");
+        sb.append("Tax: " + this.imposto + "\n");
+        sb.append("Base value: " + this.valorBase + "\n");
+        sb.append("Discount: " + this.desconto + "\n");
+        sb.append("\n");
+
+        //sb.append("Casas: " + this.casas + "\n");
+        //sb.append("Bill: " + this.faturas + "\n");
+
+        return sb.toString();
     }
 
     public FornecedorEnergia clone() {
         return new FornecedorEnergia(this);
     }
-
-    //public void adicionarFornec
-
-
-
-
-    // Map<String, Casa> conj_Casas
-    // Map<String, SmartDevice> dispositivos
 
     public double getPrecoDispositivoPorHora(SmartDevice sd){
         return (this.valorBase * sd.getConsumoPorHora() * this.imposto) * (1 - (this.desconto/100));
@@ -158,6 +153,7 @@ public class FornecedorEnergia implements Serializable {
 
 
 
+
     // Getters and Setters
     public String getNomeEmpresa() {
         return nomeEmpresa;
@@ -191,47 +187,19 @@ public class FornecedorEnergia implements Serializable {
         this.desconto = desconto;
     }
 
-    public Map<String, Casa> getConjCasas() {
-        Map<String, Casa> newCasa = new HashMap<>();
-        for(String NIF: this.conj_Casas.keySet()){
-            newCasa.put(NIF, this.conj_Casas.get(NIF).clone());
-        }
-        return newCasa;
+    public Map<String, Casa> getCasasDoFornecedor() {
+        return this.casasDoFornecedor;
     }
 
-    private void setConjCasas(HashMap<String, Casa> conj_Casas){
-        Map<String, Casa> newCasa = new HashMap<>();
-        for(String NIF: conj_Casas.keySet()){
-            newCasa.put(NIF, conj_Casas.get(NIF).clone());
-        }
-        this.conj_Casas = newCasa;
+    private void setCasasDoFornecedor(HashMap<String, Casa> casasDoFornecedor){
+        this.casasDoFornecedor = casasDoFornecedor;
     }
 
-
-    public Map<String, List<String>> getFaturas() {
-        Map<String, List<String>> newFaturas = new HashMap<>();
-        for(String fat: this.faturas.keySet()) {
-            List<String> lista = this.faturas.get(fat);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newFaturas.put(fat, novaLista);
-        }
-        return newFaturas;
+    public Map<String, List<Fatura>> getFaturas() {
+        return this.faturas;
     }
 
-
-    public void setFatura(Map<String, List<String>> faturas) {
-        Map<String, List<String>> newFaturas = new HashMap<>();
-        for(String fat: faturas.keySet()) {
-            List<String> lista = faturas.get(fat);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newFaturas.put(fat, novaLista);
-        }
-        this.faturas = newFaturas;
+    public void setFatura(Map<String, List<Fatura>> faturas) {
+        this.faturas = faturas;
     }
 }

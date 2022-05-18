@@ -19,6 +19,17 @@ public class Casa implements Serializable {
         this.NIF = "";
         this.dispositivos = new HashMap<>();
         this.divisoes = new HashMap<>();
+        this.fornecedor = null;
+    }
+
+    public Casa(String idCasa, String morada, String nome, String NIF, Map<String, SmartDevice> dispositivos, Map<String, List<String>> divisoes, FornecedorEnergia fornecedor) {
+        this.idCasa = idCasa;
+        this.morada = morada;
+        this.nome = nome;
+        this.NIF = NIF;
+        setDispositivos(dispositivos);
+        setDivisoes(divisoes);
+        this.fornecedor = fornecedor;
     }
 
     public Casa(String idCasa, String morada, String nome, String NIF, Map<String, SmartDevice> dispositivos, Map<String, List<String>> divisoes) {
@@ -30,13 +41,14 @@ public class Casa implements Serializable {
         setDivisoes(divisoes);
     }
 
-    public Casa(String idCasa, String morada, String nome, String NIF) {
+    public Casa(String idCasa, String morada, String nome, String NIF, FornecedorEnergia fornecedor) {
         this.idCasa = idCasa;
         this.morada = morada;
         this.nome = nome;
         this.NIF = NIF;
         this.divisoes = new HashMap<String,List<String>>();
         this.dispositivos = new HashMap<String,SmartDevice>();
+        this.fornecedor = fornecedor;
     }
 
     public Casa(Casa casa) {
@@ -67,15 +79,17 @@ public class Casa implements Serializable {
     }
 
     public String toString() {
-        String sb = "\n" + "ID da Casa: " + this.idCasa + "\n" +
-                    "Morada: " + this.morada + "\n" +
-                    "Nome: " + this.nome + "\n" +
-                    "NIF: " + this.NIF + "\n" +
-                    "Divisões: " + this.divisoes + "\n" +
-                    "Dispositivos: " + this.dispositivos + "\n" +
-                    "Fornecedor: " + this.fornecedor + "\n";
+        StringBuilder sb = new StringBuilder();
 
-        return sb;
+        sb.append("House id: " + this.idCasa + "\n");
+        sb.append("Adress: " + this.morada + "\n");
+        sb.append("House owner: " + this.nome + "\n");
+        sb.append("NIF: " + this.NIF + "\n");
+        sb.append("Casa id: " + this.idCasa + "\n");
+        sb.append("\n");
+        //...
+
+        return sb.toString();
     }
 
     public Casa clone() {
@@ -164,6 +178,26 @@ public class Casa implements Serializable {
 
     public void add_Fornecedor(FornecedorEnergia fornecedor) {
         this.fornecedor = fornecedor;
+    }
+
+    public String listaDevices(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("List of devices");
+        sb.append("{");
+        for(String idDevice: dispositivos.keySet()){
+            sb.append(idDevice);
+        }
+        sb.append("}");
+
+        return sb.toString();
+    }
+
+    public String infoDevice(String idDevice){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(dispositivos.get(idDevice).toString());
+
+        return sb.toString();
     }
 
 

@@ -1,56 +1,32 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.io.*;
 
 public class Cidade implements Serializable {
-    public Map<String, Casa> casas = new HashMap<>(); // Todas as casas ---> Id da casa - Casa
-    public Map<String, List<String>> fornecedoresCasas = new HashMap<>(); // Todos os fornecedores e as casas ---> nome do Fornecedor - Lista de casas
-    public Map<String, FornecedorEnergia> fornecedores = new HashMap<>(); // ---> Nome do fornecedor - Fornecedor
-    public Map<String, List<String>> faturas = new HashMap<>(); // Todas as faturas de todas as casas ---> nome da Casas - Lista de faturas
-
-    public void saveState(String nameOfFile) throws FileNotFoundException,IOException {
-        try {
-            FileOutputStream fos = new FileOutputStream(nameOfFile);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(this);
-            oos.flush();
-            oos.close();
-        } catch(FileNotFoundException e) {
-            System.out.println("File not found!\n");
-        }
-    }
-
-    public Cidade loadState(String nameOfFile) throws FileNotFoundException,IOException, ClassNotFoundException{
-        FileInputStream fis = new FileInputStream(nameOfFile);
-        ObjectInputStream oos = new ObjectInputStream(fis);
-        Cidade cidade =(Cidade) oos.readObject();
-        oos.close();
-
-        return cidade;
-    }
+    public Map<String, Casa> casas = new HashMap<>(); // Id da casa - Casa (Todas as casas)
+    public Map<String, FornecedorEnergia> fornecedorDaCasa = new HashMap<>(); // idCasa - Fornecedor (Fornecedor de cada casa)
+    public Map<String, FornecedorEnergia> fornecedores = new HashMap<>(); // Nome do fornecedor - Fornecedor (Todos os fornecedores existentes)
+    public Map<String, List<Fatura>> faturas = new HashMap<>(); // Nome da Casas - Lista de faturas (Todas as faturas de todas as casas)
 
     public Cidade() {
         this.casas = new HashMap<>();
-        this.fornecedoresCasas = new HashMap<>();
+        this.fornecedorDaCasa = new HashMap<>();
+        this.fornecedores = new HashMap<>();
         this.faturas = new HashMap<>();
     }
 
-    public Cidade(Map<String, Casa> casas, Map<String, List<String>> fornecedores, Map<String, List<String>> faturas) {
+    public Cidade(Map<String, Casa> casas, Map<String, FornecedorEnergia> fornecedorDaCasa, Map<String, FornecedorEnergia> fornecedores, Map<String, List<Fatura>> faturas) {
         this.casas = casas;
-        this.fornecedoresCasas = fornecedores;
+        this.fornecedorDaCasa = fornecedorDaCasa;
+        this.fornecedores = fornecedores;
         this.faturas = faturas;
     }
 
     public Cidade(Cidade cidade) {
         this.casas = cidade.getCasas();
-        this.fornecedoresCasas = cidade.getFornecedores();
+        this.fornecedorDaCasa = cidade.getFornecedorDaCasa();
+        this.fornecedores = cidade.getFornecedores();
         this.faturas = cidade.getFaturas();
     }
 
@@ -80,7 +56,8 @@ public class Cidade implements Serializable {
 
         Cidade c = (Cidade) o;
         return (this.casas.equals(c.getCasas()) &&
-                this.fornecedoresCasas.equals(c.getFornecedores()) &&
+                this.fornecedorDaCasa.equals(c.getFornecedorDaCasa()) &&
+                this.fornecedores.equals(c.getFornecedores()) &&
                 this.faturas.equals(c.getFaturas()));
     }
 
@@ -88,13 +65,82 @@ public class Cidade implements Serializable {
         return new Cidade(this);
     }
 
-    public void add_Casa (String idCasa, Casa casa){
-        casas.put(idCasa, casa);
+    public void add_Casa(String idCasa, Casa casa){
+        this.casas.put(idCasa, casa);
     }
 
-    public void remove_Casa (String idCasa){
-        casas.remove(idCasa);
+    public void remove_Casa(String idCasa){
+        this.casas.remove(idCasa);
     }
+
+    public Casa getCasa(String idCasa) {
+        return this.casas.get(idCasa);
+    }
+
+    public FornecedorEnergia getFornecedorDaCasa(String idCasa) {
+        return this.fornecedorDaCasa.get(idCasa);
+    }
+
+    public FornecedorEnergia getFornecedor(String nomeFornecedor) {
+        return this.fornecedores.get(nomeFornecedor);
+    }
+
+    public int removeFornecedor(String nomeFornecedor) {
+        int flag = 1;
+
+        for(String idCasa: this.fornecedorDaCasa.keySet()) {
+            if(this.fornecedorDaCasa.get(idCasa).getNomeEmpresa().equals(nomeFornecedor))
+                flag = 0;
+        }
+        if(flag == 1)
+            this.fornecedores.remove(nomeFornecedor);
+
+        return flag;
+    }
+
+    public String listaCasas() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Houses ids:\n");
+        for(String idCasa: casas.keySet()) {
+            sb.append(idCasa);
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    public String listaInfoCasa(String idCasa) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(getCasa(idCasa).toString());
+
+        return sb.toString();
+    }
+
+
+    public String listaFornecedores(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("List of energy suppliers:\n");
+        for(String nomeF: fornecedores.keySet()){
+            sb.append(nomeF);
+        }
+
+        return sb.toString();
+    }
+
+    public String listaInfoFornecedor(String nomeF){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(fornecedores.get(nomeF).toString());
+
+        return sb.toString();
+    }
+
+
+
+
 
 
 
@@ -102,70 +148,34 @@ public class Cidade implements Serializable {
 
     // Getters and Setters
     public Map<String, Casa> getCasas() {
-        Map<String, Casa> newCasa = new HashMap<>();
-        for(String NIF: this.casas.keySet()){
-            newCasa.put(NIF, this.casas.get(NIF).clone());
-        }
-        return newCasa;
+        return this.casas;
     }
 
     public void setCasas(HashMap<String, Casa> casas){
-        Map<String, Casa> newCasa = new HashMap<>();
-        for(String NIF: casas.keySet()){
-            newCasa.put(NIF, casas.get(NIF).clone());
-        }
-        this.casas = newCasa;
+        this.casas = casas;
     }
 
-    public Map<String, List<String>> getFaturas() {
-        Map<String, List<String>> newFaturas = new HashMap<>();
-        for(String fat: this.faturas.keySet()) {
-            List<String> lista = this.faturas.get(fat);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newFaturas.put(fat, novaLista);
-        }
-        return newFaturas;
+    public Map<String, FornecedorEnergia> getFornecedorDaCasa(){
+        return this.fornecedorDaCasa;
     }
 
-    public void setFatura(Map<String, List<String>> faturas) {
-        Map<String, List<String>> newFaturas = new HashMap<>();
-        for(String fat: faturas.keySet()) {
-            List<String> lista = faturas.get(fat);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newFaturas.put(fat, novaLista);
-        }
-        this.faturas = newFaturas;
+    public void setFornecedoresCasas(Map<String, FornecedorEnergia> fornecedorDaCasa){
+        this.fornecedorDaCasa = fornecedorDaCasa;
     }
 
-    public Map<String, List<String>> getFornecedores() {
-        Map<String, List<String>> newFornecedores = new HashMap<>();
-        for(String f: this.fornecedoresCasas.keySet()) {
-            List<String> lista = this.fornecedoresCasas.get(f);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newFornecedores.put(f, novaLista);
-        }
-        return newFornecedores;
+    public Map<String, FornecedorEnergia> getFornecedores() {
+        return this.fornecedores;
     }
 
-    public void setFornecedores(Map<String, List<String>> fornecedores) {
-        Map<String, List<String>> newFornecedores = new HashMap<>();
-        for(String f: fornecedores.keySet()) {
-            List<String> lista = fornecedores.get(f);
-            List<String> novaLista = new ArrayList<String>();
-            ListIterator<String> iter = lista.listIterator();
-            while(iter.hasNext())
-                novaLista.add(iter.next());
-            newFornecedores.put(f, novaLista);
-        }
-        this.fornecedoresCasas = newFornecedores;
+    public void setFornecedores(Map<String, FornecedorEnergia> fornecedores) {
+        this.fornecedores = fornecedores;
+    }
+
+    public Map<String, List<Fatura>> getFaturas(){
+        return this.faturas;
+    }
+
+    public void setFatura(Map<String, List<Fatura>> faturas){
+        this.faturas = faturas;
     }
 }

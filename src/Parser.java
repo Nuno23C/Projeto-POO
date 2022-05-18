@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import SmartDevices.SmartBulb;
+import SmartDevices.SmartCamera;
+import SmartDevices.SmartDevice;
 import SmartDevices.SmartSpeaker;
 
 public class Parser {
     public void parse(){
-        Path path = Path.of("");
-        String conteudo = Files.lerFicheiro(path);
-        //SmartCity city = new SmartCity(ouseID, deviceID);
+        Path path = Path.of("logs.txt");
+        String conteudo = Files.readString(path);
         String[] conteudoPartido = conteudo.split("\n");
         String[] linhaPartida;
         String divisao = "";
@@ -28,21 +29,25 @@ public class Parser {
                 case "Casa":
                     casa = parseCasa(linhaPartida[1]);
                     break;
+
                 case "Divisao":
-                    if (casa == null) System.out.println("Linha inválida.");
+                    if (casa == null)
+                        System.out.println("Linha inválida.");
                     divisao = linhaPartida[1];
                     casa.add_Divisao(divisao);
                     break;
+
                 case "SmartBulb":
                     if (divisao == null) System.out.println("Linha inválida.");
                     SmartBulb sb = parseSmartBulb(linhaPartida[1]);
                     casa.add_DispositivoNaDivisao(divisao, sb);
                     break;
+
                 case "SmartSpeaker":
                     if (divisao == null) System.out.println("Linha inválida.");
                     SmartSpeaker ss = parseSmartSpeaker(linhaPartida[1]); //não percebo o erro
                     casa.add_DispositivoNaDivisao(divisao, ss);
-                    break; 
+                    break;
                 case "SmartCamera":
                     if (divisao == null) System.out.println("Linha inválida.");
                     SmartSpeaker sc = parseSmartCamera(linhaPartida[1]); //não percebo o erro
@@ -50,7 +55,7 @@ public class Parser {
                     break;
                 case "Fornecedor":
                     Menu.criaFornecedorEnergia(parseComercializadoresEnergia(linhaPartida[1]));
-                    break;                    
+                    break;
                 default:
                     System.out.println("Linha inválida.");
                     break;
@@ -60,26 +65,22 @@ public class Parser {
     }
 
     public List<String> lerFicheiro(String nomeFich) {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(nomeFich), StandardCharsets.UTF_8);
-            return lines;
-        }
-        catch(IOException exc) {
-            List<String> lines = new ArrayList<>();
-            return lines;
-        }
+        List<String> lines;
+
+        try {lines = Files.readAllLines(Paths.get(nomeFich), StandardCharsets.UTF_8);}
+        catch(IOException exc) {lines = new ArrayList<>();}
+
+        return lines;
     }
 
-    public Casa parseCasa(String input, Casa casa) {
+    public Casa parseCasa(String input) {
         String[] campos = input.split(",");
-        String nome = campos[0];
-        int NIF = Integer.parseInt(campos[1]);
-        String fornecedor = campos[2];
-        FornecedorEnergia fornecedorEnergia = FornecedorEnergia.getComercializador(fornecedor);
-        if (fornecedorEnergia == null){
-            fornecedorEnergia = new FornecedorEnergia(fornecedor);
-        }
-        return new Casa(casa.getIdCasa(),nome,NIF,fornecedorEnergia);
+        String casaID = campos[0];
+        String morada = campos[1];
+        String nome = campos[2];
+        String NIF = campos[3];
+        String fornecedor = campos[1];
+        return new casa(casaID, nome, NIF, fornecedor);
     }
 
     public SmartBulb parseSmartBulb(String input, Casa casa){
@@ -87,18 +88,22 @@ public class Parser {
         String estado = campos[0];
         int dimensoes = Integer.parseInt(campos[1]);
         double consumo = Double.parseDouble(campos[2]);
-        return new SmartBulb(.giveDeviceId(), estado,dimensoes,consumo);
+        return new SmartBulb(id,estado, dimensoes,consumo);
+        //não sei como por o id pq no log não há um campo de id, temos de ser nós a introduzir no terminal
     }
 
-    public FornecedorEnergia parseFornecedorEnergia(String input) {
+    public SmartSpeaker parseSmartSpeaker(String input, Casa casa) {
         String[] campos = input.split(",");
-        String nome = campos[0];
-        return new ComercializadoresEnergia(nome);
+        int volume = Integer.parseInt(campos[0]);
+        String estacao = campos[1];
+        double consumo = Double.parseDouble(campos[3]);
+        return new SmartSpeaker(id, volume,estacao,consumo); //same problem
     }
 
     public SmartCamera parseSmartCamera(String input, Casa casa) {
         String[] campos = input.split(",");
         String resolucao = campos[0];
+        //não percebi estas duas linhas
         resolucao = resolucao.replace("(","");
         resolucao = resolucao.replace(")","");
         String[] larguraAltura = resolucao.split("x");
@@ -106,21 +111,21 @@ public class Parser {
         float largura = Float.parseFloat(larguraAltura[0]);
         float altura = Float.parseFloat(larguraAltura[1]);
         float consumo = Float.parseFloat(campos[2]);
-        return new SmartCamera(.giveDeviceId(), largura,altura,tamanho,SmartCamera.state.OFF, consumo);
+        return new SmartCamera(id, largura,altura,tamanho,SmartCamera.Estado.OFF, consumo);
+        //o mesmo problema que a função anterior
     }
 
-    
-
-    public SmartSpeaker parseSmartSpeaker(String input, Casa casa) {
+    public FornecedorEnergia parseFornecedorEnergia(String input) {
         String[] campos = input.split(",");
-        int volume = Integer.parseInt(campos[0]);
-        String estacao = campos[1];
-        double consumo = Double.parseDouble(campos[3]);
-        return new SmartSpeaker(.giveDeviceId(), volume,estacao,consumo);
+        String nome = campos[0];
+        return new FornecedorEnergia(nome); //está a dar mas no meu pede mais argumentos -> VER
     }
 
-    
+    // O nelson tem um parse da Marca mas não temos nenum classe para marca
 
+    // Ele tem uma simulação, não sei se é para fazer
+
+    //Que é isto?
     /*
     public CasaInteligente parseCasa(String input){
         String[] campos = input.split(",");

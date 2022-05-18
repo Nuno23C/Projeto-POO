@@ -48,18 +48,24 @@ public class Fatura implements Serializable {
     }
 
     public String toString() {
-        String sb = "Id da casa: " + this.idCasa + "\n" +
-                    "Data inicial: " + this.dataInicial + "\n" +
-                    "Data final: " + this.dataFinal + "\n" +
-                    "Consumo da casa durante o período de tempo: " + this.consumo + "W" + "\n" +
-                    "Custo: " + this.custo + "€" + "\n";
+        StringBuilder sb = new StringBuilder();
 
-        return sb;
+        sb.append("House ID: " + this.idCasa + "\n");
+        sb.append("Data inicial: " + this.dataInicial + "\n");
+        sb.append("Data final: " + this.dataFinal + "\n");
+        sb.append("Consumo da casa durante o período de tempo: " + this.consumo + "kwh" + "\n");
+        sb.append("Custo: " + this.custo + "€" + "\n");
+
+        return sb.toString();
     }
 
     public Fatura clone() {
         return new Fatura(this);
     }
+
+
+
+
 
     // Getters and Setters
     public String getIdCasa() {
