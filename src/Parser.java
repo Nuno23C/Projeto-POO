@@ -19,6 +19,15 @@ public class Parser {
         this.cidade = cidade;
     }
 
+    public List<String> lerFicheiro(String nomeFich) {
+        List<String> lines;
+
+        try {lines = Files.readAllLines(Paths.get(nomeFich), StandardCharsets.UTF_8);}
+        catch(IOException exc) {lines = new ArrayList<>();}
+
+        return lines;
+    }
+
     public void parse() throws IOException{
         Path path = Path.of("logs.txt");
         String conteudo = Files.readString(path);
@@ -67,8 +76,9 @@ public class Parser {
                     break;
 
                 case "Fornecedor":
-                    FornecedorEnergia fe = parseFornecedorEnergia(linhaPartida[1]);
-                    casa.add_Fornecedor(fe);
+                    //FornecedorEnergia fe = parseFornecedorEnergia(linhaPartida[1]);
+                    //System.out.println(fe);
+                    //cidade.fornecedores.put(fe.getNomeEmpresa(), fe);
                     break;
 
                 default:
@@ -79,23 +89,17 @@ public class Parser {
         System.out.println("Feito");
     }
 
-    public List<String> lerFicheiro(String nomeFich) {
-        List<String> lines;
-
-        try {lines = Files.readAllLines(Paths.get(nomeFich), StandardCharsets.UTF_8);}
-        catch(IOException exc) {lines = new ArrayList<>();}
-
-        return lines;
-    }
-
     public Casa parseCasa(String input) {
         String[] campos = input.split(",");
         String nome = campos[0];
         String NIF = campos[1];
-        String Nomefornecedor = campos[2];
+        String nomeFornecedor = campos[2];
+        FornecedorEnergia fe = cidade.getFornecedor(nomeFornecedor);
+        String idCasa = Integer.toString(houseID);
+        cidade.fornecedorDaCasa.put(idCasa, fe);
         this.houseID++;
 
-        return new Casa(Integer.toString(houseID), nome, NIF, Nomefornecedor);
+        return new Casa(idCasa, nome, NIF, fe);
     }
 
     public SmartBulb parseSmartBulb(String input, Casa casa){
@@ -155,5 +159,8 @@ public class Parser {
         double desconto = Double.parseDouble(campos[2]);
 
         return new FornecedorEnergia(nome, valorBase, desconto);
+        //FornecedorEnergia fe = cidade.getFornecedor(nome);
+        //fe.setValorBase(valorBase);
+        //fe.setDesconto(desconto);
     }
 }

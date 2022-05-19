@@ -31,11 +31,7 @@ public class SmartCamera extends SmartDevice {
      * @param estado
      * @param resolucao
      */
-<<<<<<< HEAD
     public SmartCamera(String id, Estado estado, int x, int y, double tamanhoPacote, double consumoPorHora){
-=======
-    public SmartCamera(String id, int x, int y, double tamanhoPacote, double consumoPorHora){
->>>>>>> 2ecdf44fae413045c8640671127845927c3b4eed
         super(id);
         this.x = x;
         this.y = y;
@@ -111,11 +107,6 @@ public class SmartCamera extends SmartDevice {
         this.estado = Estado.OFF;
     }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 2ecdf44fae413045c8640671127845927c3b4eed
 
 
 

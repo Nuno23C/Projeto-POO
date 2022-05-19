@@ -29,6 +29,12 @@ public class Menu implements Serializable {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 
+    public void entertoContinue(Scanner scan) {
+        System.out.println("Press enter to continue!");
+        try{scan.nextLine();}
+        catch(Exception e){}
+    }
+
     public void saveState(Cidade cidade, String nomeFicheiro) {
        try {
            FileOutputStream fos = new FileOutputStream(nomeFicheiro);
@@ -229,12 +235,19 @@ public class Menu implements Serializable {
             case("9"):
                 clearConsole();
                 //System.out.println(cidade.toString());
+                System.out.println(cidade.listaCasas());
+                System.out.println("1 -----------");
                 System.out.println(cidade.listaInfoCasa("casa1"));
-
-                System.out.println("Press enter to continue");
-                try{System.in.read();}
-                catch(Exception e){}
-
+                System.out.println("2 -----------");
+                System.out.println(cidade.listaFornecedores());
+                System.out.println("3 -----------");
+                System.out.println(cidade.listaInfoFornecedor("MEO"));
+                System.out.println("4 -----------");
+                System.out.println(cidade.getCasa("casa1").listaDevices());
+                System.out.println("5 -----------");
+                System.out.println(cidade.getCasa("casa1").listaInfoDevice("lamp1"));
+                entertoContinue(scan);
+                //checkStateMenu(cidade, scan);
                 break;
 
             case("0"):
@@ -273,7 +286,7 @@ public class Menu implements Serializable {
 
         System.out.print("NIF: ");
         String NIF = scan.nextLine();
-        while(NIF.length() != 9 /* && onlyDigits(NIF, NIF.length())*/) {
+        while(NIF.length() != 9) {
             System.out.println("The NIF must have 9 characters!");
             System.out.print("Try another one: ");
             NIF = scan.nextLine();
@@ -353,20 +366,6 @@ public class Menu implements Serializable {
 
         createCidade(cidade, scan);
     }
-
-/*
-    public boolean onlyDigits(String str, int n) {
-        int i;
-        for (i = 0; i < n; i++) {
-            if (Character.isDigit(str.charAt(i)))
-                return true;
-            else
-                return false;
-        }
-
-        return false;
-    }
-*/
 
     public void createDivisao(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         String choice;
@@ -515,7 +514,7 @@ public class Menu implements Serializable {
                 break;
         }
 
-        System.out.print("Dimension: ");
+        System.out.print("Dimension (cm): ");
         double dimension = -1;
         while(dimension <= 0) {
             try {
@@ -527,7 +526,7 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        System.out.print("Base value: ");
+        System.out.print("Device base consumption (kWh): ");
         double consumoBase = -1;
         while(consumoBase < 0) {
             try {
@@ -601,7 +600,7 @@ public class Menu implements Serializable {
         System.out.print("\n");
 
 
-        System.out.print("Device base consumption: ");
+        System.out.print("Device base consumption (kWh): ");
         double consumoBase = -1;
         while(consumoBase < 0) {
             try {
@@ -653,19 +652,32 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        System.out.println("Resolution: ");
+        System.out.println("Resolution (px): ");
         System.out.print("x: ");
-        int x = scan.nextInt();
-        scan.nextLine();
+        int x = -1;
+        while(x < 0) {
+            try {
+                x = Integer.parseInt(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
+
         System.out.print("y: ");
-        int y = scan.nextInt();
-        scan.nextLine();
+        int y = -1;
+        while(y < 0) {
+            try {
+                y = Integer.parseInt(scan.nextLine());
+            } catch(NumberFormatException e) {
+                System.out.println("Invalid option, try again!");
+            }
+        }
 
         System.out.print("\n");
 
-        System.out.print("File size: ");
+        System.out.print("File size (sec): ");
         double tamanhoPacote = -1;
-        while(tamanhoPacote <= 0) {
+        while(tamanhoPacote < 0) {
             try {
                 tamanhoPacote = Double.parseDouble(scan.nextLine());
             } catch(NumberFormatException e) {
@@ -675,7 +687,7 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        System.out.print("Base value: ");
+        System.out.print("Device base consumption (kWh): ");
         double valorBase = -1;
         while(valorBase <= 0) {
             try {
@@ -713,7 +725,7 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        System.out.print("Discount: ");
+        System.out.print("Discount (%): ");
         double desconto = -1;
         while(desconto < 0) {
             try {
@@ -737,12 +749,11 @@ public class Menu implements Serializable {
         System.out.println("1 - Change house ID");
         System.out.println("2 - Change house adress");
         System.out.println("3 - Change house owner name");
-        System.out.println("4 - Change house NIF");
-        System.out.println("5 - Add a new division");
-        System.out.println("6 - Change division");
-        System.out.println("7 - Remove division");
-        System.out.println("8 - Change energy supplier");
-        System.out.println("9 - Turn On/Off all devices in the house");
+        System.out.println("4 - Add a new division");
+        System.out.println("5 - Change division");
+        System.out.println("6 - Remove division");
+        System.out.println("7 - Change energy supplier");
+        System.out.println("8 - Turn On/Off all devices in the house");
         System.out.println("0 - Go back");
         System.out.print("Choose an option: ");
         String choice = scan.nextLine();
@@ -778,14 +789,7 @@ public class Menu implements Serializable {
                 System.out.print("New Name: ");
                 String novoNome = scan.nextLine();
                 casa.setNome(novoNome);
-
-                System.out.print("\n");
-
-                break;
-
-            case("4"):
-                clearConsole();
-                System.out.print("New NIF: ");
+                System.out.print("NIF: ");
                 String novoNIF = scan.nextLine();
                 casa.setNIF(novoNIF);
 
@@ -793,12 +797,12 @@ public class Menu implements Serializable {
 
                 break;
 
-            case("5"):
+            case("4"):
                 clearConsole();
                 createDivisao(casa, cidade, scan);
                 break;
 
-            case("6"):
+            case("5"):
                 clearConsole();
                 System.out.println("What division do you want to change?");
                 System.out.print("Division name: ");
@@ -811,7 +815,7 @@ public class Menu implements Serializable {
                 changeDivisao(divName, casa, cidade, scan);
                 break;
 
-            case("7"):
+            case("6"):
                 clearConsole();
                 System.out.println("What division do you want to remove?");
                 System.out.print("Division name: ");
@@ -842,7 +846,7 @@ public class Menu implements Serializable {
                 System.out.println("\nDone");
                 break;
 
-            case("8"):
+            case("7"):
                 clearConsole();
                 System.out.println("What do you want to do?");
                 System.out.println("1 - Create a new energy supplier");
@@ -883,7 +887,7 @@ public class Menu implements Serializable {
                 }
                 break;
 
-            case("9"):
+            case("8"):
                 clearConsole();
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
@@ -1261,13 +1265,19 @@ public class Menu implements Serializable {
             case("2"):
                 clearConsole();
                 System.out.print("New X: ");
-                int novoX = scan.nextInt();
-                scan.nextLine();
+                int novoX = -1;
+                while(novoX < 0) {
+                    try {novoX = Integer.parseInt(scan.nextLine());}
+                    catch(NumberFormatException e) {System.out.println("Invalid option, try again!");}
+                }
                 sc.setX(novoX);
 
                 System.out.println("New Y: ");
-                int novoY = scan.nextInt();
-                scan.nextLine();
+                int novoY = -1;
+                while(novoY < 0) {
+                    try {novoY = Integer.parseInt(scan.nextLine());}
+                    catch(NumberFormatException e) {System.out.println("Invalid option, try again!");}
+                }
                 sc.setY(novoY);
 
                 sd = (SmartDevice) sc;
@@ -1373,5 +1383,167 @@ public class Menu implements Serializable {
                 break;
         }
     }
+/*
+    public void checkStateMenu(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
+        clearConsole();
+        System.out.println("What do you want to check?");
+        System.out.println("1 - Houses");
+        System.out.println("2 - Devices");
+        System.out.println("3 - Energy Suppliers");
+        System.out.println("4 - Bills");
+        System.out.println("0 - Go back");
+        System.out.print("Choose an option: ");
+        String choice = scan.nextLine();
 
+        switch(choice){
+            case("1"):
+                clearConsole();
+                System.out.println("What do you want to check?");
+                System.out.println("1 - List of Houses");
+                System.out.println("2 - Information of specific House");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
+                choice = scan.nextLine();
+
+                switch(choice){
+                    case("1"):
+                        clearConsole();
+                        System.out.println(cidade.listaCasas());
+                        entertoContinue();
+                        break;
+
+                    case("2"):
+                        clearConsole();
+                        System.out.print("House ID: ");
+                        String idCasa = scan.nextLine();
+                        System.out.println(cidade.listaInfoCasa(idCasa));
+                        entertoContinue();
+                        break;
+
+                    case("0"):
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+
+                    default:
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+                }
+
+            case("2"):
+                clearConsole();
+                System.out.print("House id:");
+                String idCasa = scan.nextLine();
+                System.out.println("What do you want to check?");
+                System.out.println("1 - List of Devices");
+                System.out.println("2 - Information of specific Device");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
+                choice = scan.nextLine();
+
+                switch(choice){
+                    case("1"):
+                        clearConsole();
+                        System.out.println(cidade.getCasa(idCasa).listaDevices());
+                        entertoContinue();
+                        break;
+
+                    case("2"):
+                        clearConsole();
+                        System.out.print("Device ID: ");
+                        String idDevice = scan.nextLine();
+                        System.out.println(cidade.getCasa(idCasa).infoDevice(idDevice));
+                        entertoContinue();
+                        break;
+
+                    case("0"):
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+
+                    default:
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+                }
+
+            case("3"):
+                clearConsole();
+                System.out.println("What do you want to check?");
+                System.out.println("1 - List of Energy Suppliers: ");
+                System.out.println("2 - Information of specific Energy Supplier: ");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
+                choice = scan.nextLine();
+                switch(choice){
+                    case("1"):
+                        clearConsole();
+                        cidade.listaFornecedores();
+                        entertoContinue();
+                        break;
+
+                    case("2"):
+                        clearConsole();
+                        System.out.println("ID: ");
+                        String novoId = scan.nextLine();
+                        cidade.listaInfoFornecedor(novoId);
+                        entertoContinue();
+                        break;
+
+                    case("0"):
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+
+                    default:
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+                }
+
+            case("4"):
+                clearConsole();
+                System.out.println("What do you want to check?");
+                System.out.println("1 - List of Bills: ");
+                System.out.println("2 - Information of specific Bills: ");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
+                choice = scan.nextLine();
+                switch(choice){
+                    case("1"):
+                        clearConsole();
+                        //cidade.listaFaturas();
+                        entertoContinue();
+                        break;
+
+                    case("2"):
+                        clearConsole();
+                        //cidade.infoBills(novoId);
+                        entertoContinue();
+                        break;
+
+                    case("0"):
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+
+                    default:
+                        clearConsole();
+                        checkStateMenu(cidade, scan);
+                        break;
+                }
+            case("0"):
+                clearConsole();
+                mainMenu(scan);
+                break;
+
+            default:
+                clearConsole();
+                checkStateMenu(cidade, scan);
+                break;
+        }
+        checkStateMenu(cidade, scan);
+    }
+*/
 }

@@ -11,7 +11,7 @@ public class Casa implements Serializable {
     public Map<String, SmartDevice> dispositivos;
     public Map<String, List<String>> divisoes; // Nome da divisão - Dispositivos
     private FornecedorEnergia fornecedor;
-    private String Nomefornecedor;
+    //private String Nomefornecedor;
 
     public Casa() {
         this.idCasa = "";
@@ -42,13 +42,13 @@ public class Casa implements Serializable {
         setDivisoes(divisoes);
     }
 
-    public Casa(String idCasa, String nome, String NIF, String Nomefornecedor) {
+    public Casa(String idCasa, String nome, String NIF, FornecedorEnergia fornecedor) {
         this.idCasa = idCasa;
         this.nome = nome;
         this.NIF = NIF;
         this.divisoes = new HashMap<String,List<String>>();
         this.dispositivos = new HashMap<String,SmartDevice>();
-        this.Nomefornecedor = Nomefornecedor;
+        this.fornecedor = fornecedor;
     }
 
     public Casa(Casa casa) {
@@ -85,9 +85,12 @@ public class Casa implements Serializable {
         sb.append("Adress: " + this.morada + "\n");
         sb.append("House owner: " + this.nome + "\n");
         sb.append("NIF: " + this.NIF + "\n");
-        sb.append("Casa id: " + this.idCasa + "\n");
         sb.append("\n");
-        //...
+        for(String deviceID: this.dispositivos.keySet()) {
+            sb.append(this.dispositivos.get(deviceID).toString());
+            sb.append("\n");
+        }
+        sb.append(divisoes.toString());
 
         return sb.toString();
     }
@@ -192,7 +195,7 @@ public class Casa implements Serializable {
         return sb.toString();
     }
 
-    public String infoDevice(String idDevice){
+    public String listaInfoDevice(String idDevice){
         StringBuilder sb = new StringBuilder();
 
         sb.append(dispositivos.get(idDevice).toString());

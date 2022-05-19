@@ -33,7 +33,6 @@ public class Cidade implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Casas:\n");
-        sb.append(this.getCasas().size());
         for (Casa casa: this.casas.values()){
             sb.append(casa.toString());
             sb.append("\n");
@@ -125,6 +124,7 @@ public class Cidade implements Serializable {
         sb.append("List of energy suppliers:\n");
         for(String nomeF: fornecedores.keySet()){
             sb.append(nomeF);
+            sb.append("\n");
         }
 
         return sb.toString();
