@@ -25,22 +25,44 @@ import java.util.Map;
 public class Menu implements Serializable {
     Scanner scan;
 
+    /**
+     * Método que invoca o Menu Principal
+     * @param cidade
+     * @param s
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public Menu(Cidade cidade, Scanner s) throws IOException, InterruptedException, ClassNotFoundException{
         this.scan = s;
         clearConsole();
         mainMenu(scan);
     }
 
+    /**
+     * Método que "limpa" o terminal
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void clearConsole() throws IOException, InterruptedException {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 
+    /**
+     * Método enterToContinue
+     * @param scan
+     */
     public void enterToContinue(Scanner scan) {
         System.out.println("Press enter to continue!");
         try{scan.nextLine();}
         catch(Exception e){}
     }
 
+    /**
+     * Método que salva um Ficheiro
+     * @param cidade
+     * @param nomeFicheiro
+     */
     public void saveState(Cidade cidade, String nomeFicheiro) {
        try {
            FileOutputStream fos = new FileOutputStream(nomeFicheiro);
@@ -55,6 +77,13 @@ public class Menu implements Serializable {
        }
     }
 
+    /**
+     * Método
+     * @param nomeFicheiro
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @return c - retorna uma cidade
+     */
     public Cidade loadState(String nomeFicheiro) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(nomeFicheiro);
         ObjectInputStream ois = new ObjectInputStream(fis);
@@ -63,6 +92,13 @@ public class Menu implements Serializable {
         return c;
     }
 
+    /**
+     * Menu Principal
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void mainMenu(Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
         String choice;
@@ -90,7 +126,6 @@ public class Menu implements Serializable {
                 Parser parser = new Parser(cidade);
                 parser.parse();
                 createCidade(cidade, scan);
-
                 break;
 
             default:
@@ -100,6 +135,14 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que cria o menu que cria a cidade
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void createCidade(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
         String choice;
@@ -279,6 +322,14 @@ public class Menu implements Serializable {
         createCidade(cidade, scan);
     }
 
+    /**
+     * Método que cria uma Casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void createCasa(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
 
@@ -411,6 +462,15 @@ public class Menu implements Serializable {
         return Pattern.matches("[a-zA-Z]+", in);
     }
 
+    /**
+     * Método que cria uma Divisão de uma Casa
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void createDivisao(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
 
@@ -459,6 +519,15 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que cria um Device
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @return sd - Retorna um Device
+     */
     public SmartDevice createDevice(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         SmartDevice sd = null;
         String choice;
@@ -513,7 +582,13 @@ public class Menu implements Serializable {
         return sd;
     }
 
-
+    /**
+     * Método que cria uma Lampada
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @return sb - Retorna uma Lampada
+     */
     public SmartDevice createSmartBulb(Casa casa, Cidade cidade, Scanner scan) {
         String choice;
         SmartBulb sb = null;
@@ -649,6 +724,13 @@ public class Menu implements Serializable {
         return sb;
     }
 
+    /**
+     * Método que cria uma Coluna
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @return ss - Retorna uma Coluna
+     */
     public SmartDevice createSmartSpeaker(Casa casa, Cidade cidade, Scanner scan) {
         String choice;
         SmartSpeaker ss = null;
@@ -756,6 +838,13 @@ public class Menu implements Serializable {
         return ss;
     }
 
+    /**
+     * Método que cria uma Camera
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @return sc - Retorna uma Camera
+     */
     public SmartDevice createSmartCamera(Casa casa, Cidade cidade, Scanner scan){
         String choice;
         SmartCamera sc = null;
@@ -868,6 +957,12 @@ public class Menu implements Serializable {
         return sc;
     }
 
+    /**
+     * Método que cria um Fornecedor de Energia
+     * @param cidade
+     * @param scan
+     * @return fe - Retorna um Fornecedor de Energia
+     */
     public FornecedorEnergia criaFornecedorEnergia(Cidade cidade, Scanner scan) {
         System.out.print("Energy supplier name: ");
         String nomeFornecedor = scan.nextLine();
@@ -909,6 +1004,15 @@ public class Menu implements Serializable {
         return fe;
     }
 
+    /**
+     * Método que muda as informações de uma Casa
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void changeCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         System.out.println("What do you want to do?");
         System.out.println("1 - Change house ID");
@@ -1097,6 +1201,16 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que muda as informações de uma Divisao
+     * @param divName
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void changeDivisao(String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         System.out.println("What do you want to do?");
         System.out.println("1 - Change division name");
@@ -1190,6 +1304,17 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que muda as informações de um Device
+     * @param sd
+     * @param divName
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void changeDevice(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
         System.out.println("What do you want to do?");
@@ -1226,6 +1351,15 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que muda as informações de uma SmartBulb
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void changeSmartBulb(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartBulb ID");
@@ -1324,6 +1458,17 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que muda as informações de um SmartSpeaker
+     * @param sd
+     * @param divName
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void changeSmartSpeaker(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartSpeaker ID");
@@ -1404,6 +1549,17 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que muda as informações de uma SmartCamera
+     * @param sd
+     * @param divName
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void changeSmartCamera(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartCamera ID");
@@ -1488,6 +1644,15 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que muda as informações de um Fornecedor de Energia
+     * @param fe
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void changeFornecedorEnergia(FornecedorEnergia fe, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         System.out.println("What do you want to do?");
         System.out.println("1 - Change name");
@@ -1549,6 +1714,14 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que mostra as informações da Cidade
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void checkStateMenu(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         clearConsole();
         System.out.println("What do you want to check?");
@@ -1716,6 +1889,14 @@ public class Menu implements Serializable {
         checkStateMenu(cidade, scan);
     }
 
+    /**
+     * Método que avança o tempo
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void simulation(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
         String choice;
@@ -1742,7 +1923,7 @@ public class Menu implements Serializable {
         }
 
         clearConsole();
-/*
+
         System.out.println("Initial date:");
         System.out.println("1 - Atual");
         System.out.println("2 - Enter a new date");
@@ -1769,15 +1950,24 @@ public class Menu implements Serializable {
         String dataF = scan.nextLine();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         LocalDateTime dataFinal = LocalDateTime.parse(dataF, formatter);
+        while(!dataInicial.isBefore(dataFinal)) {
+            System.out.println("Invalid date, try again!");
+            dataF = scan.nextLine();
+            formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            dataFinal = LocalDateTime.parse(dataF, formatter);
+        }
+
+        System.out.print("\n");
 
         System.out.println("Initial date: " + dataInicial);
         System.out.println("Final date: " + dataFinal);
+
+        System.out.print("\n");
 
         long periodo = ChronoUnit.DAYS.between(dataInicial, dataFinal);
         System.out.println(periodo);
 
         enterToContinue(scan);
-*/
 
         clearConsole();
         System.out.println("What do you want to do?");

@@ -26,6 +26,15 @@ public class SmartSpeaker extends SmartDevice {
         this.consumoF = 0;
     }
 
+    /**
+     * Construtor parametrizado
+     * @param id
+     * @param estado
+     * @param marca
+     * @param volume
+     * @param radioOnline
+     * @param consumoBase
+     */
     public SmartSpeaker(String id, Estado estado, String marca, int volume, String radioOnline, double consumoBase) {
         super(id);
         this.estado = estado;
@@ -36,6 +45,15 @@ public class SmartSpeaker extends SmartDevice {
         this.consumoF = volume * consumoBase;
     }
 
+    /**
+     * Construtor parametrizado especializado
+     * @param id
+     * @param n_estado
+     * @param marca
+     * @param volume
+     * @param radioOnline
+     * @param consumoBase
+     */
     public SmartSpeaker(String id, int n_estado, String marca, int volume, String radioOnline, double consumoBase) {
         super(id);
         this.n_estado = n_estado;
@@ -60,6 +78,11 @@ public class SmartSpeaker extends SmartDevice {
         this.consumoF = ss.getConsumoF();
     }
 
+    /**
+     * Método que verifica se os duas SmartSpeakers são iguais.
+     * @param o SmartSpeaker passada como parâmetro.
+     * @return True se as SmartSpeakers forem iguais | False se as SmartSpeakers forem diferentes.
+     */
     public boolean equals (Object o) {
         if (this == o)
             return true;
@@ -77,6 +100,10 @@ public class SmartSpeaker extends SmartDevice {
                 ss.getConsumoF() == this.consumoF);
     }
 
+    /**
+     * Método que representa a SmartSpeaker em formato de texto.
+     * @return String com as características da SmartSpeaker.
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
@@ -91,77 +118,138 @@ public class SmartSpeaker extends SmartDevice {
         return sb.toString();
     }
 
+    /**
+     * Método que cria um clone da SmartSpeaker.
+     * @return Clone da SmartSpeaker.
+     */
     public SmartSpeaker clone() {
         return new SmartSpeaker(this);
     }
 
+    /**
+     * Método que liga uma SmartSpeaker
+     */
     public void turnOn() {
         this.estado = Estado.ON;
     }
 
+    /**
+     * Método que desliga uma SmartSpeaker
+     */
     public void turnOff() {
         this.estado = Estado.OFF;
     }
 
 
 
-
-
-
-
-    // Getters and Setters
+    /**
+     * Método get que dá o estado da SmartSpeaker.
+     * @return estado
+     */
     public Estado getEstado() {
         return this.estado;
     }
 
+    /**
+     * Método set que altera o estado da SmartSpeaker.
+     * @param estado
+     */
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
+    /**
+     * Método get que dá o n_estado da SmartSpeaker.
+     * @return n_estado
+     */
     public int getN_estado() {
         return this.n_estado;
     }
 
+    /**
+     * Método set que altera o estado da SmartSpeaker.
+     * @param n_estado
+     */
     public void setN_estado(int n_estado) {
         this.n_estado = n_estado;
     }
 
+    /**
+     * Método get que dá a marca da SmartSpeaker.
+     * @return marca
+     */
     public String getMarca() {
         return marca;
     }
 
+    /**
+     * Método set que altera a marca da SmartSpeaker.
+     * @param marca
+     */
     public void setMarca(String marca) {
         this.marca = marca;
     }
 
+    /**
+     * Método get que dá o volume da SmartSpeaker.
+     * @return volume
+     */
     public int getVolume() {
         return volume;
     }
 
+    /**
+     * Método set que altera o volume da SmartSpeaker.
+     * @param volume
+     */
     public void setVolume(int volume) {
         this.volume = volume;
     }
 
+    /**
+     * Método get que dá a radio online da SmartSpeaker.
+     * @return radioOnline
+     */
     public String getRadioOnline() {
         return radioOnline;
     }
 
+    /**
+     * Método set que altera a radio online da SmartSpeaker.
+     * @param radioOnline
+     */
     public void setRadioOnline(String radioOnline) {
         this.radioOnline = radioOnline;
     }
 
+    /**
+     * Método get que dá o consumo base SmartSpeaker.
+     * @return consumoBase
+     */
     public double getConsumoBase() {
         return this.consumoBase;
     }
 
+    /**
+     * Método set que altera o estado da SmartSpeaker.
+     * @param consumoBase
+     */
     public void setConsumoBase(double consumoBase) {
         this.consumoBase = consumoBase;
     }
 
+    /**
+     * Método get que dá o consumo final da SmartSpeaker.
+     * @return consumoF
+     */
     public double getConsumoF() {
         return this.consumoF;
     }
 
+    /**
+     * Método set que altera o consumo final da SmartSpeaker.
+     * @param consumoF
+     */
     public void setConsumoF(double consumoF) {
         this.consumoF = consumoF;
     }

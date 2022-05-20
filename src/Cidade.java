@@ -201,6 +201,12 @@ public class Cidade implements Serializable {
         return sb.toString();
     }
 
+    //ap<String, List<Fatura>> faturas = new HashMap<>();
+
+
+
+
+
 
 
 

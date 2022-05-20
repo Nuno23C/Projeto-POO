@@ -44,6 +44,14 @@ public class SmartBulb extends SmartDevice {
         this.consumoF = consumoBase;
     }
 
+    /**
+     * Construtor parametrizado especializado
+     * @param id
+     * @param n_estado
+     * @param string_tone
+     * @param dimensao
+     * @param consumoBase
+     */
     public SmartBulb(String id, int n_estado, String string_tone, double dimensao, double consumoBase) {
         super(id);
         this.n_estado = n_estado;
@@ -104,18 +112,23 @@ public class SmartBulb extends SmartDevice {
         sb.append("Device id: " + this.getId() + "\n");
         sb.append("Mode: " + this.estado + "\n");
         sb.append("Tone: " + this.tone + "\n");
-        sb.append("Dimension: " + this.dimensao +  "cm" + "\n");
+        sb.append("Dimension: " + this.dimensao + "cm" + "\n");
         sb.append("Device base consumption: " + this.consumoBase + "kWh" + " \n");
         sb.append("Device consumption: " + this.consumoF + "kWh" + " \n");
 
         return sb.toString();
     }
 
-
+    /**
+     * Método que liga uma SmartBulb
+     */
     public void turnOn() {
         this.estado = Estado.ON;
     }
 
+    /**
+     * Método que desliga uma SmartBulb
+     */
     public void turnOff() {
         this.estado = Estado.OFF;
     }
@@ -143,65 +156,116 @@ public class SmartBulb extends SmartDevice {
 
 
 
-
-
-
-    // Getters and Setters
+    /**
+     * Método get que dá o valor do estado
+     * @return estado
+     */
     public Estado getEstado() {
         return this.estado;
     }
 
+    /**
+     * Método set que altera o valor do estado
+     * @param estado
+     */
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
+    /**
+     * Método get que dá o valor da tonalidade
+     * @return tone
+     */
     public Tonalidade getTone() {
         return tone;
     }
 
+    /**
+     * Método get que altera o valor da tonalidade
+     * @param tone
+     */
     public void setTone(Tonalidade tone) {
         this.tone = tone;
     }
 
+    /**
+     * Método get que dá o valor da string tonalidade
+     * @return string_tonalidade
+     */
     public String getString_tone() {
         return this.string_tone;
     }
 
+    /**
+     * Método set que altera o valor da string tonalidade
+     * @return string_tonalidade
+     */
     public void setString_tone(String string_tone) {
         this.string_tone = string_tone;
     }
 
+    /**
+     * Método get que dá o valor do n_estado
+     * @return n_estado
+     */
     public int getN_estado() {
         return this.n_estado;
     }
 
+    /**
+     * Método set que altera o valor do n_estado
+     * @param n_estado
+     */
     public void setN_estado(int n_estado) {
         this.n_estado = n_estado;
     }
 
+    /**
+     * Método get que dá o valor da dimensão de uma SmartBulb
+     * @return dimensao
+     */
     public double getDimensao() {
         return this.dimensao;
     }
 
+    /**
+     * Método set que altera o valor da dimensao
+     * @param dimensao
+     */
     public void setDimensao(double dimensao) {
         this.dimensao = dimensao;
     }
 
+    /**
+     * Método get que dá o valor do consumo base
+     * @return consumoBase
+     */
     public double getConsumoBase() {
         return consumoBase;
     }
 
+    /**
+     * Método set que altera o valor do consumo por hora
+     * @param consumobase
+     */
     public void setConsumoPorHora(double consumoBase) {
         this.consumoBase = consumoBase;
     }
 
+    /**
+     * Método get que dá o valor do consumo final
+     * @return consumoF
+     */
     public double getConsumoF() {
         return consumoF;
     }
 
+    /**
+     * Método set que altera o valor do consumo final
+     * @param consumoF
+     */
     public void setConsumoF(double consumoF) {
         this.consumoF = consumoF;
     }
-
 
 }

@@ -8,6 +8,9 @@ public class Fatura implements Serializable {
     private LocalDateTime dataInicial;
     private LocalDateTime dataFinal;
 
+    /**
+     * Construtor por omissão
+     */
     public Fatura() {
         this.idCasa = "";
         this.consumo = 0;
@@ -16,6 +19,14 @@ public class Fatura implements Serializable {
         this.dataFinal = LocalDateTime.now();
     }
 
+    /**
+     * Construtor parametrizado
+     * @param idCsa
+     * @param consumo
+     * @param custo
+     * @param dataInicial
+     * @param dataFinal
+     */
     public Fatura(String idCasa, double consumo, double custo, LocalDateTime dataInicial, LocalDateTime dataFinal) {
         this.idCasa = idCasa;
         this.consumo = consumo;
@@ -24,6 +35,9 @@ public class Fatura implements Serializable {
         this.dataFinal = dataFinal;
     }
 
+    /**
+     * Construtor por cópia
+     */
     public Fatura(Fatura f) {
         this.idCasa = f.getIdCasa();
         this.consumo = f.getConsumo();
@@ -32,6 +46,11 @@ public class Fatura implements Serializable {
         this.dataFinal = f.getDataFinal();
     }
 
+    /**
+     * Método que verifica se duas faturas são iguais.
+     * @param o fatura passada como parâmetro
+     * @return True se as faturas forem iguais | False se as faturas forem diferentes
+     */
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -47,6 +66,10 @@ public class Fatura implements Serializable {
                 this.dataFinal.equals(f.getDataFinal()));
     }
 
+    /**
+     * Método que representa uma fatura em formato de texto.
+     * @return String com as características de uma fatura.
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
@@ -59,31 +82,54 @@ public class Fatura implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * Método que cria um clone da fatura.
+     * @return Clone da fatura.
+     */
     public Fatura clone() {
         return new Fatura(this);
     }
 
 
 
-
-
     // Getters and Setters
+
+    /**
+     * Método get que dá o id da casa
+     * @return idCasa
+     */
     public String getIdCasa() {
         return this.idCasa;
     }
 
+    /**
+     * Método set que altera o id da casa
+     * @param idCasa
+     */
     public void setIdCasa(String idCasa) {
         this.idCasa = idCasa;
     }
 
+    /**
+     * Método get que dá o consumo da casa
+     * @return consumo
+     */
     public double getConsumo() {
         return this.consumo;
     }
 
+    /**
+     * Método set que altera o consumo da casa
+     * @param consumo
+     */
     public void setConsumo(double consumo) {
         this.consumo = consumo;
     }
 
+    /**
+     * Método get que dá o id da casa
+     * @return idCasa
+     */
     public double getCusto() {
         return this.custo;
     }

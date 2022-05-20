@@ -10,8 +10,8 @@ import SmartDevices.SmartCamera;
 import SmartDevices.SmartSpeaker;
 
 public class Parser {
-    private int houseID = 0;
-    private int deviceID = 0;
+    private int houseID = 1;
+    private int deviceID = 1;
     private Cidade cidade;
 
     public Parser() {
@@ -32,7 +32,7 @@ public class Parser {
     }
 
     public void parse() throws IOException{
-        Path path = Path.of("logs.txt");
+        Path path = Path.of("mylogs.txt");
         String conteudo = Files.readString(path);
         String[] conteudoPartido = conteudo.split("\n");
         String[] linhaPartida;
@@ -47,6 +47,7 @@ public class Parser {
                 case "Casa":
                     casa = parseCasa(linhaPartida[1]);
                     cidade.add_Casa(casa.getIdCasa(), casa);
+                    cidade.getFornecedorDaCasa().put(casa.getIdCasa(), casa.getFornecedor());
 
                     break;
 
@@ -74,15 +75,15 @@ public class Parser {
                     }
 
                     switch(sb.getString_tone()) {
-                        case("NEUTRAl"):
+                        case("Neutral"):
                             sb.turn_NEUTRAL();
                             break;
 
-                        case("WARM"):
+                        case("Warm"):
                             sb.turn_WARM();
                             break;
 
-                        case("COLD"):
+                        case("Cold"):
                             sb.turn_COLD();
                             break;
                     }
@@ -93,6 +94,17 @@ public class Parser {
                         System.out.println("Invalid line!");
                     SmartSpeaker ss = parseSmartSpeaker(linhaPartida[1], casa);
                     casa.add_DispositivoNaDivisao(divisao, ss);
+
+                    switch(ss.getN_estado()) {
+                        case(1):
+                            ss.turnOn();
+                            break;
+
+                        case(2):
+                            ss.turnOff();
+                            break;
+                    }
+
                     break;
 
                 case "SmartCamera":
@@ -100,6 +112,17 @@ public class Parser {
                         System.out.println("Invalid line!");
                     SmartCamera sc = parseSmartCamera(linhaPartida[1], casa);
                     casa.add_DispositivoNaDivisao(divisao, sc);
+
+                    switch(sc.getN_estado()) {
+                        case(1):
+                            sc.turnOn();
+                            break;
+
+                        case(2):
+                            sc.turnOff();
+                            break;
+                    }
+
                     break;
 
                 case "Fornecedor":
@@ -123,7 +146,7 @@ public class Parser {
         String nomeFornecedor = campos[2];
         FornecedorEnergia fe = cidade.getFornecedor(nomeFornecedor);
         String idCasa = Integer.toString(houseID);
-        cidade.getFornecedorDaCasa().put(idCasa, fe);
+        //cidade.getFornecedorDaCasa().put(idCasa, fe);
         this.houseID++;
 
         return new Casa(idCasa, nome, NIF, fe);
@@ -134,9 +157,10 @@ public class Parser {
         String string_tone = campos[0];
         int dimensoes = Integer.parseInt(campos[1]);
         double consumo = Double.parseDouble(campos[2]);
+        String deviceID = Integer.toString(this.deviceID);
         this.deviceID++;
 
-        return new SmartBulb(Integer.toString(deviceID), 1, string_tone, dimensoes, consumo);
+        return new SmartBulb(deviceID, 1, string_tone, dimensoes, consumo);
     }
 
     public SmartSpeaker parseSmartSpeaker(String input, Casa casa) {
@@ -145,9 +169,10 @@ public class Parser {
         String radioOnline = campos[1];
         String marca = campos[2];
         double consumo = Double.parseDouble(campos[3]);
+        String deviceID = Integer.toString(this.deviceID);
         this.deviceID++;
 
-        return new SmartSpeaker(Integer.toString(deviceID), SmartSpeaker.Estado.OFF, marca, volume, radioOnline, consumo);
+        return new SmartSpeaker(deviceID, 1, marca, volume, radioOnline, consumo);
     }
 
     public SmartCamera parseSmartCamera(String input, Casa casa) {
@@ -160,9 +185,10 @@ public class Parser {
         int altura = Integer.parseInt(larguraAltura[1]);
         double tamanho = Double.parseDouble(campos[1]);
         double consumo = Double.parseDouble(campos[2]);
+        String deviceID = Integer.toString(this.deviceID);
         this.deviceID++;
 
-        return new SmartCamera(Integer.toString(deviceID), SmartCamera.Estado.OFF, largura, altura, tamanho, consumo);
+        return new SmartCamera(deviceID, 1, largura, altura, tamanho, consumo);
     }
 
     public FornecedorEnergia parseFornecedorEnergia(String input, Cidade cidade) {

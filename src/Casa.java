@@ -12,6 +12,9 @@ public class Casa implements Serializable {
     private Map<String, List<String>> divisoes; // Nome da divisão - Dispositivos
     private FornecedorEnergia fornecedor;
 
+    /**
+     * Construtor por omissão
+     */
     public Casa() {
         this.idCasa = "";
         this.morada = "";
@@ -22,6 +25,16 @@ public class Casa implements Serializable {
         this.fornecedor = null;
     }
 
+    /**
+     * Construtor parametrizado
+     * @param idCasa
+     * @param morada
+     * @param nome
+     * @param NIF
+     * @param dispositivos
+     * @param divisoes
+     * @param fornecedor
+     */
     public Casa(String idCasa, String morada, String nome, String NIF, Map<String, SmartDevice> dispositivos, Map<String, List<String>> divisoes, FornecedorEnergia fornecedor) {
         this.idCasa = idCasa;
         this.morada = morada;
@@ -32,6 +45,15 @@ public class Casa implements Serializable {
         this.fornecedor = fornecedor;
     }
 
+    /**
+     * Construtor parametrizado especializado
+     * @param idCasa
+     * @param morada
+     * @param nome
+     * @param NIF
+     * @param dispositivos
+     * @param divisoes
+     */
     public Casa(String idCasa, String morada, String nome, String NIF, Map<String, SmartDevice> dispositivos, Map<String, List<String>> divisoes) {
         this.idCasa = idCasa;
         this.morada = morada;
@@ -41,6 +63,16 @@ public class Casa implements Serializable {
         setDivisoes(divisoes);
     }
 
+    /**
+     * Construtor parametrizado
+     * @param idCasa
+     * @param morada
+     * @param nome
+     * @param NIF
+     * @param dispositivos
+     * @param divisoes
+     * @param fornecedor
+     */
     public Casa(String idCasa, String nome, String NIF, FornecedorEnergia fornecedor) {
         this.idCasa = idCasa;
         this.nome = nome;
@@ -90,8 +122,15 @@ public class Casa implements Serializable {
             sb.append("\n");
         }
         sb.append("\n");
-        sb.append(divisoes.toString());
-        sb.append("Energy supplier: " + this.fornecedor + "\n");
+        sb.append("{");
+        for(String div: divisoes.keySet()) {
+            for(String sd: divisoes.get(div)) {
+                sb.append(sd);
+                sb.append("\n");
+            }
+        }
+        sb.append("}");
+        sb.append("Energy supplier: " + this.fornecedor.toString() + "\n");
 
         return sb.toString();
     }

@@ -7,8 +7,8 @@ public class SmartCamera extends SmartDevice {
     }
     private Estado estado;
     private int n_estado;
-    private int x;
-    private int y;
+    private int x; //resolução (comprimento)
+    private int y; //resolução (largura)
     private long tempoLigada;
     private double tamanhoPacote;
     private double consumoBase;
@@ -44,6 +44,15 @@ public class SmartCamera extends SmartDevice {
         this.consumoF = consumoBase * x * y;
     }
 
+    /**
+     * Construtor parametrizado especializado
+     * @param id
+     * @param n_estado
+     * @param x
+     * @param y
+     * @param tamanhoPacote
+     * @param consumoBase
+     */
     public SmartCamera(String id, int n_estado, int x, int y, double tamanhoPacote, double consumoBase){
         super(id);
         this.n_estado = n_estado;
@@ -98,7 +107,7 @@ public class SmartCamera extends SmartDevice {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Decice ID:" + "this.id" + "\n");
+        sb.append("Device ID:" + this.getId() + "\n");
         sb.append("Mode: " + this.estado + "\n");
         sb.append("Resolution: " + "(" + this.x + "x" + this.y + ")" + "\n");
         sb.append("File size: " + this.tamanhoPacote + "sec" + "\n");
@@ -116,10 +125,16 @@ public class SmartCamera extends SmartDevice {
         return new SmartCamera(this);
     }
 
+    /**
+     * Método que liga uma SmartCamera.
+     */
     public void turnOn() {
         this.estado = Estado.ON;
     }
 
+    /**
+     * Método que desliga uma SmartCamera.
+     */
     public void turnOff() {
         this.estado = Estado.OFF;
     }
@@ -127,59 +142,130 @@ public class SmartCamera extends SmartDevice {
 
 
 
-    // Getters and Setters
+    /**
+     * Método get que dá o estado da SmartCamera.
+     * @return estado
+     */
     public Estado getEstado() {
         return this.estado;
     }
 
+    /**
+     * Método set que o eera stado da SmartCamera.
+     * @param estado
+     */
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
+    /**
+     * Método get que dá o n_estado da SmartCamera.
+     * @return n_estado
+     */
     public int getN_estado() {
         return this.n_estado;
     }
 
+    /**
+     * Método set que altera o estado da SmartCamera.
+     * @param n_estado
+     */
     public void setN_estado(int n_estado) {
         this.n_estado = n_estado;
     }
 
+    /**
+     * Método get que dá o x da resolução da SmartCamera.
+     * @return x
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Método set que altera o x da resolução da SmartCamera.
+     * @param x o
+     */
     public void setX(int x) {
         this.x = x;
     }
 
+    /**
+     * Método get que dá y da resolução da SmartCamera.
+     * @return y
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Método set que altera o y da resolução da SmartCamera.
+     * @param y
+     */
     public void setY(int y) {
         this.y = y;
     }
 
+    /**
+     * Método get que dá o tempo ligado da SmartCamera.
+     * @return tempoLigada
+     */
     public long getTempoLigada() {
         return this.tempoLigada;
     }
 
+    /**
+     * Método set que altera o tempo ligado da SmartCamera.
+     * @param tempoLigada
+     */
+    public void setTempoLigada(long tempoLigada){
+        this.tempoLigada = tempoLigada;
+    }
+
+    /**
+     * Método get que dá o tamanho do pacote da SmartCamera.
+     * @return tamanhoPacote
+     */
     public double getTamanhoPacote() {
         return tamanhoPacote;
     }
 
+    /**
+     * Método set que altera o tamnho do pacote da SmartCamera.
+     * @param tempoLigada
+     */
+    public void setTamanhoPacote(double tamanhoPacote){
+        this.tamanhoPacote = tamanhoPacote;
+    }
+
+    /**
+     * Método get que dá o consumo base da SmartCamera.
+     * @return consumoBase
+     */
     public double getConsumoBase() {
         return consumoBase;
     }
 
+    /**
+     * Método set que altera o consumo base da SmartCamera.
+     * @param consumoBase
+     */
     public void setConsumoBase(double consumoBase) {
         this.consumoBase = consumoBase;
     }
 
+    /**
+     * Método get que dá o consumo final da SmartCamera.
+     * @return consumoF
+     */
     public double getConsumoF() {
         return consumoF;
     }
 
+    /**
+     * Método set que altera o  onsumo finalartCamera.
+     * @param consumoF
+     */
     public void setConsumoF(double consumoF) {
         this.consumoF = consumoF;
     }
