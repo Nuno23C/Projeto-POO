@@ -125,6 +125,7 @@ public class Menu implements Serializable {
             case("2"):
                 Parser parser = new Parser(cidade);
                 parser.parse();
+                enterToContinue(scan);
                 createCidade(cidade, scan);
                 break;
 

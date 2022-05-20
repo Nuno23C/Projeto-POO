@@ -127,7 +127,6 @@ public class Parser {
 
                 case "Fornecedor":
                     FornecedorEnergia fe = parseFornecedorEnergia(linhaPartida[1], cidade);
-                    System.out.println(fe);
                     cidade.add_Fornecedor(fe);
                     break;
 
@@ -144,7 +143,9 @@ public class Parser {
         String nome = campos[0];
         String NIF = campos[1];
         String nomeFornecedor = campos[2];
+        System.out.println(nomeFornecedor);
         FornecedorEnergia fe = cidade.getFornecedor(nomeFornecedor);
+        System.out.println(fe);
         String idCasa = Integer.toString(houseID);
         //cidade.getFornecedorDaCasa().put(idCasa, fe);
         this.houseID++;

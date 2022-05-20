@@ -201,7 +201,13 @@ public class Cidade implements Serializable {
         return sb.toString();
     }
 
-    //ap<String, List<Fatura>> faturas = new HashMap<>();
+/*
+    private Map<String, Casa> casas = new HashMap<>(); // Id da casa - Casa (Todas as casas)
+    private Map<String, FornecedorEnergia> fornecedorDaCasa = new HashMap<>(); // idCasa - Fornecedor (Fornecedor de cada casa)
+    private Map<String, FornecedorEnergia> fornecedores = new HashMap<>(); // Nome do fornecedor - Fornecedor (Todos os fornecedores existentes)
+    private Map<String, List<Fatura>> faturas = new HashMap<>(); // Nome da Casas - Lista de faturas (Todas as faturas de todas as casas)
+*/
+
 
 
 
