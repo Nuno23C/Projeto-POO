@@ -85,7 +85,7 @@ public class FornecedorEnergia implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Nome da Empresa: " + this.nomeEmpresa + "\n");
+        sb.append("Energy supplier name: " + this.nomeEmpresa + "\n");
         sb.append("Tax: " + this.imposto + "\n");
         sb.append("Base value: " + this.valorBase + "\n");
         sb.append("Discount: " + this.desconto + "\n");
@@ -101,49 +101,49 @@ public class FornecedorEnergia implements Serializable {
         return new FornecedorEnergia(this);
     }
 
-    public double getPrecoDispositivoPorHora(SmartDevice sd){
-        return (this.valorBase * sd.getConsumoPorHora() * this.imposto) * (1 - (this.desconto/100));
+    public double getPrecoDispositivo(SmartDevice sd){
+        return (this.valorBase * sd.getConsumoF() * this.imposto) * (1 - (this.desconto/100));
     }
 
     // Quando recebe a casa
-    public double getPrecoCasaPorHora(Casa casa) {
+    public double getPrecoCasa(Casa casa) {
         double precoTotal = 0;
 
         for(SmartDevice sd: casa.getDispositivos().values()) {
-            precoTotal += getPrecoDispositivoPorHora(sd);
+            precoTotal += getPrecoDispositivo(sd);
         }
 
         return precoTotal;
     }
 
     // Quando recebe os dispositivos da casa
-    public double getPrecoCasaPorHora(Map<String, SmartDevice> dispositivos) {
+    public double getPrecoCasa(Map<String, SmartDevice> dispositivos) {
         double precoTotal = 0;
 
         for(SmartDevice sd: dispositivos.values()) {
-            precoTotal += getPrecoDispositivoPorHora(sd);
+            precoTotal += getPrecoDispositivo(sd);
         }
 
         return precoTotal;
     }
 
     // Quando recebe a casa
-    public double getConsumoCasaPorHora(Casa casa) {
+    public double getConsumoCasa(Casa casa) {
         double consumoTotal = 0;
 
         for(SmartDevice sd: casa.getDispositivos().values()) {
-            consumoTotal += getPrecoDispositivoPorHora(sd);
+            consumoTotal += sd.getConsumoF();
         }
 
         return consumoTotal;
     }
 
     // Quando recebe os dispositivos da casa
-    public double getConsumoCasaPorHora(Map<String, SmartDevice> dispositivos) {
+    public double getConsumoCasa(Map<String, SmartDevice> dispositivos) {
         double consumoTotal = 0;
 
         for(SmartDevice sd: dispositivos.values()) {
-            consumoTotal += sd.getConsumoPorHora();
+            consumoTotal += sd.getConsumoF();
         }
 
         return consumoTotal;

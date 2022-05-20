@@ -51,10 +51,10 @@ public class Fatura implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         sb.append("House ID: " + this.idCasa + "\n");
-        sb.append("Data inicial: " + this.dataInicial + "\n");
-        sb.append("Data final: " + this.dataFinal + "\n");
-        sb.append("Consumo da casa durante o período de tempo: " + this.consumo + "kwh" + "\n");
-        sb.append("Custo: " + this.custo + "€" + "\n");
+        sb.append("Initial date: " + this.dataInicial + "\n");
+        sb.append("Final date: " + this.dataFinal + "\n");
+        sb.append("Consumption during the time period: " + this.consumo + "kwh" + "\n");
+        sb.append("Cost: " + this.custo + "€" + "\n");
 
         return sb.toString();
     }

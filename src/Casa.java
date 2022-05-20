@@ -8,10 +8,9 @@ public class Casa implements Serializable {
     private String morada;
     private String nome;
     private String NIF;
-    public Map<String, SmartDevice> dispositivos;
-    public Map<String, List<String>> divisoes; // Nome da divisão - Dispositivos
+    private Map<String, SmartDevice> dispositivos;
+    private Map<String, List<String>> divisoes; // Nome da divisão - Dispositivos
     private FornecedorEnergia fornecedor;
-    //private String Nomefornecedor;
 
     public Casa() {
         this.idCasa = "";
@@ -90,7 +89,9 @@ public class Casa implements Serializable {
             sb.append(this.dispositivos.get(deviceID).toString());
             sb.append("\n");
         }
+        sb.append("\n");
         sb.append(divisoes.toString());
+        sb.append("Energy supplier: " + this.fornecedor + "\n");
 
         return sb.toString();
     }
@@ -185,12 +186,11 @@ public class Casa implements Serializable {
 
     public String listaDevices(){
         StringBuilder sb = new StringBuilder();
-        sb.append("List of devices");
-        sb.append("{");
+        sb.append("List of devices:\n");
         for(String idDevice: dispositivos.keySet()){
             sb.append(idDevice);
+            sb.append("\n");
         }
-        sb.append("}");
 
         return sb.toString();
     }

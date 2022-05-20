@@ -1,13 +1,16 @@
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import SmartDevices.SmartDevice;
+
 import java.io.*;
 
 public class Cidade implements Serializable {
-    public Map<String, Casa> casas = new HashMap<>(); // Id da casa - Casa (Todas as casas)
-    public Map<String, FornecedorEnergia> fornecedorDaCasa = new HashMap<>(); // idCasa - Fornecedor (Fornecedor de cada casa)
-    public Map<String, FornecedorEnergia> fornecedores = new HashMap<>(); // Nome do fornecedor - Fornecedor (Todos os fornecedores existentes)
-    public Map<String, List<Fatura>> faturas = new HashMap<>(); // Nome da Casas - Lista de faturas (Todas as faturas de todas as casas)
+    private Map<String, Casa> casas = new HashMap<>(); // Id da casa - Casa (Todas as casas)
+    private Map<String, FornecedorEnergia> fornecedorDaCasa = new HashMap<>(); // idCasa - Fornecedor (Fornecedor de cada casa)
+    private Map<String, FornecedorEnergia> fornecedores = new HashMap<>(); // Nome do fornecedor - Fornecedor (Todos os fornecedores existentes)
+    private Map<String, List<Fatura>> faturas = new HashMap<>(); // Nome da Casas - Lista de faturas (Todas as faturas de todas as casas)
 
     public Cidade() {
         this.casas = new HashMap<>();
@@ -84,6 +87,10 @@ public class Cidade implements Serializable {
         return this.fornecedores.get(nomeFornecedor);
     }
 
+    public void add_Fornecedor(FornecedorEnergia fe) {
+        this.fornecedores.put(fe.getNomeEmpresa(), fe);
+    }
+
     public int removeFornecedor(String nomeFornecedor) {
         int flag = 1;
 
@@ -97,11 +104,67 @@ public class Cidade implements Serializable {
         return flag;
     }
 
+    public double getConsumoCasaPeriodo(Casa casa, Cidade cidade, long periodo) {
+        double consumoTotal = 0;
+
+        for(SmartDevice sd: casa.getDispositivos().values()) {
+            consumoTotal += sd.getConsumoF();
+        }
+
+        return consumoTotal*periodo;
+    }
+
+    public Casa getCasaMaisGastadoraPeriodo(Cidade cidade, long period) {
+        double maiorValor = 0;
+        Casa casaM = null;
+
+        for(Casa c: cidade.getCasas().values()) {
+            double consumo = getConsumoCasaPeriodo(c, cidade, period);
+            if(consumo > maiorValor) {
+                maiorValor = consumo;
+                casaM = c;
+            }
+        }
+
+        return casaM;
+    }
+
+    public double getPrecoCasaPeriodo(Casa casa, long periodo) {
+        double precoTotal = 0;
+
+        for(SmartDevice sd: casa.getDispositivos().values()) {
+            precoTotal += getPrecoDispositivoPeriodo(casa, sd, periodo);
+        }
+
+        return precoTotal;
+    }
+
+    public double getPrecoDispositivoPeriodo(Casa casa, SmartDevice sd, long periodo){
+        return (casa.getFornecedor().getValorBase() * sd.getConsumoF() * casa.getFornecedor().getImposto()) * (1 - (casa.getFornecedor().getDesconto()/100)) * periodo;
+    }
+
+
+    public double volumeFatFornecedor (FornecedorEnergia fornecedor, long periodo){
+        double volumeFaturacao = 0;
+        for(String idCasa: this.fornecedorDaCasa.keySet()){
+            if(this.fornecedorDaCasa.get(idCasa).getNomeEmpresa().equals(fornecedor.getNomeEmpresa())){
+                volumeFaturacao += getPrecoCasaPeriodo(getCasa(idCasa), periodo);
+            }
+        }
+        return volumeFaturacao;
+    }
+
+
+
+
+
+
+
     public String listaCasas() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Houses ids:\n");
-        for(String idCasa: casas.keySet()) {
+        for(String idCasa: this.casas.keySet()) {
             sb.append(idCasa);
             sb.append("\n");
         }
@@ -109,7 +172,7 @@ public class Cidade implements Serializable {
         return sb.toString();
     }
 
-    public String listaInfoCasa(String idCasa) {
+    public String listaInfoCasa(Cidade cidade, String idCasa) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(getCasa(idCasa).toString());
@@ -122,7 +185,7 @@ public class Cidade implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         sb.append("List of energy suppliers:\n");
-        for(String nomeF: fornecedores.keySet()){
+        for(String nomeF: this.fornecedores.keySet()){
             sb.append(nomeF);
             sb.append("\n");
         }

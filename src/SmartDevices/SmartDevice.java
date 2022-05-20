@@ -3,7 +3,7 @@ package SmartDevices;
 import java.io.Serializable;
 
 public abstract class SmartDevice implements Serializable {
-    public String id;
+    private String id;
 
     public SmartDevice() {
         this.id = "";
@@ -41,7 +41,9 @@ public abstract class SmartDevice implements Serializable {
 
     public abstract void turnOff();
 
-    public abstract double getConsumoPorHora();
+    public abstract double getConsumoBase();
+
+    public abstract double getConsumoF();
 
 
 

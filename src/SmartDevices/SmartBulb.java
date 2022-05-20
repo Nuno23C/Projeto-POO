@@ -1,19 +1,22 @@
 package SmartDevices;
 
 public class SmartBulb extends SmartDevice {
-    public enum Estado {
+    private enum Estado {
         ON,
         OFF
     }
-    public Estado estado;
-    public enum Tonalidade {
+    private Estado estado;
+    private int n_estado;
+    private enum Tonalidade {
         NEUTRAL,
         WARM,
         COLD
     }
-    public Tonalidade tone;
-    public double dimensões;
-    public double consumoPorHora;
+    private Tonalidade tone;
+    private String string_tone;
+    private double dimensao;
+    private double consumoBase;
+    private double consumoF;
 
     /**
      * Construtor por omissão.
@@ -21,8 +24,9 @@ public class SmartBulb extends SmartDevice {
     public SmartBulb() {
         super();
         this.tone = Tonalidade.NEUTRAL;
-        this.dimensões = 0;
-        this.consumoPorHora = 0;
+        this.dimensao = 0;
+        this.consumoBase = 0;
+        this.consumoF = 0;
     }
 
     /**
@@ -31,12 +35,22 @@ public class SmartBulb extends SmartDevice {
      * @param estado Estado da SmartBulb.
      * @param tone Tonalidade da SmartBulb.
      */
-    public SmartBulb(String id, Estado estado, Tonalidade tone, double dimensões, double consumoPorHora) {
+    public SmartBulb(String id, Estado estado, Tonalidade tone, double dimensao, double consumoBase) {
         super(id);
         this.estado = estado;
         this.tone = tone;
-        this.dimensões = dimensões;
-        this.consumoPorHora = consumoPorHora;
+        this.dimensao = dimensao;
+        this.consumoBase = consumoBase;
+        this.consumoF = consumoBase;
+    }
+
+    public SmartBulb(String id, int n_estado, String string_tone, double dimensao, double consumoBase) {
+        super(id);
+        this.n_estado = n_estado;
+        this.string_tone = string_tone;
+        this.dimensao = dimensao;
+        this.consumoBase = consumoBase;
+        this.consumoF = consumoBase;
     }
 
     /**
@@ -47,8 +61,9 @@ public class SmartBulb extends SmartDevice {
         super();
         this.estado = sb.getEstado();
         this.tone = sb.getTone();
-        this.dimensões = sb.getDimensõEs();
-        this.consumoPorHora = sb.getConsumoPorHora();
+        this.dimensao = sb.getDimensao();
+        this.consumoBase = sb.getConsumoBase();
+        this.consumoF = sb.getConsumoF();
     }
 
     /**
@@ -64,11 +79,11 @@ public class SmartBulb extends SmartDevice {
             return false;
 
         SmartBulb sb = (SmartBulb) o;
-        return (sb.getId().equals(this.id) &&
+        return (sb.getId().equals(this.getId()) &&
                 sb.getEstado() == this.estado &&
                 sb.getTone() == this.tone &&
-                sb.getDimensõEs() == this.dimensões &&
-                sb.getConsumoPorHora() == this.consumoPorHora);
+                sb.getDimensao() == this.dimensao &&
+                sb.getConsumoBase() == this.consumoF);
     }
 
     /**
@@ -84,14 +99,16 @@ public class SmartBulb extends SmartDevice {
      * @return String com as características da SmartBulb.
      */
     public String toString() {
+        StringBuilder sb = new StringBuilder();
 
-        String sb = "\n" + "id: " + this.id + "\n" +
-                    "Estado: " + this.estado + "\n" +
-                    "Tonalidade: " + this.tone + "\n" +
-                    "Dimensões: " + this.dimensões +  "cm" + "\n" +
-                    "Consumo por hora: " + this.consumoPorHora + " \n";
+        sb.append("Device id: " + this.getId() + "\n");
+        sb.append("Mode: " + this.estado + "\n");
+        sb.append("Tone: " + this.tone + "\n");
+        sb.append("Dimension: " + this.dimensao +  "cm" + "\n");
+        sb.append("Device base consumption: " + this.consumoBase + "kWh" + " \n");
+        sb.append("Device consumption: " + this.consumoF + "kWh" + " \n");
 
-        return sb;
+        return sb.toString();
     }
 
 
@@ -129,7 +146,6 @@ public class SmartBulb extends SmartDevice {
 
 
 
-
     // Getters and Setters
     public Estado getEstado() {
         return this.estado;
@@ -147,20 +163,44 @@ public class SmartBulb extends SmartDevice {
         this.tone = tone;
     }
 
-    public double getDimensõEs() {
-        return this.dimensões;
+    public String getString_tone() {
+        return this.string_tone;
     }
 
-    public void setDimensõEs(double dimensões) {
-        this.dimensões = dimensões;
+    public void setString_tone(String string_tone) {
+        this.string_tone = string_tone;
     }
 
-    public double getConsumoPorHora() {
-        return consumoPorHora;
+    public int getN_estado() {
+        return this.n_estado;
     }
 
-    public void setConsumoPorHora(double consumoPorHora) {
-        this.consumoPorHora = consumoPorHora;
+    public void setN_estado(int n_estado) {
+        this.n_estado = n_estado;
+    }
+
+    public double getDimensao() {
+        return this.dimensao;
+    }
+
+    public void setDimensao(double dimensao) {
+        this.dimensao = dimensao;
+    }
+
+    public double getConsumoBase() {
+        return consumoBase;
+    }
+
+    public void setConsumoPorHora(double consumoBase) {
+        this.consumoBase = consumoBase;
+    }
+
+    public double getConsumoF() {
+        return consumoF;
+    }
+
+    public void setConsumoF(double consumoF) {
+        this.consumoF = consumoF;
     }
 
 

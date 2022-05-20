@@ -8,12 +8,15 @@ import java.util.List;
 import SmartDevices.SmartBulb;
 import SmartDevices.SmartCamera;
 import SmartDevices.SmartSpeaker;
-import SmartDevices.SmartBulb.Tonalidade;
 
 public class Parser {
     private int houseID = 0;
     private int deviceID = 0;
     private Cidade cidade;
+
+    public Parser() {
+        this.cidade = new Cidade();
+    }
 
     public Parser(Cidade cidade) {
         this.cidade = cidade;
@@ -59,6 +62,30 @@ public class Parser {
                         System.out.println("Invalid line!");
                     SmartBulb sb = parseSmartBulb(linhaPartida[1], casa);
                     casa.add_DispositivoNaDivisao(divisao, sb);
+
+                    switch(sb.getN_estado()) {
+                        case(1):
+                            sb.turnOn();
+                            break;
+
+                        case(2):
+                            sb.turnOff();
+                            break;
+                    }
+
+                    switch(sb.getString_tone()) {
+                        case("NEUTRAl"):
+                            sb.turn_NEUTRAL();
+                            break;
+
+                        case("WARM"):
+                            sb.turn_WARM();
+                            break;
+
+                        case("COLD"):
+                            sb.turn_COLD();
+                            break;
+                    }
                     break;
 
                 case "SmartSpeaker":
@@ -76,9 +103,9 @@ public class Parser {
                     break;
 
                 case "Fornecedor":
-                    //FornecedorEnergia fe = parseFornecedorEnergia(linhaPartida[1]);
-                    //System.out.println(fe);
-                    //cidade.fornecedores.put(fe.getNomeEmpresa(), fe);
+                    FornecedorEnergia fe = parseFornecedorEnergia(linhaPartida[1], cidade);
+                    System.out.println(fe);
+                    cidade.add_Fornecedor(fe);
                     break;
 
                 default:
@@ -96,7 +123,7 @@ public class Parser {
         String nomeFornecedor = campos[2];
         FornecedorEnergia fe = cidade.getFornecedor(nomeFornecedor);
         String idCasa = Integer.toString(houseID);
-        cidade.fornecedorDaCasa.put(idCasa, fe);
+        cidade.getFornecedorDaCasa().put(idCasa, fe);
         this.houseID++;
 
         return new Casa(idCasa, nome, NIF, fe);
@@ -104,26 +131,12 @@ public class Parser {
 
     public SmartBulb parseSmartBulb(String input, Casa casa){
         String[] campos = input.split(",");
-        String tonalidade = campos[0];
-        Tonalidade tone = Tonalidade.NEUTRAL;
-        switch(tonalidade) {
-            case("NEUTRAl"):
-                tone = Tonalidade.NEUTRAL;
-                break;
-
-            case("WARM"):
-                tone = Tonalidade.WARM;
-                break;
-
-            case("COLD"):
-                tone = Tonalidade.COLD;
-                break;
-        }
+        String string_tone = campos[0];
         int dimensoes = Integer.parseInt(campos[1]);
         double consumo = Double.parseDouble(campos[2]);
         this.deviceID++;
 
-        return new SmartBulb(Integer.toString(deviceID), SmartBulb.Estado.OFF, tone, dimensoes, consumo);
+        return new SmartBulb(Integer.toString(deviceID), 1, string_tone, dimensoes, consumo);
     }
 
     public SmartSpeaker parseSmartSpeaker(String input, Casa casa) {
@@ -152,7 +165,7 @@ public class Parser {
         return new SmartCamera(Integer.toString(deviceID), SmartCamera.Estado.OFF, largura, altura, tamanho, consumo);
     }
 
-    public FornecedorEnergia parseFornecedorEnergia(String input) {
+    public FornecedorEnergia parseFornecedorEnergia(String input, Cidade cidade) {
         String[] campos = input.split(",");
         String nome = campos[0];
         double valorBase = Double.parseDouble(campos[1]);

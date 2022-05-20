@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.io.DataInput;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -6,6 +8,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import SmartDevices.SmartBulb;
 import SmartDevices.SmartCamera;
@@ -29,7 +35,7 @@ public class Menu implements Serializable {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 
-    public void entertoContinue(Scanner scan) {
+    public void enterToContinue(Scanner scan) {
         System.out.println("Press enter to continue!");
         try{scan.nextLine();}
         catch(Exception e){}
@@ -84,6 +90,7 @@ public class Menu implements Serializable {
                 Parser parser = new Parser(cidade);
                 parser.parse();
                 createCidade(cidade, scan);
+
                 break;
 
             default:
@@ -101,6 +108,9 @@ public class Menu implements Serializable {
         System.out.println("Create, change or remove:");
         System.out.println("1 - Houses");
         System.out.println("2 - Energy suppliers");
+        System.out.print("\n");
+        System.out.println("4 - Invoices");
+        System.out.println("5 - Simulation");
         System.out.print("\n");
         System.out.println("7 - Save state");
         System.out.println("8 - Load state");
@@ -136,20 +146,20 @@ public class Menu implements Serializable {
                         System.out.println("What house?");
                         System.out.print("House id: ");
                         String houseID = scan.nextLine();
-                        while(!cidade.casas.containsKey(houseID)) {
+                        while(!cidade.getCasas().containsKey(houseID)) {
                             System.out.println("Invalid option!");
                             System.out.print("Try again: ");
                             houseID = scan.nextLine();
                         }
                         clearConsole();
-                        changeCasa(cidade.casas.get(houseID), cidade, scan);
+                        changeCasa(cidade.getCasas().get(houseID), cidade, scan);
                         break;
 
                     case("3"):
                         clearConsole();
                         System.out.print("House's id that you want to remove: ");
                         String idCasaR = scan.nextLine();
-                        cidade.casas.remove(idCasaR);
+                        cidade.getCasas().remove(idCasaR);
                         break;
 
                     case("0"):
@@ -188,7 +198,7 @@ public class Menu implements Serializable {
                         clearConsole();
                         System.out.print("Energy supplier name: ");
                         String nomeFornecedor = scan.nextLine();
-                        while(!cidade.fornecedores.containsKey(nomeFornecedor)) {
+                        while(!cidade.getFornecedores().containsKey(nomeFornecedor)) {
                             System.out.println("Invalid name, try again!");
                             nomeFornecedor = scan.nextLine();
                         }
@@ -216,6 +226,26 @@ public class Menu implements Serializable {
                 }
                 break;
 
+            case("3"):
+                clearConsole();
+
+                System.out.print("Teste: ");
+                String t = scan.nextLine();
+                while(isWord(t)) {
+                    System.out.println("Error, try again!");
+                    t = scan.nextLine();
+                }
+
+                System.out.println("Palavra escrita: " + t);
+
+                enterToContinue(scan);
+                break;
+
+            case("5"):
+                clearConsole();
+                simulation(cidade, scan);
+                break;
+
             case("7"):
                 clearConsole();
                 System.out.print("Give the file a name: ");
@@ -234,20 +264,7 @@ public class Menu implements Serializable {
 
             case("9"):
                 clearConsole();
-                //System.out.println(cidade.toString());
-                System.out.println(cidade.listaCasas());
-                System.out.println("1 -----------");
-                System.out.println(cidade.listaInfoCasa("casa1"));
-                System.out.println("2 -----------");
-                System.out.println(cidade.listaFornecedores());
-                System.out.println("3 -----------");
-                System.out.println(cidade.listaInfoFornecedor("MEO"));
-                System.out.println("4 -----------");
-                System.out.println(cidade.getCasa("casa1").listaDevices());
-                System.out.println("5 -----------");
-                System.out.println(cidade.getCasa("casa1").listaInfoDevice("lamp1"));
-                entertoContinue(scan);
-                //checkStateMenu(cidade, scan);
+                checkStateMenu(cidade, scan);
                 break;
 
             case("0"):
@@ -265,9 +282,32 @@ public class Menu implements Serializable {
     public void createCasa(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
 
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                break;
+
+            case("2"):
+                clearConsole();
+                createCidade(cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                createCasa(cidade, scan);
+                break;
+        }
+
+        System.out.print("\n");
+
         System.out.print("House's id: ");
         String idCasa = scan.nextLine();
-        while(cidade.casas.containsKey(idCasa)) {
+        while(cidade.getCasas().containsKey(idCasa)) {
             System.out.println("This id has already been used, try again!");
             idCasa = scan.nextLine();
         }
@@ -346,7 +386,7 @@ public class Menu implements Serializable {
             case("1"):
                 FornecedorEnergia fe = criaFornecedorEnergia(cidade, scan);
                 casa.add_Fornecedor(fe);
-                cidade.fornecedorDaCasa.put(casa.getIdCasa(), fe);
+                cidade.getFornecedorDaCasa().put(casa.getIdCasa(), fe);
 
                 break;
 
@@ -354,12 +394,12 @@ public class Menu implements Serializable {
                 System.out.println("Wich one?");
                 System.out.print("Energy supplier name: ");
                 String nomeFornecedor = scan.nextLine();
-                while(!cidade.fornecedores.containsKey(nomeFornecedor)) {
+                while(!cidade.getFornecedores().containsKey(nomeFornecedor)) {
                     System.out.println("This supplier does not exists, try again!");
                     nomeFornecedor = scan.nextLine();
                 }
                 casa.add_Fornecedor(cidade.getFornecedor(nomeFornecedor));
-                cidade.fornecedorDaCasa.put(casa.getIdCasa(), cidade.getFornecedor(nomeFornecedor));
+                cidade.getFornecedorDaCasa().put(casa.getIdCasa(), cidade.getFornecedor(nomeFornecedor));
 
                 break;
         }
@@ -367,7 +407,11 @@ public class Menu implements Serializable {
         createCidade(cidade, scan);
     }
 
-    public void createDivisao(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+    public static boolean isWord(String in) {
+        return Pattern.matches("[a-zA-Z]+", in);
+    }
+
+    public void createDivisao(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
 
         System.out.print("Disivion name: ");
@@ -415,9 +459,29 @@ public class Menu implements Serializable {
         }
     }
 
-    public SmartDevice createDevice(Casa casa, Cidade cidade, Scanner scan) {
+    public SmartDevice createDevice(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         SmartDevice sd = null;
         String choice;
+
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                break;
+
+            case("2"):
+                return sd;
+
+            default:
+                createDevice(casa, cidade, scan);
+                break;
+        }
+
+        System.out.print("\n");
 
         System.out.println("What do you want to create?");
         System.out.println("1 - SmartBulb ");
@@ -452,17 +516,36 @@ public class Menu implements Serializable {
 
     public SmartDevice createSmartBulb(Casa casa, Cidade cidade, Scanner scan) {
         String choice;
+        SmartBulb sb = null;
+
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                break;
+
+            case("2"):
+                return sb;
+
+            default:
+                createSmartBulb(casa, cidade, scan);
+                break;
+        }
+
+        System.out.print("\n");
 
         System.out.print("SmartBulb ID: ");
         String id = scan.nextLine();
-        while(casa.dispositivos.containsKey(id)) {
+        while(casa.getDispositivos().containsKey(id)) {
             System.out.println("This id already exists, try another one!");
             id = scan.nextLine();
         }
 
         System.out.print("\n");
-
-        SmartBulb.Estado estado = SmartBulb.Estado.OFF;
 
         System.out.println("Mode: ");
         System.out.println("1 - ON");
@@ -474,13 +557,14 @@ public class Menu implements Serializable {
             choice = scan.nextLine();
         }
 
+        int estado = 1;
         switch(choice){
             case("1"):
-                estado = SmartBulb.Estado.ON;
+                estado = 1;
                 break;
 
             case("2"):
-                estado = SmartBulb.Estado.OFF;
+                estado = 2;
                 break;
         }
 
@@ -499,18 +583,18 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        SmartBulb.Tonalidade tonalidade = SmartBulb.Tonalidade.NEUTRAL;
+        String tonalidade = "NEUTRAL";
         switch(choice) {
             case("1"):
-                tonalidade = SmartBulb.Tonalidade.COLD;
+                tonalidade = "COLD";
                 break;
 
             case("2"):
-                tonalidade = SmartBulb.Tonalidade.NEUTRAL;
+                tonalidade = "NEUTRAL";
                 break;
 
             case("3"):
-                tonalidade = SmartBulb.Tonalidade.WARM;
+                tonalidade = "WARM";
                 break;
         }
 
@@ -536,17 +620,62 @@ public class Menu implements Serializable {
             }
         }
 
-        SmartDevice sb = new SmartBulb(id, estado, tonalidade, dimension, consumoBase);
+        sb = new SmartBulb(id, estado, tonalidade, dimension, consumoBase);
+
+        switch(sb.getN_estado()) {
+            case(1):
+                sb.turnOn();
+                break;
+
+            case(2):
+                sb.turnOff();
+                break;
+        }
+
+        switch(sb.getString_tone()) {
+            case("NEUTRAl"):
+                sb.turn_NEUTRAL();
+                break;
+
+            case("WARM"):
+                sb.turn_WARM();
+                break;
+
+            case("COLD"):
+                sb.turn_COLD();
+                break;
+        }
 
         return sb;
     }
 
     public SmartDevice createSmartSpeaker(Casa casa, Cidade cidade, Scanner scan) {
         String choice;
+        SmartSpeaker ss = null;
+
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                break;
+
+            case("2"):
+                return ss;
+
+            default:
+                createSmartSpeaker(casa, cidade, scan);
+                break;
+        }
+
+        System.out.print("\n");
 
         System.out.print("SmartSpeaker ID: ");
         String id = scan.nextLine();
-        while(casa.dispositivos.containsKey(id)) {
+        while(casa.getDispositivos().containsKey(id)) {
             System.out.println("This id already exists, try another one!");
             id = scan.nextLine();
         }
@@ -563,14 +692,14 @@ public class Menu implements Serializable {
             choice = scan.nextLine();
         }
 
-        SmartSpeaker.Estado estado = SmartSpeaker.Estado.OFF;
-        switch(choice) {
+        int estado = 1;
+        switch(choice){
             case("1"):
-                estado = SmartSpeaker.Estado.ON;
+                estado = 1;
                 break;
 
             case("2"):
-                estado = SmartSpeaker.Estado.OFF;
+                estado = 2;
                 break;
         }
 
@@ -612,24 +741,53 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-        SmartDevice ss = new SmartSpeaker(id, estado, marca, volume, radioOnline, consumoBase);
+        ss = new SmartSpeaker(id, estado, marca, volume, radioOnline, consumoBase);
+
+        switch(ss.getN_estado()) {
+            case(1):
+                ss.turnOn();
+                break;
+
+            case(2):
+                ss.turnOff();
+                break;
+        }
 
         return ss;
     }
 
     public SmartDevice createSmartCamera(Casa casa, Cidade cidade, Scanner scan){
         String choice;
+        SmartCamera sc = null;
+
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                break;
+
+            case("2"):
+                return sc;
+
+            default:
+                createSmartCamera(casa, cidade, scan);
+                break;
+        }
+
+        System.out.print("\n");
 
         System.out.print("SmartCamera ID: ");
         String id = scan.nextLine();
-        while(casa.dispositivos.containsKey(id)) {
+        while(casa.getDispositivos().containsKey(id)) {
             System.out.println("This id already exists, try another one!");
             id = scan.nextLine();
         }
 
         System.out.print("\n");
-
-        SmartCamera.Estado estado = SmartCamera.Estado.OFF;
 
         System.out.println("Mode: ");
         System.out.println("1 - ON: ");
@@ -637,16 +795,14 @@ public class Menu implements Serializable {
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
 
-        switch(choice) {
+        int estado = 1;
+        switch(choice){
             case("1"):
-                estado = SmartCamera.Estado.ON;
+                estado = 1;
                 break;
 
             case("2"):
-                estado = SmartCamera.Estado.OFF;
-                break;
-
-            default:
+                estado = 2;
                 break;
         }
 
@@ -697,8 +853,17 @@ public class Menu implements Serializable {
             }
         }
 
+        sc = new SmartCamera(id, estado, x, y, tamanhoPacote, valorBase);
 
-        SmartDevice sc = new SmartCamera(id, estado, x, y, tamanhoPacote, valorBase);
+        switch(sc.getN_estado()) {
+            case(1):
+                sc.turnOn();
+                break;
+
+            case(2):
+                sc.turnOff();
+                break;
+        }
 
         return sc;
     }
@@ -706,7 +871,7 @@ public class Menu implements Serializable {
     public FornecedorEnergia criaFornecedorEnergia(Cidade cidade, Scanner scan) {
         System.out.print("Energy supplier name: ");
         String nomeFornecedor = scan.nextLine();
-        while(cidade.fornecedores.containsKey(nomeFornecedor)) {
+        while(cidade.getFornecedores().containsKey(nomeFornecedor)) {
             System.out.println("This supplier already exits!");
             nomeFornecedor = scan.nextLine();
         }
@@ -739,7 +904,7 @@ public class Menu implements Serializable {
 
         FornecedorEnergia fe = new FornecedorEnergia(nomeFornecedor, valorBase, desconto);
 
-        cidade.fornecedores.put(nomeFornecedor, fe);
+        cidade.getFornecedores().put(nomeFornecedor, fe);
 
         return fe;
     }
@@ -763,7 +928,7 @@ public class Menu implements Serializable {
                 clearConsole();
                 System.out.print("New Id: ");
                 String novoID = scan.nextLine();
-                while(cidade.casas.containsKey(novoID)) {
+                while(cidade.getCasas().containsKey(novoID)) {
                     System.out.println("This division is already created!");
                     System.out.print("Try another one: ");
                     novoID = scan.nextLine();
@@ -871,13 +1036,13 @@ public class Menu implements Serializable {
                         System.out.println("Wich one?");
                         System.out.print("Energy supplier name: ");
                         String nomeFornecedor = scan.nextLine();
-                        while(!cidade.fornecedores.containsKey(nomeFornecedor)) {
+                        while(!cidade.getFornecedores().containsKey(nomeFornecedor)) {
                             System.out.println("This supplier does not exists!");
                             nomeFornecedor = scan.nextLine();
                             System.out.print("\n");
                         }
 
-                        casa.setFornecedor(cidade.fornecedores.get(nomeFornecedor));
+                        casa.setFornecedor(cidade.getFornecedores().get(nomeFornecedor));
                         break;
 
                     case("0"):
@@ -972,7 +1137,7 @@ public class Menu implements Serializable {
                 System.out.println("Which device do you want to change?");
                 System.out.print("SmartDevice ID: ");
                 String idDevice = scan.nextLine();
-                changeDevice(casa.dispositivos.get(idDevice), divName, casa, cidade, scan);
+                changeDevice(casa.getDispositivos().get(idDevice), divName, casa, cidade, scan);
                 break;
 
             case("4"):
@@ -1066,7 +1231,7 @@ public class Menu implements Serializable {
         System.out.println("1 - Change SmartBulb ID");
         System.out.println("2 - Change Tone");
         System.out.println("3 - Change Mode");
-        System.out.println("");
+        System.out.println(""); // Consumo
         System.out.println("0 - Go back");
         System.out.print("Choose an option: ");
         String choice = scan.nextLine();
@@ -1383,7 +1548,7 @@ public class Menu implements Serializable {
                 break;
         }
     }
-/*
+
     public void checkStateMenu(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         clearConsole();
         System.out.println("What do you want to check?");
@@ -1409,15 +1574,15 @@ public class Menu implements Serializable {
                     case("1"):
                         clearConsole();
                         System.out.println(cidade.listaCasas());
-                        entertoContinue();
+                        enterToContinue(scan);
                         break;
 
                     case("2"):
                         clearConsole();
                         System.out.print("House ID: ");
                         String idCasa = scan.nextLine();
-                        System.out.println(cidade.listaInfoCasa(idCasa));
-                        entertoContinue();
+                        System.out.println(cidade.listaInfoCasa(cidade, idCasa));
+                        enterToContinue(scan);
                         break;
 
                     case("0"):
@@ -1430,10 +1595,11 @@ public class Menu implements Serializable {
                         checkStateMenu(cidade, scan);
                         break;
                 }
+                break;
 
             case("2"):
                 clearConsole();
-                System.out.print("House id:");
+                System.out.print("House id: ");
                 String idCasa = scan.nextLine();
                 System.out.println("What do you want to check?");
                 System.out.println("1 - List of Devices");
@@ -1446,15 +1612,15 @@ public class Menu implements Serializable {
                     case("1"):
                         clearConsole();
                         System.out.println(cidade.getCasa(idCasa).listaDevices());
-                        entertoContinue();
+                        enterToContinue(scan);
                         break;
 
                     case("2"):
                         clearConsole();
                         System.out.print("Device ID: ");
                         String idDevice = scan.nextLine();
-                        System.out.println(cidade.getCasa(idCasa).infoDevice(idDevice));
-                        entertoContinue();
+                        System.out.println(cidade.getCasa(idCasa).listaInfoDevice(idDevice));
+                        enterToContinue(scan);
                         break;
 
                     case("0"):
@@ -1467,6 +1633,7 @@ public class Menu implements Serializable {
                         checkStateMenu(cidade, scan);
                         break;
                 }
+                break;
 
             case("3"):
                 clearConsole();
@@ -1479,16 +1646,16 @@ public class Menu implements Serializable {
                 switch(choice){
                     case("1"):
                         clearConsole();
-                        cidade.listaFornecedores();
-                        entertoContinue();
+                        System.out.println(cidade.listaFornecedores());
+                        enterToContinue(scan);
                         break;
 
                     case("2"):
                         clearConsole();
-                        System.out.println("ID: ");
-                        String novoId = scan.nextLine();
-                        cidade.listaInfoFornecedor(novoId);
-                        entertoContinue();
+                        System.out.print("Energy supplier name: ");
+                        String novoNomeF = scan.nextLine();
+                        System.out.println(cidade.listaInfoFornecedor(novoNomeF));
+                        enterToContinue(scan);
                         break;
 
                     case("0"):
@@ -1501,6 +1668,7 @@ public class Menu implements Serializable {
                         checkStateMenu(cidade, scan);
                         break;
                 }
+                break;
 
             case("4"):
                 clearConsole();
@@ -1514,13 +1682,13 @@ public class Menu implements Serializable {
                     case("1"):
                         clearConsole();
                         //cidade.listaFaturas();
-                        entertoContinue();
+                        enterToContinue(scan);
                         break;
 
                     case("2"):
                         clearConsole();
                         //cidade.infoBills(novoId);
-                        entertoContinue();
+                        enterToContinue(scan);
                         break;
 
                     case("0"):
@@ -1533,9 +1701,11 @@ public class Menu implements Serializable {
                         checkStateMenu(cidade, scan);
                         break;
                 }
+                break;
+
             case("0"):
                 clearConsole();
-                mainMenu(scan);
+                createCidade(cidade, scan);
                 break;
 
             default:
@@ -1545,5 +1715,134 @@ public class Menu implements Serializable {
         }
         checkStateMenu(cidade, scan);
     }
+
+    public void simulation(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
+        clearConsole();
+        String choice;
+
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                break;
+
+            case("2"):
+                clearConsole();
+                createCidade(cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                simulation(cidade, scan);
+                break;
+        }
+
+        clearConsole();
+/*
+        System.out.println("Initial date:");
+        System.out.println("1 - Atual");
+        System.out.println("2 - Enter a new date");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        LocalDateTime dataInicial = LocalDateTime.now();
+        switch(choice) {
+            case("1"):
+                dataInicial = LocalDateTime.now();
+                break;
+
+            case("2"):
+                System.out.print("Date (dd-MM-yyyy HH:mm): ");
+                String dataI = scan.nextLine();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                dataInicial = LocalDateTime.parse(dataI, formatter);
+                break;
+        }
+
+        System.out.print("\n");
+
+        System.out.print("Date that you want to go: (dd-MM-yyyy HH:mm): ");
+        String dataF = scan.nextLine();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        LocalDateTime dataFinal = LocalDateTime.parse(dataF, formatter);
+
+        System.out.println("Initial date: " + dataInicial);
+        System.out.println("Final date: " + dataFinal);
+
+        long periodo = ChronoUnit.DAYS.between(dataInicial, dataFinal);
+        System.out.println(periodo);
+
+        enterToContinue(scan);
 */
+
+        clearConsole();
+        System.out.println("What do you want to do?");
+        System.out.println("1 - What is the house that spent the most in that period");
+        System.out.println("2 - Which supplier has the highest invoicing volume");
+        System.out.println("3 - Invoices list's issued by a supplier");
+        System.out.println("4 - Give an ordering of the largest energy consumers during a period");
+        System.out.println("0 - Go back");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        System.out.print("\n");
+
+        switch(choice) {
+            case("1"):
+                clearConsole();
+                Casa casaM = cidade.getCasaMaisGastadoraPeriodo(cidade, 10);
+                System.out.println("The house that spent the most was: " + casaM.getIdCasa());
+                System.out.println("kWh = " + cidade.getConsumoCasaPeriodo(casaM, cidade, 10));
+
+                enterToContinue(scan);
+
+                System.out.println("1 - See more information about the house");
+                System.out.println("0 - Go back");
+                System.out.print("Choose an option: ");
+                String option = scan.nextLine();
+                switch(option){
+                    case ("1"):
+                        clearConsole();
+                        System.out.println(cidade.listaInfoCasa(cidade, casaM.getIdCasa()));
+                        enterToContinue(scan);
+                        break;
+
+                    case ("0"):
+                        clearConsole();
+                        simulation(cidade, scan);
+                        break;
+
+                    default:
+                        clearConsole();
+                        simulation(cidade, scan);
+                        break;
+                }
+                break;
+
+            case("2"):
+                clearConsole();
+
+                System.out.println(cidade.listaFornecedores());
+                System.out.print("Choose an Energy Supllier: ");
+                String nomeF = scan.nextLine();
+                FornecedorEnergia fornecedor = cidade.getFornecedor(nomeF);
+
+                System.out.print("Invoicing volume = " + cidade.volumeFatFornecedor(fornecedor, 10) + "€");
+
+                enterToContinue(scan);
+                break;
+
+            case("3"):
+                System.out.println(cidade.listaFornecedores());
+                System.out.print("Choose an Energy Supllier: ");
+                nomeF = scan.nextLine();
+                fornecedor = cidade.getFornecedor(nomeF);
+
+
+        }
+    }
 }
