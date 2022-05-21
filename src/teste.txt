@@ -1,4 +1,0 @@
-MEO Energia:4.2,8.0
-Galp Energia:6.3,15.0
-EDP Comercial:5.3,10.0
-Iberdrola:6.5,11.0

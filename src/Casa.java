@@ -240,7 +240,7 @@ public class Casa implements Serializable {
         if (this.divisoes.containsKey(divName)) {
             List<String> ids = this.divisoes.get(divName);
             this.divisoes.remove(divName);
-            divisoes.put(divName, ids);
+            divisoes.put(newDivName, ids);
         }
     }
 

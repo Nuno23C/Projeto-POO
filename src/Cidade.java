@@ -301,7 +301,7 @@ public class Cidade implements Serializable {
     public String listaInfoCasa(Cidade cidade, String idCasa) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(getCasa(idCasa).toString());
+        sb.append(this.casas.get(idCasa).toString());
 
         return sb.toString();
     }

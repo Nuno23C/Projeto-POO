@@ -2,7 +2,6 @@ import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -54,30 +53,6 @@ public class Menu implements Serializable {
         System.out.println("Press enter to continue!");
         try{scan.nextLine();}
         catch(Exception e){}
-    }
-
-    public void saveStateText(Cidade cidade, String nomeFicheiro) throws IOException {
-        FileWriter writer = new FileWriter(nomeFicheiro);
-
-        for(FornecedorEnergia fe: cidade.getFornecedores().values()) {
-            writer.write("Fornecedor:" + fe.getNomeEmpresa() + ":" + fe.getValorBase() + "," + fe.getDesconto() + "\n");
-            writer.flush();
-        }
-
-        for(Casa casa: cidade.getCasas().values()) {
-            writer.write("Casa:" + casa.getNome() + "," + casa.getNIF() + "," + casa.getFornecedor().getNomeEmpresa());
-            writer.flush();
-            for(String divisao: casa.getDivisoes().keySet()) {
-                writer.write("Divisao:" + divisao);
-                writer.flush();
-                for(String deviceID: casa.getDivisoes().get(divisao)) {
-                    SmartDevice sd = casa.getDispositivos().get(deviceID);
-
-                }
-            }
-        }
-
-        writer.close();
     }
 
     /**
@@ -186,8 +161,6 @@ public class Menu implements Serializable {
         System.out.println("3 - Advance in time");
         System.out.println("4 - Simulation");
         System.out.print("\n");
-        System.out.println("5 - Save to text file");
-        System.out.println("6 - Load text file");
         System.out.println("7 - Save state in object file");
         System.out.println("8 - Load state in object file");
         System.out.print("\n");
@@ -287,6 +260,8 @@ public class Menu implements Serializable {
                             System.out.println("Energy supplier removed successfully!");
                         else
                             System.out.println("Error, the supplier was not removed because there are still houses with a contract!");
+
+                        enterToContinue(scan);
                         break;
 
                     case("0"):
@@ -309,30 +284,10 @@ public class Menu implements Serializable {
                 simulationMenu(cidade, scan);
                 break;
 
-            case("5"):
-                clearConsole();
-                System.out.print("Give the file a name: ");
-                String nomeFicheiro = scan.nextLine();
-                saveStateText(cidade, nomeFicheiro);
-                System.out.println("Saved!");
-
-                enterToContinue(scan);
-                break;
-
-            case("6"):
-                clearConsole();
-                System.out.print("Insert the text file name: ");
-                nomeFicheiro = scan.nextLine();
-                Parser parser = new Parser(cidade);
-                parser.parse(nomeFicheiro);
-
-                enterToContinue(scan);
-                break;
-
             case("7"):
                 clearConsole();
                 System.out.print("Give the file a name: ");
-                nomeFicheiro = scan.nextLine();
+                String nomeFicheiro = scan.nextLine();
                 saveState(cidade, nomeFicheiro);
                 System.out.println("Saved!");
 
@@ -1056,6 +1011,15 @@ public class Menu implements Serializable {
         return fe;
     }
 
+    /**
+     * Método que verifica no change casa senão houve engano na escolha de uma opção
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void queresContinuarChangeCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
 
@@ -1120,7 +1084,7 @@ public class Menu implements Serializable {
                 }
                 casa.setIdCasa(novoID);
                 cidade.getCasas().remove(idAnt);
-                cidade.getCasas().put(novoID, cidade.getCasa(novoID));
+                cidade.getCasas().put(novoID, casa);
 
                 System.out.print("\n");
 
@@ -1282,6 +1246,16 @@ public class Menu implements Serializable {
         changeCasa(casa, cidade, scan);
     }
 
+    /**
+     * Método que verifica no change divisão senão houve engano na escolha de uma opção
+     * @param divName
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void queresContinuarChangeDivisao(String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
 
@@ -1995,12 +1969,13 @@ public class Menu implements Serializable {
                         System.out.println("Which device?");
                         System.out.print("Device ID: ");
                         String idDevice = scan.nextLine();
-                        while(!cidade.getCasas().containsKey(idCasa)) {
+                        while(!cidade.getCasa(idCasa).getDivisoes().get(divName).contains(idDevice)) {
                             System.out.println("Invalid ID, try again!");
-                            idCasa = scan.nextLine();
+                            idDevice = scan.nextLine();
                         }
 
                         System.out.print("\n");
+
                         System.out.println(cidade.getCasa(idCasa).listaInfoDevice(idDevice));
 
                         enterToContinue(scan);
@@ -2022,6 +1997,10 @@ public class Menu implements Serializable {
                 clearConsole();
                 System.out.print("House id: ");
                 String idCasa = scan.nextLine();
+                while(!cidade.getCasas().containsKey(idCasa)) {
+                            System.out.println("Invalid ID, try again!");
+                            idCasa = scan.nextLine();
+                    }
                 System.out.println("What do you want to check?");
                 System.out.println("1 - List of Devices");
                 System.out.println("2 - Information of specific Device");
@@ -2243,6 +2222,7 @@ public class Menu implements Serializable {
 
         clearConsole();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         LocalDateTime dataInicial = LocalDateTime.now();
 
         if(cidade.getDatas().isEmpty()) {
@@ -2258,13 +2238,14 @@ public class Menu implements Serializable {
 
             switch(choice) {
                 case("1"):
+                    String form = dataInicial.format(formatter);
+                    dataInicial = LocalDateTime.parse(form, formatter);
                     cidade.getDatas().add(dataInicial);
                     break;
 
                 case("2"):
                     System.out.print("Enter the initial date (dd-MM-yyyy HH:mm): ");
                     String dataI = scan.nextLine();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
                     dataInicial = LocalDateTime.parse(dataI, formatter);
                     cidade.getDatas().add(dataInicial);
                     break;
@@ -2278,7 +2259,6 @@ public class Menu implements Serializable {
 
         System.out.print("Date that you want to go: (dd-MM-yyyy HH:mm): ");
         String dataF = scan.nextLine();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         LocalDateTime dataFinal = LocalDateTime.parse(dataF, formatter);
 
         while(!dataFinal.isAfter(cidade.getDatas().get(cidade.getDatas().size()-1))) {
@@ -2363,10 +2343,10 @@ public class Menu implements Serializable {
         System.out.println("\n");
 
         System.out.println("What do you want to do?");
-        System.out.println("1 - What is the house that spent the most in this period");
-        System.out.println("2 - Which supplier has the highest invoicing volume");
+        System.out.println("1 - House that spent the most in a certain period of time");
+        System.out.println("2 - Supplier with the highest invoicing volume");
         System.out.println("3 - Invoices list's issued by a supplier");
-        System.out.println("4 - Give an ordering of the largest energy consumers during this period");
+        System.out.println("4 - Ordering of the largest energy consumers during this period");
         System.out.println("0 - Go back");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();

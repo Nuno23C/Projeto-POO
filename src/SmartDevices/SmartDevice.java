@@ -79,6 +79,10 @@ public abstract class SmartDevice implements Serializable {
      */
     public abstract double getConsumoF();
 
+    /**
+     * Método que determina o indentificador de um dispositivo
+     */
+    public abstract int getIdentificador();
 
 
 

@@ -44,9 +44,13 @@ public class SmartBulb extends SmartDevice {
         super(id);
         this.estado = estado;
         this.tone = tone;
-        this.dimensao = dimensao;
         this.consumoBase = consumoBase;
-        this.consumoF = consumoBase;
+        if(tone.equals(Tonalidade.COLD))
+            this.consumoF = consumoBase * 1;
+        else if(tone.equals(Tonalidade.NEUTRAL))
+            this.consumoF = consumoBase * 2;
+        else
+            this.consumoF = consumoBase * 3;
         this.precoInstalacao = 10;
         this.identificador = 1;
     }
@@ -59,13 +63,13 @@ public class SmartBulb extends SmartDevice {
      * @param dimensao
      * @param consumoBase
      */
-    public SmartBulb(String id, int n_estado, String string_tone, double dimensao, double consumoBase) {
+    public SmartBulb(String id, int n_estado, String string_tone, double dimensao, double consumoF) {
         super(id);
         this.n_estado = n_estado;
         this.string_tone = string_tone;
         this.dimensao = dimensao;
-        this.consumoBase = consumoBase;
-        this.consumoF = consumoBase;
+        this.consumoBase = consumoF;
+        this.consumoF = consumoF;
         this.precoInstalacao = 10;
         this.identificador = 1;
     }
@@ -102,7 +106,8 @@ public class SmartBulb extends SmartDevice {
                 sb.getEstado() == this.estado &&
                 sb.getTone() == this.tone &&
                 sb.getDimensao() == this.dimensao &&
-                sb.getConsumoBase() == this.consumoF &&
+                sb.getConsumoBase() == this.consumoBase &&
+                sb.getConsumoF() == this.consumoF &&
                 sb.getPrecoInstalacao() == this.precoInstalacao &&
                 sb.getIdentificador() == this.identificador);
     }
@@ -296,7 +301,7 @@ public class SmartBulb extends SmartDevice {
      * Método set que altera o valor do consumo por hora
      * @param consumobase
      */
-    public void setConsumoPorHora(double consumoBase) {
+    public void setConsumoBase(double consumoBase) {
         this.consumoBase = consumoBase;
     }
 
