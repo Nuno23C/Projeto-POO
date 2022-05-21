@@ -306,7 +306,6 @@ public class Cidade implements Serializable {
         return sb.toString();
     }
 
-
     /**
      * Método que determina uma lista de fornecedores
      * @return sb em formato string
