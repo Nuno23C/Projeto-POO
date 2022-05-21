@@ -46,7 +46,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método enterToContinue
+     * Método que espera um "Enter" para avançar
      * @param scan
      */
     public void enterToContinue(Scanner scan) {
@@ -56,9 +56,9 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que salva um Ficheiro
-     * @param cidade
-     * @param nomeFicheiro
+     * Método que salva um estado em ficheiro objeto
+     * @param cidade cidade que vai ser guardada
+     * @param nomeFicheiro caminho para o ficheiro onde vai ser guardado o estado
      */
     public void saveState(Cidade cidade, String nomeFicheiro) {
        try {
@@ -75,11 +75,11 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método
-     * @param nomeFicheiro
+     * Método que carrega um estado em ficheiro objeto
+     * @param nomeFicheiro caminho do ficheiro que vai ser carregado
      * @throws IOException
      * @throws ClassNotFoundException
-     * @return c - retorna uma cidade
+     * @return c - retorna a cidade carregada
      */
     public Cidade loadState(String nomeFicheiro) throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream(nomeFicheiro);
@@ -142,8 +142,8 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que cria o menu que cria a cidade
-     * @param cidade
+     * Método que cria o menu que cria, edita e imprime a cidade
+     * @param cidade cidade passada como parâmetro
      * @param scan
      * @throws IOException
      * @throws InterruptedException
@@ -511,13 +511,13 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que cria um Device
+     * Método que cria um SmartDevice
      * @param casa
      * @param cidade
      * @param scan
+     * @return sd - Retorna o SmartDevice criado
      * @throws IOException
      * @throws InterruptedException
-     * @return sd - Retorna um Device
      */
     public SmartDevice createDevice(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         SmartDevice sd = null;
@@ -579,9 +579,9 @@ public class Menu implements Serializable {
      * @param casa
      * @param cidade
      * @param scan
-     * @return sb - Retorna uma SmartBulb
-     * @throws InterruptedException
+     * @return retorna a SmartBulb criada
      * @throws IOException
+     * @throws InterruptedException
      */
     public SmartDevice createSmartBulb(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         String choice;
@@ -725,7 +725,7 @@ public class Menu implements Serializable {
      * @param casa
      * @param cidade
      * @param scan
-     * @return ss - Retorna um SmartSpeaker
+     * @return ss - Retorna a SmartSpeaker criada
      * @throws InterruptedException
      * @throws IOException
      */
@@ -843,7 +843,7 @@ public class Menu implements Serializable {
      * @param casa
      * @param cidade
      * @param scan
-     * @return sc - Retorna uma SmartCamera
+     * @return sc - Retorna a SmartCamera creiada
      * @throws InterruptedException
      * @throws IOException
      */
@@ -964,7 +964,7 @@ public class Menu implements Serializable {
      * Método que cria um Fornecedor de Energia
      * @param cidade
      * @param scan
-     * @return fe - Retorna um Fornecedor de Energia
+     * @return fe - Retorna o Fornecedor de Energia criado
      * @throws InterruptedException
      * @throws IOException
      */
@@ -1012,7 +1012,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que verifica no change casa senão houve engano na escolha de uma opção
+     * Método que auxilia na escolha de uma opção durante o Menu changeCasa
      * @param casa
      * @param cidade
      * @param scan
@@ -1049,7 +1049,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que muda as informações de uma Casa
+     * Método que altera as informações de uma Casa
      * @param casa
      * @param cidade
      * @param scan
@@ -1247,7 +1247,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que verifica no change divisão senão houve engano na escolha de uma opção
+     * Método que auxilia na escolha de uma opção durante o Menu changeDivisao
      * @param divName
      * @param casa
      * @param cidade
@@ -1285,7 +1285,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que muda as informações de uma Divisao
+     * Método que altera as informações de uma Divisao
      * @param divName
      * @param casa
      * @param cidade
@@ -1397,6 +1397,17 @@ public class Menu implements Serializable {
         changeDivisao(divName, casa, cidade, scan);
     }
 
+    /**
+     * Método que auxilia na escolha de uma opção durante o Menu changeDevice
+     * @param sd
+     * @param divName
+     * @param casa
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void queresContinuarChangeDevice(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
 
@@ -1426,7 +1437,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que muda as informações de um Device
+     * Método que altera as informações de um Device
      * @param sd
      * @param divName
      * @param casa
@@ -1474,7 +1485,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que muda as informações de uma SmartBulb
+     * Método que altera as informações de uma SmartBulb
      * @param casa
      * @param cidade
      * @param scan
@@ -1583,7 +1594,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que muda as informações de um SmartSpeaker
+     * Método que altera as informações de um SmartSpeaker
      * @param sd
      * @param divName
      * @param casa
@@ -1674,7 +1685,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que muda as informações de uma SmartCamera
+     * Método que altera as informações de uma SmartCamera
      * @param sd
      * @param divName
      * @param casa
@@ -1768,6 +1779,15 @@ public class Menu implements Serializable {
         }
     }
 
+    /**
+     * Método que auxilia na escolha de uma opção durante o Menu changeFornecedorEnergia
+     * @param fe
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void queresContinuarChangeFE(FornecedorEnergia fe, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
         clearConsole();
 
@@ -1797,7 +1817,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que muda as informações de um Fornecedor de Energia
+     * Método que altera as informações de um Fornecedor de Energia
      * @param fe
      * @param cidade
      * @param scan
@@ -1875,7 +1895,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que mostra as informações da Cidade
+     * Método que imprime as informações da Cidade
      * @param cidade
      * @param scan
      * @throws IOException
@@ -2194,6 +2214,14 @@ public class Menu implements Serializable {
         checkStateMenu(cidade, scan);
     }
 
+    /**
+     * Metedo que permite avançar no tempo
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
     public void avancaNoTempo(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
 
@@ -2292,7 +2320,7 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que avança o tempo
+     * Método que determina informações de consumo e custo das casas e dos fornecedores depois de um ciclo
      * @param cidade
      * @param scan
      * @throws IOException

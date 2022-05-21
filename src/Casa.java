@@ -312,7 +312,7 @@ public class Casa implements Serializable {
     }
 
     /**
-     * Método que lista a informação de um dispositivo concreto
+     * Método que lista a informação de um determinado dispositivo
      * @param idDevice
      * @return sb
      */
@@ -324,6 +324,10 @@ public class Casa implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * Método que lista as divisoes de uma casa
+     * @return
+     */
     public String listaDivisoes() {
         StringBuilder sb = new StringBuilder();
 
@@ -335,6 +339,11 @@ public class Casa implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * Método que lista os dispositivos numa determinada divisao
+     * @param divName
+     * @return
+     */
     public String listaDispositivosNaDivisao(String divName) {
         StringBuilder sb = new StringBuilder();
 
@@ -352,7 +361,7 @@ public class Casa implements Serializable {
 
     // Getters and Setters
     /**
-     * Método get que dá o id da casa
+     * Método get que retorna o id da casa
      * @return idCasa
      */
     public String getIdCasa() {
@@ -368,7 +377,7 @@ public class Casa implements Serializable {
     }
 
     /**
-     * Método get que dá a morada
+     * Método get que retorna a morada
      * @return morada
      */
     public String getMorada() {
@@ -384,7 +393,7 @@ public class Casa implements Serializable {
     }
 
     /**
-     * Método get que dá o nome da casa
+     * Método get que retorna o nome da casa
      * @return nome
      */
     public String getNome() {
@@ -400,7 +409,7 @@ public class Casa implements Serializable {
     }
 
     /**
-     * Método get que dá o NIF associado a uma casa
+     * Método get que retorna o NIF associado a uma casa
      * @return NIF
      */
     public String getNIF() {
@@ -417,7 +426,7 @@ public class Casa implements Serializable {
     }
 
     /**
-     * Método get que dá o conjunto de dispositivos
+     * Método get que retorna o conjunto de dispositivos
      * @return dispositivos
      */
     public Map<String, SmartDevice> getDispositivos() {
@@ -433,7 +442,7 @@ public class Casa implements Serializable {
     }
 
     /**
-     * Método get que dá o conjunto de divisões da casa
+     * Método get que retorna o conjunto de divisões da casa
      * @return divisoes
      */
     public Map<String, List<String>> getDivisoes() {
@@ -449,7 +458,7 @@ public class Casa implements Serializable {
     }
 
     /**
-     * Método get que dá o fornecedor da casa
+     * Método get que retorna o fornecedor da casa
      * @return fornecedor
      */
     public FornecedorEnergia getFornecedor() {

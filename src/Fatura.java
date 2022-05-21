@@ -95,7 +95,7 @@ public class Fatura implements Serializable {
     // Getters and Setters
 
     /**
-     * Método get que dá o id da casa
+     * Método get que retorna o id da casa
      * @return idCasa
      */
     public String getIdCasa() {
@@ -111,7 +111,7 @@ public class Fatura implements Serializable {
     }
 
     /**
-     * Método get que dá o consumo da casa
+     * Método get que retorna o consumo da casa
      * @return consumo
      */
     public double getConsumo() {
@@ -127,7 +127,7 @@ public class Fatura implements Serializable {
     }
 
     /**
-     * Método get que dá o id da casa
+     * Método get que retorna o id da casa
      * @return idCasa
      */
     public double getCusto() {
@@ -143,7 +143,7 @@ public class Fatura implements Serializable {
     }
 
     /**
-     * Método get que dá a data inicial da contagem do consumo
+     * Método get que retorna a data inicial da contagem do consumo
      * @return dataInicial
      */
     public LocalDateTime getDataInicial() {

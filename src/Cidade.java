@@ -76,7 +76,7 @@ public class Cidade implements Serializable {
     }
 
     /**
-     * Método que teste se duas cidades são iguais
+     * Método que testa se duas cidades são iguais
      * @param o Cidade passada como parâmetro
      */
     public boolean equals(Object o) {
@@ -119,23 +119,27 @@ public class Cidade implements Serializable {
     }
 
     /**
-     * Método get que dá uma casa de uma cidade
+     * Método get que retorn uma casa de uma cidade
+     * @param idCasa
+     * @return retorn casa
      */
     public Casa getCasa(String idCasa) {
         return this.casas.get(idCasa);
     }
 
     /**
-     * Método que dá o fornecedor de uma casa
+     * Método que retorna o fornecedor de uma casa
      * @param idCasa
+     * @return fornecedor da casa
      */
     public FornecedorEnergia getFornecedorDeCadaCasa(String idCasa) {
         return this.fornecedorDeCadaCasa.get(idCasa);
     }
 
     /**
-     * Método que dá o fornecedor
+     * Método que retorna o fornecedor
      * @param nomeFornecedor
+     * @return
      */
     public FornecedorEnergia getFornecedor(String nomeFornecedor) {
         FornecedorEnergia fe = this.fornecedores.get(nomeFornecedor);
@@ -161,7 +165,7 @@ public class Cidade implements Serializable {
 
 
     /**
-     * Método que remove um fornecedor
+     * Método que remove um fornecedor de energia
      * @param nomeFornecedor
      * @return flag que indica se foi removido ou não
      */
@@ -217,7 +221,7 @@ public class Cidade implements Serializable {
     }
 
     /**
-     * Método que dá o preco da casa num dado periodo de tempo
+     * Método que retorna o preco da casa num dado periodo de tempo
      * @param casa
      * @param periodo
      * @return precoTotal
@@ -432,7 +436,7 @@ public class Cidade implements Serializable {
     // Getters and Setters
 
     /**
-     * Método get que dá o conjunto de casas
+     * Método get que retorna o conjunto de casas
      * @return casas
      */
     public Map<String, Casa> getCasas() {
@@ -448,7 +452,7 @@ public class Cidade implements Serializable {
     }
 
     /**
-     * Método get que dá o fornecedor de cada casa
+     * Método get que retorna o fornecedor de cada casa
      * @return fornecedorDeCadaCasa
      */
     public Map<String, FornecedorEnergia> getFornecedorDeCadaCasa(){
@@ -464,7 +468,7 @@ public class Cidade implements Serializable {
     }
 
     /**
-     * Método get que dá o fornecedor
+     * Método get que retorna o fornecedor
      * @return fornecedores
      */
     public Map<String, FornecedorEnergia> getFornecedores() {
@@ -480,7 +484,7 @@ public class Cidade implements Serializable {
     }
 
     /**
-     * Método get que dá as faturas
+     * Método get que retorna as faturas
      * @return faturas
      */
     public Map<String, List<Fatura>> getFaturas(){

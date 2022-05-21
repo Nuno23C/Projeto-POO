@@ -15,19 +15,23 @@ public class Parser {
     private Cidade cidade;
 
     /**
-     * Método que cria uma nova
+     * Construtor por omissão
      */
     public Parser() {
         this.cidade = new Cidade();
     }
 
+    /**
+     * Construtor parametrizado
+     * @param cidade
+     */
     public Parser(Cidade cidade) {
         this.cidade = cidade;
     }
 
     /**
      * Método que lê o ficheiro dado
-     * @param nomeFich
+     * @param nomeFich caminho do ficheiro
      * @return lines
      */
     public List<String> lerFicheiro(String nomeFich) {

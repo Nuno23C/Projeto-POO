@@ -120,9 +120,10 @@ public class FornecedorEnergia implements Serializable {
     }
 
      /**
-     * Método que determina o preco de um dispositivo
-     * @param sd
-     */
+      * Método que determina o preco de um dispositivo
+      * @param sd
+      * @return
+      */
     public double getPrecoDispositivo(SmartDevice sd){
         return (this.valorBase * sd.getConsumoF() * this.imposto) * (1 - (this.desconto/100));
     }
@@ -197,7 +198,7 @@ public class FornecedorEnergia implements Serializable {
 
     // Getters and Setters
     /**
-     * Método que dá o nome da empresa
+     * Método que retorna o nome da empresa
      * @return nomeEmpresa
      */
     public String getNomeEmpresa() {
@@ -213,7 +214,7 @@ public class FornecedorEnergia implements Serializable {
     }
 
     /**
-     * Método que dá o imposto
+     * Método que retorna o imposto
      * @return imposto
      */
     public double getImposto() {
@@ -229,7 +230,7 @@ public class FornecedorEnergia implements Serializable {
     }
 
     /**
-     * Método que dá o valor base
+     * Método que retorna o valor base
      * @return valorBase
      */
     public double getValorBase() {
@@ -245,7 +246,7 @@ public class FornecedorEnergia implements Serializable {
     }
 
     /**
-     * Método que dá o desconto
+     * Método que retorna o desconto
      * @return desconto
      */
     public double getDesconto() {
@@ -261,7 +262,7 @@ public class FornecedorEnergia implements Serializable {
     }
 
     /**
-     * Método que dá o conjunto das casas de um dado fornecedor
+     * Método que retorna o conjunto das casas de um dado fornecedor
      * @return casasDoFornecedor
      */
     public Map<String, Casa> getCasasDoFornecedor() {
@@ -277,7 +278,7 @@ public class FornecedorEnergia implements Serializable {
     }
 
     /**
-     * Método que dá as faturas
+     * Método que retorna as faturas
      * @return faturas
      */
     public Map<String, List<Fatura>> getFaturas() {

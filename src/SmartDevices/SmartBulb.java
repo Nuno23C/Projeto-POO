@@ -290,7 +290,7 @@ public class SmartBulb extends SmartDevice {
 
 
     /**
-     * Método get que dá o valor do consumo base
+     * Método get que retorna o valor do consumo base
      * @return consumoBase
      */
     public double getConsumoBase() {
