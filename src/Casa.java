@@ -135,6 +135,14 @@ public class Casa implements Serializable {
             sb.append(this.dispositivos.get(deviceID).toString());
             sb.append("\n");
         }
+
+        sb.append("{");
+        for(String divName: this.divisoes.keySet()) {
+            sb.append(divName + ", ");
+        }
+        sb.append("\b\b}\n");
+        sb.append("\n");
+
         sb.append("{");
         for(String div: divisoes.keySet()) {
             for(String sd: divisoes.get(div)) {
@@ -306,6 +314,17 @@ public class Casa implements Serializable {
         StringBuilder sb = new StringBuilder();
 
         sb.append(dispositivos.get(idDevice).toString());
+
+        return sb.toString();
+    }
+
+    public String listaDivisoes(String idCasa) {
+        StringBuilder sb = new StringBuilder();
+
+        for(String divName: this.divisoes.keySet()) {
+            sb.append(divName);
+            sb.append("\n");
+        }
 
         return sb.toString();
     }

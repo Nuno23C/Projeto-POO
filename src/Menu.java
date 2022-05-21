@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -53,6 +54,30 @@ public class Menu implements Serializable {
         System.out.println("Press enter to continue!");
         try{scan.nextLine();}
         catch(Exception e){}
+    }
+
+    public void saveStateText(Cidade cidade, String nomeFicheiro) throws IOException {
+        FileWriter writer = new FileWriter(nomeFicheiro);
+
+        for(FornecedorEnergia fe: cidade.getFornecedores().values()) {
+            writer.write("Fornecedor:" + fe.getNomeEmpresa() + ":" + fe.getValorBase() + "," + fe.getDesconto() + "\n");
+            writer.flush();
+        }
+
+        for(Casa casa: cidade.getCasas().values()) {
+            writer.write("Casa:" + casa.getNome() + "," + casa.getNIF() + "," + casa.getFornecedor().getNomeEmpresa());
+            writer.flush();
+            for(String divisao: casa.getDivisoes().keySet()) {
+                writer.write("Divisao:" + divisao);
+                writer.flush();
+                for(String deviceID: casa.getDivisoes().get(divisao)) {
+                    SmartDevice sd = casa.getDispositivos().get(deviceID);
+
+                }
+            }
+        }
+
+        writer.close();
     }
 
     /**
@@ -161,12 +186,12 @@ public class Menu implements Serializable {
         System.out.println("3 - Advance in time");
         System.out.println("4 - Simulation");
         System.out.print("\n");
-        System.out.println("7 - Save state");
-        System.out.println("8 - Load state");
+        System.out.println("5 - Save to text file");
+        System.out.println("6 - Load text file");
+        System.out.println("7 - Save state in object file");
+        System.out.println("8 - Load state in object file");
         System.out.print("\n");
         System.out.println("9 - Check State");
-        System.out.print("\n");
-        System.out.println("0 - Go back");
         System.out.print("\n");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
@@ -207,8 +232,12 @@ public class Menu implements Serializable {
                     case("3"):
                         clearConsole();
                         System.out.print("House's id that you want to remove: ");
-                        String idCasaR = scan.nextLine();
-                        cidade.getCasas().remove(idCasaR);
+                        houseID = scan.nextLine();
+                        while(!cidade.getCasas().containsKey(houseID)) {
+                            System.out.println("Invalid option, try again!");
+                            houseID = scan.nextLine();
+                        }
+                        cidade.getCasas().remove(houseID);
                         break;
 
                     case("0"):
@@ -230,10 +259,6 @@ public class Menu implements Serializable {
                 System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 choice = scan.nextLine();
-                while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")) {
-                    System.out.print("Choose a valid option (1/2/3): ");
-                    choice = scan.nextLine();
-                }
 
                 System.out.print("\n");
 
@@ -285,30 +310,49 @@ public class Menu implements Serializable {
                 simulationMenu(cidade, scan);
                 break;
 
-            case("7"):
+            case("5"):
                 clearConsole();
                 System.out.print("Give the file a name: ");
                 String nomeFicheiro = scan.nextLine();
+                saveStateText(cidade, nomeFicheiro);
+                System.out.println("Saved!");
+
+                enterToContinue(scan);
+                break;
+
+            case("6"):
+                clearConsole();
+                System.out.print("Insert the text file name: ");
+                nomeFicheiro = scan.nextLine();
+                Parser parser = new Parser(cidade);
+                parser.parse(nomeFicheiro);
+
+                enterToContinue(scan);
+                break;
+
+            case("7"):
+                clearConsole();
+                System.out.print("Give the file a name: ");
+                nomeFicheiro = scan.nextLine();
                 saveState(cidade, nomeFicheiro);
                 System.out.println("Saved!");
+
+                enterToContinue(scan);
                 break;
 
             case("8"):
                 clearConsole();
-                System.out.print("Insert the name file: ");
+                System.out.print("Insert the file name: ");
                 nomeFicheiro = scan.nextLine();
                 cidade = loadState(nomeFicheiro);
                 System.out.println("\nDone");
+
+                enterToContinue(scan);
                 break;
 
             case("9"):
                 clearConsole();
                 checkStateMenu(cidade, scan);
-                break;
-
-            case("0"):
-                clearConsole();
-                mainMenu(scan);
                 break;
 
             default:
@@ -1013,6 +1057,34 @@ public class Menu implements Serializable {
         return fe;
     }
 
+    public void queresContinuar(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
+        clearConsole();
+
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        String choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                clearConsole();
+                break;
+
+            case("2"):
+                clearConsole();
+                changeCasa(casa, cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                queresContinuar(casa, cidade, scan);
+                break;
+        }
+
+        clearConsole();
+    }
+
     /**
      * Método que muda as informações de uma Casa
      * @param casa
@@ -1039,14 +1111,17 @@ public class Menu implements Serializable {
         switch(choice) {
             case("1"):
                 clearConsole();
+                queresContinuar(casa, cidade, scan);
+                String idAnt = casa.getIdCasa();
                 System.out.print("New Id: ");
                 String novoID = scan.nextLine();
                 while(cidade.getCasas().containsKey(novoID)) {
-                    System.out.println("This division is already created!");
-                    System.out.print("Try another one: ");
+                    System.out.println("This ID already exists, try again!");
                     novoID = scan.nextLine();
                 }
                 casa.setIdCasa(novoID);
+                cidade.getCasas().remove(idAnt);
+                cidade.getCasas().put(novoID, cidade.getCasa(novoID));
 
                 System.out.print("\n");
 
@@ -1054,6 +1129,7 @@ public class Menu implements Serializable {
 
             case("2"):
                 clearConsole();
+                queresContinuar(casa, cidade, scan);
                 System.out.print("New Adress: ");
                 String novaMorada = scan.nextLine();
                 casa.setMorada(novaMorada);
@@ -1064,11 +1140,20 @@ public class Menu implements Serializable {
 
             case("3"):
                 clearConsole();
+                queresContinuar(casa, cidade, scan);
                 System.out.print("New Name: ");
                 String novoNome = scan.nextLine();
+                while(casa.getNome().equals(novoNome)) {
+                    System.out.println("Same name, try again!");
+                    novoNome = scan.nextLine();
+                }
                 casa.setNome(novoNome);
                 System.out.print("NIF: ");
                 String novoNIF = scan.nextLine();
+                while(casa.getNIF().equals(novoNIF)) {
+                    System.out.println("Same NIF, try again!");
+                    novoNome = scan.nextLine();
+                }
                 casa.setNIF(novoNIF);
 
                 System.out.print("\n");
@@ -1082,11 +1167,13 @@ public class Menu implements Serializable {
 
             case("5"):
                 clearConsole();
+                queresContinuar(casa, cidade, scan);
+                System.out.println(casa.listaDivisoes(casa.getIdCasa()));
                 System.out.println("What division do you want to change?");
                 System.out.print("Division name: ");
                 String divName = scan.nextLine();
                 while(!casa.getDivisoes().containsKey(divName)) {
-                    System.out.println("This division does not exists!");
+                    System.out.println("This division does not exists, try again!");
                     divName = scan.nextLine();
                 }
                 clearConsole();
@@ -1095,32 +1182,16 @@ public class Menu implements Serializable {
 
             case("6"):
                 clearConsole();
+                queresContinuar(casa, cidade, scan);
+                System.out.println(casa.listaDivisoes(casa.getIdCasa()));
                 System.out.println("What division do you want to remove?");
                 System.out.print("Division name: ");
-                String nomeDivisao = scan.nextLine();
-                while(!casa.getDivisoes().containsKey(nomeDivisao)) {
-                    System.out.println("This division does not exists!");
-                    System.out.println("Do you want to try again?");
-                    System.out.println("1 - Yes");
-                    System.out.println("2 - No");
-                    System.out.print("Choose an option: ");
-                    choice = scan.nextLine();
-                    while(!choice.equals("1") && !choice.equals("2")) {
-                        System.out.print("Choose a valid option (1/2): ");
-                        choice = scan.nextLine();
-                    }
-                    switch(choice) {
-                        case("1"):
-                            System.out.print("Division name: ");
-                            nomeDivisao = scan.nextLine();
-                            break;
-
-                        case("2"):
-                            changeCasa(casa, cidade, scan);
-                            break;
-                    }
+                divName = scan.nextLine();
+                while(!casa.getDivisoes().containsKey(divName)) {
+                    System.out.println("This division does not exists, try again!");
+                    divName = scan.nextLine();
                 }
-                casa.remove_Divisao(nomeDivisao);
+                casa.remove_Divisao(divName);
                 System.out.println("\nDone");
                 break;
 
@@ -1145,7 +1216,7 @@ public class Menu implements Serializable {
                         break;
 
                     case("2"):
-                        //Lista de fornecedores
+                        System.out.println(cidade.listaFornecedores());
                         System.out.println("Wich one?");
                         System.out.print("Energy supplier name: ");
                         String nomeFornecedor = scan.nextLine();
@@ -1174,7 +1245,7 @@ public class Menu implements Serializable {
                 System.out.println("Choose an option: ");
                 choice = scan.nextLine();
                 while(!choice.equals("1") && !choice.equals("2") && !choice.equals("0")) {
-                    System.out.print("Choose a valid option (1/2): ");
+                    System.out.print("Choose a valid option (1/2/0): ");
                     choice = scan.nextLine();
                 }
 
@@ -1208,6 +1279,8 @@ public class Menu implements Serializable {
                 changeCasa(casa, cidade, scan);
                 break;
         }
+        clearConsole();
+        changeCasa(casa, cidade, scan);
     }
 
     /**
@@ -1237,7 +1310,7 @@ public class Menu implements Serializable {
                 System.out.print("New Id: ");
                 String newDivName = scan.nextLine();
                 while(casa.getDivisoes().containsKey(newDivName)) {
-                    System.out.println("This division already exists!");
+                    System.out.println("This division already exists, try again!");
                     newDivName = scan.nextLine();
                 }
                 casa.setNomeDaDivisao(divName, newDivName);
@@ -1748,6 +1821,7 @@ public class Menu implements Serializable {
                 System.out.println("What do you want to check?");
                 System.out.println("1 - List of Houses");
                 System.out.println("2 - Information of specific House");
+                System.out.println("3 - Information of specific Division");
                 System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 choice = scan.nextLine();
@@ -1764,8 +1838,24 @@ public class Menu implements Serializable {
                         clearConsole();
                         System.out.print("House ID: ");
                         String idCasa = scan.nextLine();
+                        while(!cidade.getCasas().containsKey(idCasa)) {
+                            System.out.println("Invalid ID, try again!");
+                            idCasa = scan.nextLine();
+                        }
                         System.out.println(cidade.listaInfoCasa(cidade, idCasa));
                         System.out.print("\n");
+                        enterToContinue(scan);
+                        break;
+
+                    case("3"):
+                        clearConsole();
+                        System.out.print("House ID: ");
+                        idCasa = scan.nextLine();
+                        while(!cidade.getCasas().containsKey(idCasa)) {
+                            System.out.println("Invalid ID, try again!");
+                            idCasa = scan.nextLine();
+                        }
+                        System.out.println(cidade.getCasa(idCasa).listaDivisoes(idCasa));
                         enterToContinue(scan);
                         break;
 

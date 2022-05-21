@@ -53,7 +53,7 @@ public class Parser {
                 case "Divisao":
                     if (casa == null)
                         System.out.println("Invalid line!");
-                    divisao = linhaPartida[1];
+                    divisao = linhaPartida[1].trim();
                     casa.add_Divisao(divisao);
                     break;
 
@@ -134,7 +134,7 @@ public class Parser {
                     break;
             }
         }
-        System.out.println("Feito");
+        System.out.println("Done!");
     }
 
 
@@ -198,8 +198,5 @@ public class Parser {
         double desconto = Double.parseDouble(campos[2]);
 
         return new FornecedorEnergia(nome, valorBase, desconto);
-        //FornecedorEnergia fe = cidade.getFornecedor(nome);
-        //fe.setValorBase(valorBase);
-        //fe.setDesconto(desconto);
     }
 }
