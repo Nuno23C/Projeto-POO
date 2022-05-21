@@ -1,6 +1,4 @@
 import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.io.DataInput;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -104,11 +101,11 @@ public class Menu implements Serializable {
         String choice;
 
         Map<String, Casa> casas = new HashMap<>();
-        Map<String, FornecedorEnergia> fornecedorDaCasa = new HashMap<>();
+        Map<String, FornecedorEnergia> fornecedorDeCadaCasa = new HashMap<>();
         Map<String, FornecedorEnergia> fornecedores = new HashMap<>();
         Map<String, List<Fatura>> faturas = new HashMap<>();
 
-        Cidade cidade = new Cidade(casas, fornecedorDaCasa, fornecedores, faturas);
+        Cidade cidade = new Cidade(casas, fornecedorDeCadaCasa, fornecedores, faturas);
 
         System.out.println("Menu:");
         System.out.println("1 - Create a city");
@@ -123,9 +120,17 @@ public class Menu implements Serializable {
                 break;
 
             case("2"):
+                clearConsole();
+
+                System.out.print("File name: ");
                 Parser parser = new Parser(cidade);
-                parser.parse();
+                String nameFile = scan.nextLine();
+                parser.parse(nameFile);
+
+                System.out.print("\n");
+
                 enterToContinue(scan);
+
                 createCidade(cidade, scan);
                 break;
 
@@ -153,8 +158,8 @@ public class Menu implements Serializable {
         System.out.println("1 - Houses");
         System.out.println("2 - Energy suppliers");
         System.out.print("\n");
-        System.out.println("4 - Invoices");
-        System.out.println("5 - Simulation");
+        System.out.println("3 - Advance in time");
+        System.out.println("4 - Simulation");
         System.out.print("\n");
         System.out.println("7 - Save state");
         System.out.println("8 - Load state");
@@ -272,22 +277,12 @@ public class Menu implements Serializable {
 
             case("3"):
                 clearConsole();
-
-                System.out.print("Teste: ");
-                String t = scan.nextLine();
-                while(isWord(t)) {
-                    System.out.println("Error, try again!");
-                    t = scan.nextLine();
-                }
-
-                System.out.println("Palavra escrita: " + t);
-
-                enterToContinue(scan);
+                avancaNoTempo(cidade, scan);
                 break;
 
-            case("5"):
+            case("4"):
                 clearConsole();
-                simulation(cidade, scan);
+                simulationMenu(cidade, scan);
                 break;
 
             case("7"):
@@ -333,7 +328,7 @@ public class Menu implements Serializable {
      */
     public void createCasa(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
-
+        clearConsole();
         System.out.println("Do you want to continue?");
         System.out.println("1 - Yes");
         System.out.println("2 - No");
@@ -342,6 +337,7 @@ public class Menu implements Serializable {
 
         switch(choice) {
             case("1"):
+                clearConsole();
                 break;
 
             case("2"):
@@ -354,8 +350,6 @@ public class Menu implements Serializable {
                 createCasa(cidade, scan);
                 break;
         }
-
-        System.out.print("\n");
 
         System.out.print("House's id: ");
         String idCasa = scan.nextLine();
@@ -378,9 +372,8 @@ public class Menu implements Serializable {
 
         System.out.print("NIF: ");
         String NIF = scan.nextLine();
-        while(NIF.length() != 9) {
-            System.out.println("The NIF must have 9 characters!");
-            System.out.print("Try another one: ");
+        while(!NIF.matches("[0-9]+") || NIF.length() != 9) {
+            System.out.println("The NIF must have 9 characters and only digits, try again!");
             NIF = scan.nextLine();
         }
 
@@ -422,6 +415,8 @@ public class Menu implements Serializable {
             System.out.print("\n");
         }
 
+        clearConsole();
+
         System.out.println("Join an energy supplier");
         System.out.println("1 - Create energy supplier");
         System.out.println("2 - Choose an existing energy supplier");
@@ -438,7 +433,7 @@ public class Menu implements Serializable {
             case("1"):
                 FornecedorEnergia fe = criaFornecedorEnergia(cidade, scan);
                 casa.add_Fornecedor(fe);
-                cidade.getFornecedorDaCasa().put(casa.getIdCasa(), fe);
+                cidade.getFornecedorDeCadaCasa().put(casa.getIdCasa(), fe);
 
                 break;
 
@@ -451,16 +446,12 @@ public class Menu implements Serializable {
                     nomeFornecedor = scan.nextLine();
                 }
                 casa.add_Fornecedor(cidade.getFornecedor(nomeFornecedor));
-                cidade.getFornecedorDaCasa().put(casa.getIdCasa(), cidade.getFornecedor(nomeFornecedor));
+                cidade.getFornecedorDeCadaCasa().put(casa.getIdCasa(), cidade.getFornecedor(nomeFornecedor));
 
                 break;
         }
 
         createCidade(cidade, scan);
-    }
-
-    public static boolean isWord(String in) {
-        return Pattern.matches("[a-zA-Z]+", in);
     }
 
     /**
@@ -474,6 +465,7 @@ public class Menu implements Serializable {
      */
     public void createDivisao(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
+        clearConsole();
 
         System.out.print("Disivion name: ");
         String nomeDivisao = scan.nextLine();
@@ -532,6 +524,7 @@ public class Menu implements Serializable {
     public SmartDevice createDevice(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         SmartDevice sd = null;
         String choice;
+        clearConsole();
 
         System.out.println("Do you want to continue?");
         System.out.println("1 - Yes");
@@ -541,17 +534,17 @@ public class Menu implements Serializable {
 
         switch(choice) {
             case("1"):
+                clearConsole();
                 break;
 
             case("2"):
+                clearConsole();
                 return sd;
 
             default:
                 createDevice(casa, cidade, scan);
                 break;
         }
-
-        System.out.print("\n");
 
         System.out.println("What do you want to create?");
         System.out.println("1 - SmartBulb ");
@@ -584,15 +577,19 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que cria uma Lampada
+     * Método que cria uma SmartBulb
      * @param casa
      * @param cidade
      * @param scan
-     * @return sb - Retorna uma Lampada
+     * @return sb - Retorna uma SmartBulb
+     * @throws InterruptedException
+     * @throws IOException
      */
-    public SmartDevice createSmartBulb(Casa casa, Cidade cidade, Scanner scan) {
+    public SmartDevice createSmartBulb(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         String choice;
         SmartBulb sb = null;
+
+        clearConsole();
 
         System.out.println("Do you want to continue?");
         System.out.println("1 - Yes");
@@ -602,17 +599,17 @@ public class Menu implements Serializable {
 
         switch(choice) {
             case("1"):
+                clearConsole();
                 break;
 
             case("2"):
+                clearConsole();
                 return sb;
 
             default:
                 createSmartBulb(casa, cidade, scan);
                 break;
         }
-
-        System.out.print("\n");
 
         System.out.print("SmartBulb ID: ");
         String id = scan.nextLine();
@@ -726,15 +723,19 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que cria uma Coluna
+     * Método que cria um SmartSpeaker
      * @param casa
      * @param cidade
      * @param scan
-     * @return ss - Retorna uma Coluna
+     * @return ss - Retorna um SmartSpeaker
+     * @throws InterruptedException
+     * @throws IOException
      */
-    public SmartDevice createSmartSpeaker(Casa casa, Cidade cidade, Scanner scan) {
+    public SmartDevice createSmartSpeaker(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException {
         String choice;
         SmartSpeaker ss = null;
+
+        clearConsole();
 
         System.out.println("Do you want to continue?");
         System.out.println("1 - Yes");
@@ -744,17 +745,17 @@ public class Menu implements Serializable {
 
         switch(choice) {
             case("1"):
+                clearConsole();
                 break;
 
             case("2"):
+                clearConsole();
                 return ss;
 
             default:
                 createSmartSpeaker(casa, cidade, scan);
                 break;
         }
-
-        System.out.print("\n");
 
         System.out.print("SmartSpeaker ID: ");
         String id = scan.nextLine();
@@ -840,15 +841,19 @@ public class Menu implements Serializable {
     }
 
     /**
-     * Método que cria uma Camera
+     * Método que cria uma SmartCamera
      * @param casa
      * @param cidade
      * @param scan
-     * @return sc - Retorna uma Camera
+     * @return sc - Retorna uma SmartCamera
+     * @throws InterruptedException
+     * @throws IOException
      */
-    public SmartDevice createSmartCamera(Casa casa, Cidade cidade, Scanner scan){
+    public SmartDevice createSmartCamera(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException{
         String choice;
         SmartCamera sc = null;
+
+        clearConsole();
 
         System.out.println("Do you want to continue?");
         System.out.println("1 - Yes");
@@ -858,6 +863,7 @@ public class Menu implements Serializable {
 
         switch(choice) {
             case("1"):
+                clearConsole();
                 break;
 
             case("2"):
@@ -867,8 +873,6 @@ public class Menu implements Serializable {
                 createSmartCamera(casa, cidade, scan);
                 break;
         }
-
-        System.out.print("\n");
 
         System.out.print("SmartCamera ID: ");
         String id = scan.nextLine();
@@ -963,8 +967,12 @@ public class Menu implements Serializable {
      * @param cidade
      * @param scan
      * @return fe - Retorna um Fornecedor de Energia
+     * @throws InterruptedException
+     * @throws IOException
      */
-    public FornecedorEnergia criaFornecedorEnergia(Cidade cidade, Scanner scan) {
+    public FornecedorEnergia criaFornecedorEnergia(Cidade cidade, Scanner scan) throws IOException, InterruptedException {
+        clearConsole();
+
         System.out.print("Energy supplier name: ");
         String nomeFornecedor = scan.nextLine();
         while(cidade.getFornecedores().containsKey(nomeFornecedor)) {
@@ -1729,7 +1737,7 @@ public class Menu implements Serializable {
         System.out.println("1 - Houses");
         System.out.println("2 - Devices");
         System.out.println("3 - Energy Suppliers");
-        System.out.println("4 - Bills");
+        System.out.println("4 - Invoices");
         System.out.println("0 - Go back");
         System.out.print("Choose an option: ");
         String choice = scan.nextLine();
@@ -1748,6 +1756,7 @@ public class Menu implements Serializable {
                     case("1"):
                         clearConsole();
                         System.out.println(cidade.listaCasas());
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
@@ -1756,6 +1765,7 @@ public class Menu implements Serializable {
                         System.out.print("House ID: ");
                         String idCasa = scan.nextLine();
                         System.out.println(cidade.listaInfoCasa(cidade, idCasa));
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
@@ -1786,6 +1796,7 @@ public class Menu implements Serializable {
                     case("1"):
                         clearConsole();
                         System.out.println(cidade.getCasa(idCasa).listaDevices());
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
@@ -1794,6 +1805,7 @@ public class Menu implements Serializable {
                         System.out.print("Device ID: ");
                         String idDevice = scan.nextLine();
                         System.out.println(cidade.getCasa(idCasa).listaInfoDevice(idDevice));
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
@@ -1821,14 +1833,16 @@ public class Menu implements Serializable {
                     case("1"):
                         clearConsole();
                         System.out.println(cidade.listaFornecedores());
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
                     case("2"):
                         clearConsole();
                         System.out.print("Energy supplier name: ");
-                        String novoNomeF = scan.nextLine();
-                        System.out.println(cidade.listaInfoFornecedor(novoNomeF));
+                        String nomeFornecedor = scan.nextLine();
+                        System.out.println(cidade.listaInfoFornecedor(nomeFornecedor));
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
@@ -1847,21 +1861,36 @@ public class Menu implements Serializable {
             case("4"):
                 clearConsole();
                 System.out.println("What do you want to check?");
-                System.out.println("1 - List of Bills: ");
-                System.out.println("2 - Information of specific Bills: ");
+                System.out.println("1 - List of invoices for a specific house");
+                System.out.println("2 - list of invoices for a specific supplier");
+                System.out.println("3 - List of all invoices");
+                System.out.println("4 - Information of specific invoice");
                 System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 choice = scan.nextLine();
                 switch(choice){
                     case("1"):
                         clearConsole();
-                        //cidade.listaFaturas();
+                        System.out.print("House ID: ");
+                        idCasa = scan.nextLine();
+                        System.out.println(cidade.listaFaturasCasa(idCasa));
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
                     case("2"):
                         clearConsole();
-                        //cidade.infoBills(novoId);
+                        System.out.print("Energy supplier name: ");
+                        String nomeFornecedor = scan.nextLine();
+                        System.out.println(cidade.listaFaturasFornecedor(nomeFornecedor));
+                        System.out.print("\n");
+                        enterToContinue(scan);
+                        break;
+
+                    case("3"):
+                        clearConsole();
+                        System.out.println(cidade.listaTodasFaturas());
+                        System.out.print("\n");
                         enterToContinue(scan);
                         break;
 
@@ -1890,17 +1919,10 @@ public class Menu implements Serializable {
         checkStateMenu(cidade, scan);
     }
 
-    /**
-     * Método que avança o tempo
-     * @param cidade
-     * @param scan
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    public void simulation(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
-        clearConsole();
+    public void avancaNoTempo(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         String choice;
+
+        clearConsole();
 
         System.out.println("Do you want to continue?");
         System.out.println("1 - Yes");
@@ -1919,30 +1941,41 @@ public class Menu implements Serializable {
 
             default:
                 clearConsole();
-                simulation(cidade, scan);
+                avancaNoTempo(cidade, scan);
                 break;
         }
 
         clearConsole();
 
-        System.out.println("Initial date:");
-        System.out.println("1 - Atual");
-        System.out.println("2 - Enter a new date");
-        System.out.print("Choose an option: ");
-        choice = scan.nextLine();
-
         LocalDateTime dataInicial = LocalDateTime.now();
-        switch(choice) {
-            case("1"):
-                dataInicial = LocalDateTime.now();
-                break;
 
-            case("2"):
-                System.out.print("Date (dd-MM-yyyy HH:mm): ");
-                String dataI = scan.nextLine();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                dataInicial = LocalDateTime.parse(dataI, formatter);
-                break;
+        if(cidade.getDatas().isEmpty()) {
+            System.out.println("Initial date:");
+            System.out.println("1 - Atual date");
+            System.out.println("2 - Enter a new date");
+            System.out.print("Choose an option: ");
+            choice = scan.nextLine();
+            while(!choice.equals("1") && !choice.equals("2")) {
+                System.out.print("Choose a valid option (1/2): ");
+                choice = scan.nextLine();
+            }
+
+            switch(choice) {
+                case("1"):
+                    cidade.getDatas().add(dataInicial);
+                    break;
+
+                case("2"):
+                    System.out.print("Enter the initial date (dd-MM-yyyy HH:mm): ");
+                    String dataI = scan.nextLine();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                    dataInicial = LocalDateTime.parse(dataI, formatter);
+                    cidade.getDatas().add(dataInicial);
+                    break;
+            }
+        } else {
+            dataInicial = cidade.getDatas().get(cidade.getDatas().size()-1);
+            System.out.println("Initial date: " + dataInicial);
         }
 
         System.out.print("\n");
@@ -1951,12 +1984,15 @@ public class Menu implements Serializable {
         String dataF = scan.nextLine();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         LocalDateTime dataFinal = LocalDateTime.parse(dataF, formatter);
-        while(!dataInicial.isBefore(dataFinal)) {
+
+        while(!dataFinal.isAfter(cidade.getDatas().get(cidade.getDatas().size()-1))) {
             System.out.println("Invalid date, try again!");
             dataF = scan.nextLine();
             formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             dataFinal = LocalDateTime.parse(dataF, formatter);
         }
+
+        cidade.getDatas().add(dataFinal);
 
         System.out.print("\n");
 
@@ -1966,16 +2002,69 @@ public class Menu implements Serializable {
         System.out.print("\n");
 
         long periodo = ChronoUnit.DAYS.between(dataInicial, dataFinal);
-        System.out.println(periodo);
+        System.out.println("Time period between dates = " + periodo + " days");
+
+        System.out.print("\n");
+
+        System.out.println("Date list: " + cidade.getDatas());
+
+        System.out.print("\n");
 
         enterToContinue(scan);
 
+        cidade.geraFaturas(dataInicial, dataFinal);
+    }
+
+    /**
+     * Método que avança o tempo
+     * @param cidade
+     * @param scan
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ClassNotFoundException
+     */
+    public void simulationMenu(Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
         clearConsole();
+        String choice;
+
+        System.out.println("Do you want to continue?");
+        System.out.println("1 - Yes");
+        System.out.println("2 - No");
+        System.out.print("Choose an option: ");
+        choice = scan.nextLine();
+
+        switch(choice) {
+            case("1"):
+                clearConsole();
+                break;
+
+            case("2"):
+                clearConsole();
+                createCidade(cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                simulationMenu(cidade, scan);
+                break;
+        }
+
+        LocalDateTime dataInicial = cidade.getDatas().get(cidade.getDatas().size()-2);
+        LocalDateTime dataFinal = cidade.getDatas().get(cidade.getDatas().size()-1);
+
+        long periodo = ChronoUnit.DAYS.between(dataInicial, dataFinal);
+
+        System.out.println("Initial date: " + dataInicial);
+        System.out.println("Final date: " + dataFinal);
+        System.out.println("Time period between dates = " + periodo + " days");
+
+        System.out.println("\n");
+
         System.out.println("What do you want to do?");
-        System.out.println("1 - What is the house that spent the most in that period");
+        System.out.println("1 - What is the house that spent the most in this period");
         System.out.println("2 - Which supplier has the highest invoicing volume");
         System.out.println("3 - Invoices list's issued by a supplier");
-        System.out.println("4 - Give an ordering of the largest energy consumers during a period");
+        System.out.println("4 - Give an ordering of the largest energy consumers during this period");
         System.out.println("0 - Go back");
         System.out.print("Choose an option: ");
         choice = scan.nextLine();
@@ -1985,16 +2074,18 @@ public class Menu implements Serializable {
         switch(choice) {
             case("1"):
                 clearConsole();
-                Casa casaM = cidade.getCasaMaisGastadoraPeriodo(cidade, 10);
+                Casa casaM = cidade.getCasaMaisGastadoraPeriodo(periodo);
                 System.out.println("The house that spent the most was: " + casaM.getIdCasa());
-                System.out.println("kWh = " + cidade.getConsumoCasaPeriodo(casaM, cidade, 10));
+                System.out.println("Consumption during the time period: " + cidade.getConsumoCasaPeriodo(casaM, periodo) + " kWh");
+                System.out.println("Cost: " + cidade.getPrecoCasaPeriodo(casaM, periodo) + " euros");
 
                 enterToContinue(scan);
 
-                System.out.println("1 - See more information about the house");
+                System.out.println("1 - See more information about this house");
                 System.out.println("0 - Go back");
                 System.out.print("Choose an option: ");
                 String option = scan.nextLine();
+
                 switch(option){
                     case ("1"):
                         clearConsole();
@@ -2004,36 +2095,90 @@ public class Menu implements Serializable {
 
                     case ("0"):
                         clearConsole();
-                        simulation(cidade, scan);
+                        simulationMenu(cidade, scan);
                         break;
 
                     default:
                         clearConsole();
-                        simulation(cidade, scan);
+                        simulationMenu(cidade, scan);
                         break;
                 }
                 break;
 
             case("2"):
                 clearConsole();
-
                 System.out.println(cidade.listaFornecedores());
                 System.out.print("Choose an Energy Supllier: ");
                 String nomeF = scan.nextLine();
+                while(!cidade.getFornecedores().containsKey(nomeF)) {
+                    System.out.println("Invalid option, try again!");
+                    nomeF = scan.nextLine();
+                }
+
                 FornecedorEnergia fornecedor = cidade.getFornecedor(nomeF);
 
-                System.out.print("Invoicing volume = " + cidade.volumeFatFornecedor(fornecedor, 10) + "€");
+                System.out.print("Invoicing volume = " + cidade.volumeFatFornecedor(fornecedor, periodo) + " euros");
 
                 enterToContinue(scan);
                 break;
 
             case("3"):
+                clearConsole();
                 System.out.println(cidade.listaFornecedores());
                 System.out.print("Choose an Energy Supllier: ");
                 nomeF = scan.nextLine();
-                fornecedor = cidade.getFornecedor(nomeF);
+                while(!cidade.getFornecedores().containsKey(nomeF)) {
+                    System.out.println("Invalid option, try again!");
+                    nomeF = scan.nextLine();
+                }
 
+                System.out.println(cidade.listaFaturasFornecedor(nomeF));
 
+                enterToContinue(scan);
+                break;
+
+            case ("4"):
+                clearConsole();
+                System.out.println("Sorted list of the most consuming houses: ");
+                System.out.println(cidade.casasMaisConsumidoras(cidade, periodo));
+                enterToContinue(scan);
+
+                System.out.println("Do you want to check some house?");
+                System.out.println("1 - Yes");
+                System.out.println("2 - No");
+                System.out.print("Choose an option: ");
+                choice = scan.nextLine();
+                while(!choice.equals("1") && !choice.equals("2")) {
+                    System.out.print("Choose a valid option (1/2): ");
+                    choice = scan.nextLine();
+                }
+
+                switch(choice) {
+                    case("1"):
+                        clearConsole();
+                        System.out.print("House ID: ");
+                        String idCasa = scan.nextLine();
+                        while(!cidade.getCasas().containsKey(idCasa)) {
+                            System.out.println("Invalid option, try again!");
+                            idCasa = scan.nextLine();
+                        }
+
+                        System.out.println("Consumption during the time period: " + cidade.getConsumoCasaPeriodo(cidade.getCasa(idCasa), periodo) + " kWh");
+                        System.out.println("Cost: " + cidade.getPrecoCasaPeriodo(cidade.getCasa(idCasa), periodo) + " euros");
+
+                        enterToContinue(scan);
+                }
+                break;
+
+            case("0"):
+                clearConsole();
+                createCidade(cidade, scan);
+                break;
+
+            default:
+                clearConsole();
+                simulationMenu(cidade, scan);
         }
     }
+
 }

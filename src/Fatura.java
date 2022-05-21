@@ -77,7 +77,7 @@ public class Fatura implements Serializable {
         sb.append("Initial date: " + this.dataInicial + "\n");
         sb.append("Final date: " + this.dataFinal + "\n");
         sb.append("Consumption during the time period: " + this.consumo + "kwh" + "\n");
-        sb.append("Cost: " + this.custo + "€" + "\n");
+        sb.append("Cost: " + this.custo + "euros" + "\n");
 
         return sb.toString();
     }
@@ -134,22 +134,42 @@ public class Fatura implements Serializable {
         return this.custo;
     }
 
+    /**
+     * Método set que altera o custo da casa
+     * @param custo
+     */
     public void setCusto(double custo) {
         this.custo = custo;
     }
 
+    /**
+     * Método get que dá a data inicial da contagem do consumo
+     * @return dataInicial
+     */
     public LocalDateTime getDataInicial() {
         return this.dataInicial;
     }
 
+    /**
+     * Método set que altera a data inicial da contagem do consumo
+     * @param dataInicial
+     */
     public void setDataInicial(LocalDateTime dataInicial) {
         this.dataInicial = dataInicial;
     }
 
+    /**
+     * Método get que altera a data final da contagem do consumo
+     * @return dataFinal
+     */
     public LocalDateTime getDataFinal() {
         return this.dataFinal;
     }
 
+    /**
+     * Método set que altera a data final da contagem do consumo
+     * @param dataFinal
+     */
     public void setDataFinal(LocalDateTime dataFinal) {
         this.dataFinal = dataFinal;
     }

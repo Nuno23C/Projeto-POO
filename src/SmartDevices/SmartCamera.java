@@ -13,6 +13,7 @@ public class SmartCamera extends SmartDevice {
     private double tamanhoPacote;
     private double consumoBase;
     private double consumoF;
+    private double precoInstalacao;
 
     /**
      * Construtor por omissão.
@@ -26,6 +27,7 @@ public class SmartCamera extends SmartDevice {
         this.tamanhoPacote = 0;
         this.consumoBase = 0;
         this.consumoF = 0;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -33,6 +35,7 @@ public class SmartCamera extends SmartDevice {
      * @param id
      * @param estado
      * @param resolucao
+     * @param precoInstalacao
      */
     public SmartCamera(String id, Estado estado, int x, int y, double tamanhoPacote, double consumoBase){
         super(id);
@@ -42,6 +45,7 @@ public class SmartCamera extends SmartDevice {
         this.tamanhoPacote = tamanhoPacote;
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase * x * y;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -61,6 +65,7 @@ public class SmartCamera extends SmartDevice {
         this.tamanhoPacote = tamanhoPacote;
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase * x * y;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -76,6 +81,7 @@ public class SmartCamera extends SmartDevice {
         this.tamanhoPacote = sc.getTamanhoPacote();
         this.consumoBase = sc.getConsumoBase();
         this.consumoF = sc.getConsumoF();
+        this.precoInstalacao = sc.getPrecoInstalacao();
     }
 
     /**
@@ -96,8 +102,9 @@ public class SmartCamera extends SmartDevice {
                 sc.getX() == this.x &&
                 sc.getY() == this.y &&
                 sc.getTamanhoPacote() == this.tamanhoPacote &&
-                sc.getConsumoBase() == this.consumoBase) &&
-                sc.getConsumoF() == this.consumoF;
+                sc.getConsumoBase() == this.consumoBase &&
+                sc.getConsumoF() == this.consumoF &&
+                sc.getPrecoInstalacao() == this.precoInstalacao);
     }
 
     /**
@@ -110,9 +117,10 @@ public class SmartCamera extends SmartDevice {
         sb.append("Device ID:" + this.getId() + "\n");
         sb.append("Mode: " + this.estado + "\n");
         sb.append("Resolution: " + "(" + this.x + "x" + this.y + ")" + "\n");
-        sb.append("File size: " + this.tamanhoPacote + "sec" + "\n");
-        sb.append("Device base consumption: " + this.consumoBase + "kWh" + " \n");
-        sb.append("Device consumption: " + this.consumoF + "kWh" + "\n");
+        sb.append("File size: " + this.tamanhoPacote + " sec" + "\n");
+        sb.append("Device base consumption: " + this.consumoBase + " kWh" + " \n");
+        sb.append("Device consumption: " + this.consumoF + " kWh" + "\n");
+        sb.append("Installation price: " + this.precoInstalacao + " euros" + "\n");
 
         return sb.toString();
     }
@@ -143,7 +151,7 @@ public class SmartCamera extends SmartDevice {
 
 
     /**
-     * Método get que dá o estado da SmartCamera.
+     * Método que retorna o estado da SmartCamera.
      * @return estado
      */
     public Estado getEstado() {
@@ -159,7 +167,7 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método get que dá o n_estado da SmartCamera.
+     * Método que retorna o n_estado da SmartCamera.
      * @return n_estado
      */
     public int getN_estado() {
@@ -175,7 +183,7 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método get que dá o x da resolução da SmartCamera.
+     * Método que retorna o x da resolução da SmartCamera.
      * @return x
      */
     public int getX() {
@@ -191,7 +199,7 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método get que dá y da resolução da SmartCamera.
+     * Método que retorna y da resolução da SmartCamera.
      * @return y
      */
     public int getY() {
@@ -207,7 +215,7 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método get que dá o tempo ligado da SmartCamera.
+     * Método que retorna o tempo ligado da SmartCamera.
      * @return tempoLigada
      */
     public long getTempoLigada() {
@@ -223,7 +231,7 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método get que dá o tamanho do pacote da SmartCamera.
+     * Método que retorna o tamanho do pacote da SmartCamera.
      * @return tamanhoPacote
      */
     public double getTamanhoPacote() {
@@ -239,7 +247,7 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método get que dá o consumo base da SmartCamera.
+     * Método que retorna o consumo base da SmartCamera.
      * @return consumoBase
      */
     public double getConsumoBase() {
@@ -255,7 +263,7 @@ public class SmartCamera extends SmartDevice {
     }
 
     /**
-     * Método get que dá o consumo final da SmartCamera.
+     * Método que retorna o consumo final da SmartCamera.
      * @return consumoF
      */
     public double getConsumoF() {
@@ -268,5 +276,21 @@ public class SmartCamera extends SmartDevice {
      */
     public void setConsumoF(double consumoF) {
         this.consumoF = consumoF;
+    }
+
+    /**
+     * Método que retorna o preco por instalacao
+     * @return precoInstalacao
+     */
+    public double getPrecoInstalacao(){
+        return this.precoInstalacao;
+    }
+
+    /**
+     * Método que altera o preco por instalação
+     * @param precoInstalacao
+     */
+    public void setPrecoInstalacao(double precoInstalacao){
+        this.precoInstalacao = precoInstalacao;
     }
 }

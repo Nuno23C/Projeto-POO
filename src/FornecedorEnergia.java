@@ -43,6 +43,12 @@ public class FornecedorEnergia implements Serializable {
         this.faturas = faturas;
     }
 
+    /**
+     * Contrutor parametrizado especializado
+     * @param nomeEmpresa
+     * @param valorBase
+     * @param desconto
+     */
     public FornecedorEnergia(String nomeEmpresa, double valorBase, double desconto){
         this.nomeEmpresa = nomeEmpresa;
         this.imposto = 1.23;
@@ -65,7 +71,11 @@ public class FornecedorEnergia implements Serializable {
         this.faturas = fe.getFaturas();
     }
 
-
+    /**
+     * Método que verifica se dois fornecedores de energia são iguais.
+     * @param o fornecedor de energia passada como parâmetro
+     * @return True se os fornecedores forem iguais | False se os fornecedores forem diferentes
+     */
     public boolean equals (Object o) {
         if (this == o)
             return true;
@@ -82,10 +92,14 @@ public class FornecedorEnergia implements Serializable {
                 fe.getFaturas().equals(this.faturas));
     }
 
+    /**
+     * Método que representa um fornecedor de energia em formato de texto.
+     * @return String com as características de uma fornecedor de energia.
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Energy supplier name: " + this.nomeEmpresa + "\n");
+        sb.append("Name: " + this.nomeEmpresa + "\n");
         sb.append("Tax: " + this.imposto + "\n");
         sb.append("Base value: " + this.valorBase + "\n");
         sb.append("Discount: " + this.desconto + "\n");
@@ -97,15 +111,29 @@ public class FornecedorEnergia implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * Método que cria um clone da fatura.
+     * @return Clone da fatura.
+     */
     public FornecedorEnergia clone() {
         return new FornecedorEnergia(this);
     }
 
+     /**
+     * Método que determina o preco de um dispositivo
+     * @param sd
+     */
     public double getPrecoDispositivo(SmartDevice sd){
         return (this.valorBase * sd.getConsumoF() * this.imposto) * (1 - (this.desconto/100));
     }
 
+
     // Quando recebe a casa
+    /**
+     * Método que determina o preco da casa.
+     * @param casa
+     * @return precoTotal
+     */
     public double getPrecoCasa(Casa casa) {
         double precoTotal = 0;
 
@@ -116,7 +144,13 @@ public class FornecedorEnergia implements Serializable {
         return precoTotal;
     }
 
+
     // Quando recebe os dispositivos da casa
+    /**
+     * Método que determina o preco da casa.
+     * @param dispositivos
+     * @return precoTotal
+     */
     public double getPrecoCasa(Map<String, SmartDevice> dispositivos) {
         double precoTotal = 0;
 
@@ -128,6 +162,11 @@ public class FornecedorEnergia implements Serializable {
     }
 
     // Quando recebe a casa
+    /**
+     * Método que determina o consumo da casa.
+     * @param casa
+     * @return consumoTotal
+     */
     public double getConsumoCasa(Casa casa) {
         double consumoTotal = 0;
 
@@ -139,6 +178,11 @@ public class FornecedorEnergia implements Serializable {
     }
 
     // Quando recebe os dispositivos da casa
+    /**
+     * Método que determina o consumo da casa.
+     * @param dispositivos
+     * @return consumoTotal
+     */
     public double getConsumoCasa(Map<String, SmartDevice> dispositivos) {
         double consumoTotal = 0;
 
@@ -151,54 +195,99 @@ public class FornecedorEnergia implements Serializable {
 
 
 
-
-
-
     // Getters and Setters
+    /**
+     * Método que dá o nome da empresa
+     * @return nomeEmpresa
+     */
     public String getNomeEmpresa() {
         return nomeEmpresa;
     }
 
+    /**
+     * Método que altera o nome da empresa
+     * @param nomeEmpresa
+     */
     public void setNomeEmpresa(String nomeEmpresa) {
         this.nomeEmpresa = nomeEmpresa;
     }
 
+    /**
+     * Método que dá o imposto
+     * @return imposto
+     */
     public double getImposto() {
         return imposto;
     }
 
+    /**
+     * Método que altera o imposto
+     * @param imposto
+     */
     public void setImposto(double imposto) {
         this.imposto = imposto;
     }
 
+    /**
+     * Método que dá o valor base
+     * @return valorBase
+     */
     public double getValorBase() {
         return valorBase;
     }
 
+    /**
+     * Método que altera o valor base
+     * @param valorBase
+     */
     public void setValorBase(double valorBase) {
         this.valorBase = valorBase;
     }
 
+    /**
+     * Método que dá o desconto
+     * @return desconto
+     */
     public double getDesconto() {
         return desconto;
     }
 
+    /**
+     * Método que altera o desconto
+     * @param desconto
+     */
     public void setDesconto(double desconto) {
         this.desconto = desconto;
     }
 
+    /**
+     * Método que dá o conjunto das casas de um dado fornecedor
+     * @return casasDoFornecedor
+     */
     public Map<String, Casa> getCasasDoFornecedor() {
         return this.casasDoFornecedor;
     }
 
+    /**
+     * Método que altera o conjunto das casas de um dado fornecedor
+     * @param casasDoFornecedor
+     */
     private void setCasasDoFornecedor(HashMap<String, Casa> casasDoFornecedor){
         this.casasDoFornecedor = casasDoFornecedor;
     }
 
+    /**
+     * Método que dá as faturas
+     * @return faturas
+     */
     public Map<String, List<Fatura>> getFaturas() {
         return this.faturas;
     }
 
+    /**
+     * Método que altera as faturas
+     * @param faturas
+     */
     public void setFatura(Map<String, List<Fatura>> faturas) {
         this.faturas = faturas;
     }

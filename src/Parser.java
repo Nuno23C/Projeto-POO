@@ -31,13 +31,14 @@ public class Parser {
         return lines;
     }
 
-    public void parse() throws IOException{
-        Path path = Path.of("mylogs.txt");
+    public void parse(String nomeFicheiro) throws IOException{
+        Path path = Path.of(nomeFicheiro);
         String conteudo = Files.readString(path);
         String[] conteudoPartido = conteudo.split("\n");
         String[] linhaPartida;
         String divisao = "";
         Casa casa = null;
+        FornecedorEnergia fe = null;
 
         for (String linha : conteudoPartido) {
 
@@ -47,8 +48,6 @@ public class Parser {
                 case "Casa":
                     casa = parseCasa(linhaPartida[1]);
                     cidade.add_Casa(casa.getIdCasa(), casa);
-                    cidade.getFornecedorDaCasa().put(casa.getIdCasa(), casa.getFornecedor());
-
                     break;
 
                 case "Divisao":
@@ -126,7 +125,7 @@ public class Parser {
                     break;
 
                 case "Fornecedor":
-                    FornecedorEnergia fe = parseFornecedorEnergia(linhaPartida[1], cidade);
+                    fe = parseFornecedorEnergia(linhaPartida[1], cidade);
                     cidade.add_Fornecedor(fe);
                     break;
 
@@ -138,16 +137,16 @@ public class Parser {
         System.out.println("Feito");
     }
 
+
     public Casa parseCasa(String input) {
         String[] campos = input.split(",");
         String nome = campos[0];
         String NIF = campos[1];
-        String nomeFornecedor = campos[2];
-        System.out.println(nomeFornecedor);
-        FornecedorEnergia fe = cidade.getFornecedor(nomeFornecedor);
-        System.out.println(fe);
+        String nomeF = campos[2];
+        String nomeFornecedor = nomeF.trim();
+        FornecedorEnergia fe = this.cidade.getFornecedor(nomeFornecedor);
         String idCasa = Integer.toString(houseID);
-        //cidade.getFornecedorDaCasa().put(idCasa, fe);
+        cidade.getFornecedorDeCadaCasa().put(idCasa, fe);
         this.houseID++;
 
         return new Casa(idCasa, nome, NIF, fe);

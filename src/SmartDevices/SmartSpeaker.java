@@ -12,6 +12,7 @@ public class SmartSpeaker extends SmartDevice {
     private String radioOnline;
     private double consumoBase;
     private double consumoF;
+    private double precoInstalacao;
 
     /**
      * Construtor por omissão.
@@ -24,6 +25,7 @@ public class SmartSpeaker extends SmartDevice {
         this.radioOnline = "";
         this.consumoBase = 0;
         this.consumoF = 0;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -34,6 +36,7 @@ public class SmartSpeaker extends SmartDevice {
      * @param volume
      * @param radioOnline
      * @param consumoBase
+     * @param precoInstalacao
      */
     public SmartSpeaker(String id, Estado estado, String marca, int volume, String radioOnline, double consumoBase) {
         super(id);
@@ -43,6 +46,7 @@ public class SmartSpeaker extends SmartDevice {
         this.radioOnline = radioOnline;
         this.consumoBase = consumoBase;
         this.consumoF = volume * consumoBase;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -62,6 +66,7 @@ public class SmartSpeaker extends SmartDevice {
         this.radioOnline = radioOnline;
         this.consumoBase = consumoBase;
         this.consumoF = volume * consumoBase;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -76,6 +81,7 @@ public class SmartSpeaker extends SmartDevice {
         this.radioOnline = ss.getRadioOnline();
         this.consumoBase = ss.getConsumoBase();
         this.consumoF = ss.getConsumoF();
+        this.precoInstalacao = ss.getPrecoInstalacao();
     }
 
     /**
@@ -97,7 +103,8 @@ public class SmartSpeaker extends SmartDevice {
                 ss.getVolume() == this.volume &&
                 ss.getRadioOnline().equals(this.radioOnline) &&
                 ss.getConsumoBase() == this.consumoBase &&
-                ss.getConsumoF() == this.consumoF);
+                ss.getConsumoF() == this.consumoF &&
+                ss.getPrecoInstalacao() == this.precoInstalacao);
     }
 
     /**
@@ -112,8 +119,9 @@ public class SmartSpeaker extends SmartDevice {
         sb.append("Brand: " + this.marca + "\n");
         sb.append("Online radio: " + this.radioOnline + "\n");
         sb.append("Volume: " + this.volume + "\n");
-        sb.append("Device base consumption: " + this.consumoBase + "kWh" + "\n");
-        sb.append("Device consumption: " + this.consumoF + "kWh" + "\n");
+        sb.append("Device base consumption: " + this.consumoBase + " kWh" + "\n");
+        sb.append("Device consumption: " + this.consumoF + " kWh" + "\n");
+        sb.append("Installation price: " + this.precoInstalacao + " euros" + "\n");
 
         return sb.toString();
     }
@@ -143,7 +151,7 @@ public class SmartSpeaker extends SmartDevice {
 
 
     /**
-     * Método get que dá o estado da SmartSpeaker.
+     * Método que retorna o estado da SmartSpeaker.
      * @return estado
      */
     public Estado getEstado() {
@@ -159,7 +167,7 @@ public class SmartSpeaker extends SmartDevice {
     }
 
     /**
-     * Método get que dá o n_estado da SmartSpeaker.
+     * Método que retorna o n_estado da SmartSpeaker.
      * @return n_estado
      */
     public int getN_estado() {
@@ -175,7 +183,7 @@ public class SmartSpeaker extends SmartDevice {
     }
 
     /**
-     * Método get que dá a marca da SmartSpeaker.
+     * Método que retorna a marca da SmartSpeaker.
      * @return marca
      */
     public String getMarca() {
@@ -191,7 +199,7 @@ public class SmartSpeaker extends SmartDevice {
     }
 
     /**
-     * Método get que dá o volume da SmartSpeaker.
+     * Métodoque retorna o volume da SmartSpeaker.
      * @return volume
      */
     public int getVolume() {
@@ -207,7 +215,7 @@ public class SmartSpeaker extends SmartDevice {
     }
 
     /**
-     * Método get que dá a radio online da SmartSpeaker.
+     * Método que retorna a radio online da SmartSpeaker.
      * @return radioOnline
      */
     public String getRadioOnline() {
@@ -223,7 +231,7 @@ public class SmartSpeaker extends SmartDevice {
     }
 
     /**
-     * Método get que dá o consumo base SmartSpeaker.
+     * Método que retorna o consumo base SmartSpeaker.
      * @return consumoBase
      */
     public double getConsumoBase() {
@@ -239,7 +247,7 @@ public class SmartSpeaker extends SmartDevice {
     }
 
     /**
-     * Método get que dá o consumo final da SmartSpeaker.
+     * Método que retorna o consumo final da SmartSpeaker.
      * @return consumoF
      */
     public double getConsumoF() {
@@ -252,5 +260,21 @@ public class SmartSpeaker extends SmartDevice {
      */
     public void setConsumoF(double consumoF) {
         this.consumoF = consumoF;
+    }
+
+    /**
+     * Método que retorna o preço por instalação
+     * @return precoInstalacao
+     */
+    public double getPrecoInstalacao(){
+        return this.precoInstalacao;
+    }
+
+    /**
+     * Método que altera o preço por instalação
+     * @param precoInstalacao
+     */
+    public void setPrecoInstalacao(double precoInstalacao){
+        this.precoInstalacao = precoInstalacao;
     }
 }

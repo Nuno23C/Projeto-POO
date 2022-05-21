@@ -85,10 +85,18 @@ public abstract class SmartDevice implements Serializable {
 
 
     // Getters and Setters
+    /**
+     * Método que retorna o id de um dispositivo
+     * @return id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Método set que altera o id de um dispositivo
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }

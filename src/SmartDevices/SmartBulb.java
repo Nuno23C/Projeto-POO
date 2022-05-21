@@ -17,6 +17,7 @@ public class SmartBulb extends SmartDevice {
     private double dimensao;
     private double consumoBase;
     private double consumoF;
+    private double precoInstalacao;
 
     /**
      * Construtor por omissão.
@@ -27,6 +28,7 @@ public class SmartBulb extends SmartDevice {
         this.dimensao = 0;
         this.consumoBase = 0;
         this.consumoF = 0;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -34,6 +36,7 @@ public class SmartBulb extends SmartDevice {
      * @param id identificação da SmartBulb.
      * @param estado Estado da SmartBulb.
      * @param tone Tonalidade da SmartBulb.
+     * @param precoInstalacao preco pela instalação do aparelho
      */
     public SmartBulb(String id, Estado estado, Tonalidade tone, double dimensao, double consumoBase) {
         super(id);
@@ -42,6 +45,7 @@ public class SmartBulb extends SmartDevice {
         this.dimensao = dimensao;
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -59,6 +63,7 @@ public class SmartBulb extends SmartDevice {
         this.dimensao = dimensao;
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase;
+        this.precoInstalacao = 10;
     }
 
     /**
@@ -72,6 +77,7 @@ public class SmartBulb extends SmartDevice {
         this.dimensao = sb.getDimensao();
         this.consumoBase = sb.getConsumoBase();
         this.consumoF = sb.getConsumoF();
+        this.precoInstalacao = sb.getPrecoInstalacao();
     }
 
     /**
@@ -91,7 +97,8 @@ public class SmartBulb extends SmartDevice {
                 sb.getEstado() == this.estado &&
                 sb.getTone() == this.tone &&
                 sb.getDimensao() == this.dimensao &&
-                sb.getConsumoBase() == this.consumoF);
+                sb.getConsumoBase() == this.consumoF &&
+                sb.getPrecoInstalacao() == this.precoInstalacao);
     }
 
     /**
@@ -112,9 +119,10 @@ public class SmartBulb extends SmartDevice {
         sb.append("Device id: " + this.getId() + "\n");
         sb.append("Mode: " + this.estado + "\n");
         sb.append("Tone: " + this.tone + "\n");
-        sb.append("Dimension: " + this.dimensao + "cm" + "\n");
-        sb.append("Device base consumption: " + this.consumoBase + "kWh" + " \n");
-        sb.append("Device consumption: " + this.consumoF + "kWh" + " \n");
+        sb.append("Dimension: " + this.dimensao + " cm" + "\n");
+        sb.append("Device base consumption: " + this.consumoBase + " kWh" + " \n");
+        sb.append("Device consumption: " + this.consumoF + " kWh" + " \n");
+        sb.append("Installation price:" + this.precoInstalacao + " euros" + "\n");
 
         return sb.toString();
     }
@@ -157,7 +165,7 @@ public class SmartBulb extends SmartDevice {
 
 
     /**
-     * Método get que dá o valor do estado
+     * Método que retorna o valor do estado
      * @return estado
      */
     public Estado getEstado() {
@@ -173,7 +181,7 @@ public class SmartBulb extends SmartDevice {
     }
 
     /**
-     * Método get que dá o valor da tonalidade
+     * Método que retorna o valor da tonalidade
      * @return tone
      */
     public Tonalidade getTone() {
@@ -181,7 +189,7 @@ public class SmartBulb extends SmartDevice {
     }
 
     /**
-     * Método get que altera o valor da tonalidade
+     * Método set que altera o valor da tonalidade
      * @param tone
      */
     public void setTone(Tonalidade tone) {
@@ -189,7 +197,7 @@ public class SmartBulb extends SmartDevice {
     }
 
     /**
-     * Método get que dá o valor da string tonalidade
+     * Método que retorna o valor da string tonalidade
      * @return string_tonalidade
      */
     public String getString_tone() {
@@ -205,7 +213,7 @@ public class SmartBulb extends SmartDevice {
     }
 
     /**
-     * Método get que dá o valor do n_estado
+     * Método que retorna o valor do n_estado
      * @return n_estado
      */
     public int getN_estado() {
@@ -221,7 +229,7 @@ public class SmartBulb extends SmartDevice {
     }
 
     /**
-     * Método get que dá o valor da dimensão de uma SmartBulb
+     * Método que retorna o valor da dimensão de uma SmartBulb
      * @return dimensao
      */
     public double getDimensao() {
@@ -235,6 +243,24 @@ public class SmartBulb extends SmartDevice {
     public void setDimensao(double dimensao) {
         this.dimensao = dimensao;
     }
+
+    /**
+     * Método que retorna o preço por instalação
+     * @return precoInstalacao
+     */
+    public double getPrecoInstalacao(){
+        return this.precoInstalacao;
+    }
+
+
+    /**
+     * Método que altera o preço por instalação
+     * @param precoInstalacao
+     */
+    public void setPrecoInstalacao(double precoInstalacao){
+        this.precoInstalacao = precoInstalacao;
+    }
+
 
     /**
      * Método get que dá o valor do consumo base
@@ -253,7 +279,7 @@ public class SmartBulb extends SmartDevice {
     }
 
     /**
-     * Método get que dá o valor do consumo final
+     * Método que retorna o valor do consumo final
      * @return consumoF
      */
     public double getConsumoF() {
