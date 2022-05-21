@@ -231,7 +231,6 @@ public class Casa implements Serializable {
         }
     }
 
-
     /**
      * Método que altera o nome de uma divisão a uma casa
      * @param divName
@@ -245,7 +244,6 @@ public class Casa implements Serializable {
         }
     }
 
-
     /**
      * Método que adiciona um dispositivo a uma divisão de uma casa
      * @param div
@@ -253,19 +251,27 @@ public class Casa implements Serializable {
      */
     public void add_DispositivoNaDivisao(String div, SmartDevice sd){
         if (this.divisoes.containsKey(div)){
-            List<String> ids = this.divisoes.get(div);
-            if (!ids.contains(sd.getId())){
-                ids.add(sd.getId());
+            if (!this.divisoes.get(div).contains(sd.getId())){
+                this.divisoes.get(div).add(sd.getId());
                 this.dispositivos.put(sd.getId(), sd);
             }
         }
         else{
             add_Divisao(div);
-            List<String> ids = this.divisoes.get(div);
-            if (!ids.contains(sd.getId())){
-                ids.add(sd.getId());
+            if (!this.divisoes.get(div).contains(sd.getId())){
+                this.divisoes.get(div).add(sd.getId());
                 this.dispositivos.put(sd.getId(), sd);
             }
+        }
+    }
+
+    public void setNomeDispositivo(String divName, SmartDevice sd, String novoID) {
+        if (!this.divisoes.get(divName).contains(sd.getId())) {
+            this.divisoes.get(divName).remove(sd.getId());
+            this.dispositivos.remove(sd.getId());
+            sd.setId(novoID);
+            this.divisoes.get(divName).add(novoID);
+            this.dispositivos.put(novoID, sd);
         }
     }
 
@@ -297,7 +303,7 @@ public class Casa implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("List of devices:\n");
         sb.append("{");
-        for(String idDevice: dispositivos.keySet()){
+        for(String idDevice: this.dispositivos.keySet()){
             sb.append(idDevice + ", ");
         }
         sb.append("\b\b}");
@@ -313,18 +319,30 @@ public class Casa implements Serializable {
     public String listaInfoDevice(String idDevice){
         StringBuilder sb = new StringBuilder();
 
-        sb.append(dispositivos.get(idDevice).toString());
+        sb.append(this.dispositivos.get(idDevice).toString());
 
         return sb.toString();
     }
 
-    public String listaDivisoes(String idCasa) {
+    public String listaDivisoes() {
         StringBuilder sb = new StringBuilder();
 
         for(String divName: this.divisoes.keySet()) {
             sb.append(divName);
             sb.append("\n");
         }
+
+        return sb.toString();
+    }
+
+    public String listaDispositivosNaDivisao(String divName) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("{");
+        for(String deviceID: this.divisoes.get(divName)) {
+            sb.append(this.dispositivos.get(deviceID).getId() + ", ");
+        }
+        sb.append("\b\b}");
 
         return sb.toString();
     }

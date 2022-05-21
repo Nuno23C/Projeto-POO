@@ -327,10 +327,10 @@ public class Cidade implements Serializable {
      * @param nomeF
      * @return sb em formato string
      */
-    public String listaInfoFornecedor(String nomeF){
+    public String listaInfoFornecedor(String nomeF) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(fornecedores.get(nomeF).toString());
+        sb.append(this.getFornecedor(nomeF).toString());
 
         return sb.toString();
     }
@@ -398,6 +398,28 @@ public class Cidade implements Serializable {
                 this.faturas.get(idCasa).add(fatura);
             }
         }
+    }
+
+    public Fatura listaFaturaDataI(LocalDateTime dataInicial, Casa casa) {
+        Fatura f = null;
+
+        for(Fatura fatura: this.faturas.get(casa.getIdCasa())) {
+            if(fatura.getDataInicial().equals(dataInicial)) {
+                return fatura;
+            }
+        }
+
+        return f;
+    }
+
+    public List<LocalDateTime> getDatasClone() {
+        List<LocalDateTime> novaLista = new ArrayList<>();
+
+        for(LocalDateTime d: this.datas) {
+            novaLista.add(d);
+        }
+
+        return novaLista;
     }
 
 

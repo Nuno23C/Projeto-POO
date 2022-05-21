@@ -13,6 +13,7 @@ public class SmartSpeaker extends SmartDevice {
     private double consumoBase;
     private double consumoF;
     private double precoInstalacao;
+    private int identificador;
 
     /**
      * Construtor por omissão.
@@ -26,6 +27,7 @@ public class SmartSpeaker extends SmartDevice {
         this.consumoBase = 0;
         this.consumoF = 0;
         this.precoInstalacao = 10;
+        this.identificador = 2;
     }
 
     /**
@@ -47,6 +49,7 @@ public class SmartSpeaker extends SmartDevice {
         this.consumoBase = consumoBase;
         this.consumoF = volume * consumoBase;
         this.precoInstalacao = 10;
+        this.identificador = 2;
     }
 
     /**
@@ -67,6 +70,7 @@ public class SmartSpeaker extends SmartDevice {
         this.consumoBase = consumoBase;
         this.consumoF = volume * consumoBase;
         this.precoInstalacao = 10;
+        this.identificador = 2;
     }
 
     /**
@@ -82,6 +86,7 @@ public class SmartSpeaker extends SmartDevice {
         this.consumoBase = ss.getConsumoBase();
         this.consumoF = ss.getConsumoF();
         this.precoInstalacao = ss.getPrecoInstalacao();
+        this.identificador = ss.getIdentificador();
     }
 
     /**
@@ -104,7 +109,8 @@ public class SmartSpeaker extends SmartDevice {
                 ss.getRadioOnline().equals(this.radioOnline) &&
                 ss.getConsumoBase() == this.consumoBase &&
                 ss.getConsumoF() == this.consumoF &&
-                ss.getPrecoInstalacao() == this.precoInstalacao);
+                ss.getPrecoInstalacao() == this.precoInstalacao &&
+                ss.getIdentificador() == this.identificador);
     }
 
     /**
@@ -276,5 +282,21 @@ public class SmartSpeaker extends SmartDevice {
      */
     public void setPrecoInstalacao(double precoInstalacao){
         this.precoInstalacao = precoInstalacao;
+    }
+
+    /**
+     * Método que retorna o identificador da SmartSpeacker
+     * @return identificador
+     */
+    public int getIdentificador(){
+        return this.identificador;
+    }
+
+    /**
+     * Método que retorna o identificador da SmartSpeacker
+     * @return identificador
+     */
+    public void setIdentificador(){
+        this.identificador = identificador;
     }
 }

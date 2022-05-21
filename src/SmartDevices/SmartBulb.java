@@ -18,6 +18,7 @@ public class SmartBulb extends SmartDevice {
     private double consumoBase;
     private double consumoF;
     private double precoInstalacao;
+    private int identificador;
 
     /**
      * Construtor por omissão.
@@ -29,6 +30,7 @@ public class SmartBulb extends SmartDevice {
         this.consumoBase = 0;
         this.consumoF = 0;
         this.precoInstalacao = 10;
+        this.identificador = 1;
     }
 
     /**
@@ -46,6 +48,7 @@ public class SmartBulb extends SmartDevice {
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase;
         this.precoInstalacao = 10;
+        this.identificador = 1;
     }
 
     /**
@@ -64,6 +67,7 @@ public class SmartBulb extends SmartDevice {
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase;
         this.precoInstalacao = 10;
+        this.identificador = 1;
     }
 
     /**
@@ -78,6 +82,7 @@ public class SmartBulb extends SmartDevice {
         this.consumoBase = sb.getConsumoBase();
         this.consumoF = sb.getConsumoF();
         this.precoInstalacao = sb.getPrecoInstalacao();
+        this.identificador = sb.getIdentificador();
     }
 
     /**
@@ -98,7 +103,8 @@ public class SmartBulb extends SmartDevice {
                 sb.getTone() == this.tone &&
                 sb.getDimensao() == this.dimensao &&
                 sb.getConsumoBase() == this.consumoF &&
-                sb.getPrecoInstalacao() == this.precoInstalacao);
+                sb.getPrecoInstalacao() == this.precoInstalacao &&
+                sb.getIdentificador() == this.identificador);
     }
 
     /**
@@ -122,7 +128,7 @@ public class SmartBulb extends SmartDevice {
         sb.append("Dimension: " + this.dimensao + " cm" + "\n");
         sb.append("Device base consumption: " + this.consumoBase + " kWh" + " \n");
         sb.append("Device consumption: " + this.consumoF + " kWh" + " \n");
-        sb.append("Installation price:" + this.precoInstalacao + " euros" + "\n");
+        sb.append("Installation price: " + this.precoInstalacao + " euros" + "\n");
 
         return sb.toString();
     }
@@ -259,6 +265,22 @@ public class SmartBulb extends SmartDevice {
      */
     public void setPrecoInstalacao(double precoInstalacao){
         this.precoInstalacao = precoInstalacao;
+    }
+
+    /**
+     * Método que retorna o identificador do tipo SmartBulb
+     * @return identificador
+     */
+    public int getIdentificador(){
+        return this.identificador;
+    }
+
+    /**
+     * Método que altera o identificador do tipo SmartBulb
+     * @param identificador
+     */
+    public void getIdentificador(int identificador){
+        this.identificador = identificador;
     }
 
 

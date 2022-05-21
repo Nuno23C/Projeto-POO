@@ -14,6 +14,7 @@ public class SmartCamera extends SmartDevice {
     private double consumoBase;
     private double consumoF;
     private double precoInstalacao;
+    private int identificador;
 
     /**
      * Construtor por omissão.
@@ -28,6 +29,7 @@ public class SmartCamera extends SmartDevice {
         this.consumoBase = 0;
         this.consumoF = 0;
         this.precoInstalacao = 10;
+        this.identificador = 3;
     }
 
     /**
@@ -46,6 +48,7 @@ public class SmartCamera extends SmartDevice {
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase * x * y;
         this.precoInstalacao = 10;
+        this.identificador = 3;
     }
 
     /**
@@ -66,6 +69,7 @@ public class SmartCamera extends SmartDevice {
         this.consumoBase = consumoBase;
         this.consumoF = consumoBase * x * y;
         this.precoInstalacao = 10;
+        this.identificador = 3;
     }
 
     /**
@@ -82,9 +86,10 @@ public class SmartCamera extends SmartDevice {
         this.consumoBase = sc.getConsumoBase();
         this.consumoF = sc.getConsumoF();
         this.precoInstalacao = sc.getPrecoInstalacao();
+        this.identificador = sc.getIdentificador();
     }
 
-    /**
+	/**
      * Método que verifica se os duas SmartCameras são iguais.
      * @param o SmartCamera passada como parâmetro.
      * @return True se as SmartCamera forem iguais | False se as SmartCamera forem diferentes.
@@ -104,7 +109,8 @@ public class SmartCamera extends SmartDevice {
                 sc.getTamanhoPacote() == this.tamanhoPacote &&
                 sc.getConsumoBase() == this.consumoBase &&
                 sc.getConsumoF() == this.consumoF &&
-                sc.getPrecoInstalacao() == this.precoInstalacao);
+                sc.getPrecoInstalacao() == this.precoInstalacao &&
+                sc.getIdentificador() == this.identificador);
     }
 
     /**
@@ -292,5 +298,21 @@ public class SmartCamera extends SmartDevice {
      */
     public void setPrecoInstalacao(double precoInstalacao){
         this.precoInstalacao = precoInstalacao;
+    }
+
+    /**
+     * Método que retorna o identificador da SmartCamera
+     * @return identificador
+     */
+    public int getIdentificador(){
+        return this.identificador;
+    }
+
+    /**
+     * Método que altera o identificador da SmartCamera
+     * @param identificador
+     */
+    public void setIdentificador(){
+        this.identificador = identificador;
     }
 }

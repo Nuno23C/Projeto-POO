@@ -14,6 +14,9 @@ public class Parser {
     private int deviceID = 1;
     private Cidade cidade;
 
+    /**
+     * Método que cria uma nova
+     */
     public Parser() {
         this.cidade = new Cidade();
     }
@@ -22,6 +25,11 @@ public class Parser {
         this.cidade = cidade;
     }
 
+    /**
+     * Método que lê o ficheiro dado
+     * @param nomeFich
+     * @return lines
+     */
     public List<String> lerFicheiro(String nomeFich) {
         List<String> lines;
 
@@ -31,6 +39,11 @@ public class Parser {
         return lines;
     }
 
+    /**
+     * Método parse
+     * @param nomeFicheiro
+     * @throws IOException
+     */
     public void parse(String nomeFicheiro) throws IOException{
         Path path = Path.of(nomeFicheiro);
         String conteudo = Files.readString(path);
@@ -137,7 +150,11 @@ public class Parser {
         System.out.println("Done!");
     }
 
-
+    /**
+     * Método que faz o parse de uma Casa
+     * @param input
+     * @return new Casa(idCasa, nome, NIF, fe) - retorna a casa contruída através dos parâmetros
+     */
     public Casa parseCasa(String input) {
         String[] campos = input.split(",");
         String nome = campos[0];
@@ -152,6 +169,12 @@ public class Parser {
         return new Casa(idCasa, nome, NIF, fe);
     }
 
+    /**
+     * Método que faz o parse de uma SmartBulb
+     * @param imput
+     * @param casa
+     * @return new SmartBulb(deviceID, 1, string_tone, dimensoes, consumo) - retorna a SmartBulb construída através dos parâmetros
+     */
     public SmartBulb parseSmartBulb(String input, Casa casa){
         String[] campos = input.split(",");
         String string_tone = campos[0];
@@ -163,6 +186,12 @@ public class Parser {
         return new SmartBulb(deviceID, 1, string_tone, dimensoes, consumo);
     }
 
+    /**
+     * Método que faz o parse de um SmartSpeaker
+     * @param imput
+     * @param casa
+     * @return new SmartSpeaker(deviceID, 1, marca, volume, radioOnline, consumo) - retorna o SmartSpeaker construído através dos parâmetros
+     */
     public SmartSpeaker parseSmartSpeaker(String input, Casa casa) {
         String[] campos = input.split(",");
         int volume = Integer.parseInt(campos[0]);
@@ -175,6 +204,12 @@ public class Parser {
         return new SmartSpeaker(deviceID, 1, marca, volume, radioOnline, consumo);
     }
 
+    /**
+     * Método que faz o parse de uma SmartCamera
+     * @param imput
+     * @param casa
+     * @return new SmartCamera(deviceID, 1, largura, altura, tamanho, consumo) - retorna a SmartCamera construída através dos parâmetros
+     */
     public SmartCamera parseSmartCamera(String input, Casa casa) {
         String[] campos = input.split(",");
         String resolucao = campos[0];
@@ -191,6 +226,12 @@ public class Parser {
         return new SmartCamera(deviceID, 1, largura, altura, tamanho, consumo);
     }
 
+    /**
+     * Método que faz o parse de um Fornecedor de Energia
+     * @param input
+     * @param cidade
+     * @return new FornecedorEnergia(nome, valorBase, desconto) - retorna o Fornecedor de Energia construído através dos parâmetros
+     */
     public FornecedorEnergia parseFornecedorEnergia(String input, Cidade cidade) {
         String[] campos = input.split(",");
         String nome = campos[0];
