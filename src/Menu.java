@@ -512,7 +512,7 @@ public class Menu implements Serializable {
 
         System.out.print("Disivion name: ");
         String nomeDivisao = scan.nextLine();
-        while(!casa.getDivisoes().containsKey(nomeDivisao)) {
+        while(casa.getDivisoes().containsKey(nomeDivisao)) {
             System.out.println("This division already exists, try again!");
             nomeDivisao = scan.nextLine();
         }
@@ -656,7 +656,7 @@ public class Menu implements Serializable {
 
         System.out.print("SmartBulb ID: ");
         String id = scan.nextLine();
-        while(!casa.getDispositivos().containsKey(id)) {
+        while(casa.getDispositivos().containsKey(id)) {
             System.out.println("This id already exists, try another one!");
             id = scan.nextLine();
         }
@@ -2167,11 +2167,10 @@ public class Menu implements Serializable {
 
                         List<LocalDateTime> novaLista = cidade.getDatasClone();
                         novaLista.remove(novaLista.size() - 1);
-                        System.out.println(novaLista);
 
                         System.out.println("Date list: " + novaLista);
                         System.out.print("\n");
-                        System.out.print("Choose an initial date: ");
+                        System.out.print("Choose an initial date from list: ");
                         String dataI = scan.nextLine();
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
                         LocalDateTime dataInicial = LocalDateTime.parse(dataI, formatter);
