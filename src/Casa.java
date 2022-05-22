@@ -237,7 +237,7 @@ public class Casa implements Serializable {
      * @param newDivName
      */
     public void setNomeDaDivisao(String divName, String newDivName) {
-        if (this.divisoes.containsKey(divName)) {
+        if (this.divisoes.containsKey(divName) && !this.divisoes.containsKey(newDivName)) {
             List<String> ids = this.divisoes.get(divName);
             this.divisoes.remove(divName);
             divisoes.put(newDivName, ids);
@@ -266,7 +266,7 @@ public class Casa implements Serializable {
     }
 
     public void setNomeDispositivo(String divName, SmartDevice sd, String novoID) {
-        if (!this.divisoes.get(divName).contains(sd.getId())) {
+        if (!this.divisoes.get(divName).contains(novoID) && this.divisoes.containsKey(divName)) {
             this.divisoes.get(divName).remove(sd.getId());
             this.dispositivos.remove(sd.getId());
             sd.setId(novoID);

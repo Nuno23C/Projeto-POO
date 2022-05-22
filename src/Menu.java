@@ -435,6 +435,13 @@ public class Menu implements Serializable {
                 break;
 
             case("2"):
+                if(cidade.getFornecedores().isEmpty()) {
+                    System.out.println("The suppliers list is empty, please create one!");
+                    fe = criaFornecedorEnergia(cidade, scan);
+                    casa.add_Fornecedor(fe);
+                    cidade.getFornecedorDeCadaCasa().put(casa.getIdCasa(), fe);
+                }
+                System.out.println(cidade.listaFornecedores());
                 System.out.println("Wich one?");
                 System.out.print("Energy supplier name: ");
                 String nomeFornecedor = scan.nextLine();
@@ -1057,6 +1064,7 @@ public class Menu implements Serializable {
      * @throws ClassNotFoundException
      */
     public void changeCasa(Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
+        clearConsole();
         System.out.println("What do you want to do?");
         System.out.println("1 - Change house ID");
         System.out.println("2 - Change house adress");
@@ -1317,8 +1325,6 @@ public class Menu implements Serializable {
                 }
                 casa.setNomeDaDivisao(divName, newDivName);
 
-                System.out.print("\n");
-
                 break;
 
             case("2"):
@@ -1332,15 +1338,35 @@ public class Menu implements Serializable {
 
             case("3"):
                 queresContinuarChangeDivisao(divName, casa, cidade, scan);
-                System.out.println(cidade.getCasa(casa.getIdCasa()).listaDispositivosNaDivisao(divName));
+                System.out.println("Devices list: " + cidade.getCasa(casa.getIdCasa()).listaDispositivosNaDivisao(divName));
+                System.out.println("\n");
+
                 System.out.println("Which device do you want to change?");
                 System.out.print("SmartDevice ID: ");
                 String deviceID = scan.nextLine();
-                while(!casa.getDispositivos().containsKey(deviceID)) {
+                while(!casa.getDivisoes().get(divName).contains(deviceID)) {
                     System.out.println("This device does not exists, try again!");
                     deviceID = scan.nextLine();
                 }
-                changeDevice(casa.getDispositivos().get(deviceID), divName, casa, cidade, scan);
+
+                SmartDevice sd = casa.getDispositivos().get(deviceID);
+                int n = sd.getIdentificador();
+                switch(n) {
+                    case(1):
+                        changeSmartBulb(sd, divName, casa, cidade, scan);
+                        break;
+
+                    case(2):
+                        changeSmartSpeaker(sd, divName, casa, cidade, scan);
+                        break;
+
+                    case(3):
+                        changeSmartCamera(sd, divName, casa, cidade, scan);
+                        break;
+
+                    default:
+                        break;
+                }
                 break;
 
             case("4"):
@@ -1393,94 +1419,7 @@ public class Menu implements Serializable {
                 changeDivisao(divName, casa, cidade, scan);
                 break;
         }
-        changeDivisao(divName, casa, cidade, scan);
-    }
-
-    /**
-     * Método que auxilia na escolha de uma opção durante o Menu changeDevice
-     * @param sd
-     * @param divName
-     * @param casa
-     * @param cidade
-     * @param scan
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    public void queresContinuarChangeDevice(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
-        clearConsole();
-
-        System.out.println("Do you want to continue?");
-        System.out.println("1 - Yes");
-        System.out.println("2 - No");
-        System.out.print("Choose an option: ");
-        String choice = scan.nextLine();
-
-        switch(choice) {
-            case("1"):
-                clearConsole();
-                break;
-
-            case("2"):
-                clearConsole();
-                changeDivisao(divName, casa, cidade, scan);
-                break;
-
-            default:
-                clearConsole();
-                queresContinuarChangeCasa(casa, cidade, scan);
-                break;
-        }
-
-        clearConsole();
-    }
-
-    /**
-     * Método que altera as informações de um Device
-     * @param sd
-     * @param divName
-     * @param casa
-     * @param cidade
-     * @param scan
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ClassNotFoundException
-     */
-    public void changeDevice(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException {
-        clearConsole();
-
-        System.out.println("What do you want to do?");
-        System.out.println("1 - Change SmartBulb");
-        System.out.println("2 - Change SmartSpeaker");
-        System.out.println("3 - Change SmartCamera");
-        System.out.println("0 - Go back");
-        System.out.print("Choose an option: ");
-        String choice = scan.nextLine();
-
-        switch(choice) {
-            case("1"):
-                clearConsole();
-                changeSmartBulb(sd, divName, casa, cidade, scan);
-                break;
-
-            case("2"):
-                clearConsole();
-                changeSmartSpeaker(sd, divName, casa, cidade, scan);
-                break;
-
-            case("3"):
-                clearConsole();
-                changeSmartCamera(sd, divName, casa, cidade, scan);
-                break;
-
-            case("0"):
-                clearConsole();
-                changeDivisao(divName, casa, cidade, scan);
-
-            default:
-                clearConsole();
-                changeDevice(sd, divName, casa, cidade, scan);
-        }
+        changeCasa(casa, cidade, scan);
     }
 
     /**
@@ -1508,6 +1447,7 @@ public class Menu implements Serializable {
         switch(choice) {
             case("1"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.print("New Id: ");
                 String novoID = scan.nextLine();
                 while(casa.getDispositivos().containsKey(novoID)){
@@ -1515,10 +1455,12 @@ public class Menu implements Serializable {
                     novoID = scan.nextLine();
                 }
                 cidade.getCasa(casa.getIdCasa()).setNomeDispositivo(divName, sd, novoID);
+                enterToContinue(scan);
                 break;
 
             case("2"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.println("New Tone:");
                 System.out.println("1 - Cold");
                 System.out.println("2 - Neutral");
@@ -1553,6 +1495,7 @@ public class Menu implements Serializable {
 
             case("3"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
                 System.out.println("2 - Off");
@@ -1582,7 +1525,7 @@ public class Menu implements Serializable {
 
             case("0"):
                 clearConsole();
-                changeDevice(sd, divName, casa, cidade, scan);
+                changeDivisao(divName, casa, cidade, scan);
                 break;
 
             default:
@@ -1590,6 +1533,7 @@ public class Menu implements Serializable {
                 changeSmartBulb(sd, divName, casa, cidade, scan);
                 break;
         }
+        changeDivisao(divName, casa, cidade, scan);
     }
 
     /**
@@ -1604,6 +1548,8 @@ public class Menu implements Serializable {
      * @throws ClassNotFoundException
      */
     public void changeSmartSpeaker(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
+        clearConsole();
+
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartSpeaker ID");
         System.out.println("2 - Change Brand");
@@ -1617,17 +1563,20 @@ public class Menu implements Serializable {
         switch(choice){
             case("1"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.print("New Id: ");
                 String novoID = scan.nextLine();
                 while(casa.getDispositivos().containsKey(novoID)){
                     System.out.println("This id has already been used, try again!");
                     novoID = scan.nextLine();
                 }
-                sd.setId(novoID);
+                cidade.getCasa(casa.getIdCasa()).setNomeDispositivo(divName, sd, novoID);
+                enterToContinue(scan);
                 break;
 
             case("2"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.print("New brand: ");
                 String NovaMarca = scan.nextLine();
                 ss.setMarca(NovaMarca);
@@ -1636,6 +1585,7 @@ public class Menu implements Serializable {
 
             case("3"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
                 System.out.println("2 - Off");
@@ -1665,6 +1615,7 @@ public class Menu implements Serializable {
 
             case("4"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.print("New Radio: ");
                 String novaRadio = scan.nextLine();
                 ss.setRadioOnline(novaRadio);
@@ -1673,7 +1624,7 @@ public class Menu implements Serializable {
 
             case("0"):
                 clearConsole();
-                changeDevice(sd, divName, casa, cidade, scan);
+                changeDivisao(divName, casa, cidade, scan);
                 break;
 
             default:
@@ -1681,6 +1632,7 @@ public class Menu implements Serializable {
                 changeSmartSpeaker(sd, divName, casa, cidade, scan);
                 break;
         }
+        changeDivisao(divName, casa, cidade, scan);
     }
 
     /**
@@ -1695,6 +1647,8 @@ public class Menu implements Serializable {
      * @throws ClassNotFoundException
      */
     public void changeSmartCamera(SmartDevice sd, String divName, Casa casa, Cidade cidade, Scanner scan) throws IOException, InterruptedException, ClassNotFoundException{
+        clearConsole();
+
         System.out.println("What do you want to do?");
         System.out.println("1 - Change SmartCamera ID");
         System.out.println("2 - Change Resolution");
@@ -1708,17 +1662,20 @@ public class Menu implements Serializable {
         switch(choice){
             case("1"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.print("New Id: ");
                 String novoID = scan.nextLine();
                 while(casa.getDispositivos().containsKey(novoID)){
                     System.out.println("This id has already been used, try again!");
                     novoID = scan.nextLine();
                 }
-                sd.setId(novoID);
+                cidade.getCasa(casa.getIdCasa()).setNomeDispositivo(divName, sd, novoID);
+                enterToContinue(scan);
                 break;
 
             case("2"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.print("New X: ");
                 int novoX = -1;
                 while(novoX < 0) {
@@ -1740,6 +1697,7 @@ public class Menu implements Serializable {
 
             case("3"):
                 clearConsole();
+                queresContinuarChangeDivisao(divName, casa, cidade, scan);
                 System.out.println("Turn On/Off");
                 System.out.println("1 - On");
                 System.out.println("2 - Off");
@@ -1769,13 +1727,15 @@ public class Menu implements Serializable {
 
             case("0"):
                 clearConsole();
-                changeDevice(sd, divName, casa, cidade, scan);
+                changeDivisao(divName, casa, cidade, scan);
                 break;
 
             default:
                 clearConsole();
                 changeSmartCamera(sd, divName, casa, cidade, scan);
+                break;
         }
+        changeDivisao(divName, casa, cidade, scan);
     }
 
     /**
@@ -2039,7 +1999,7 @@ public class Menu implements Serializable {
                         clearConsole();
                         System.out.print("Device ID: ");
                         String idDevice = scan.nextLine();
-                        while(!cidade.getCasas().containsKey(idDevice)) {
+                        while(!cidade.getCasa(idCasa).getDispositivos().containsKey(idDevice)) {
                             System.out.println("Invalid ID, try again!");
                             idDevice = scan.nextLine();
                         }
