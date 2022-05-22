@@ -193,8 +193,7 @@ public class Menu implements Serializable {
                         System.out.print("House's id that you want to change: ");
                         String houseID = scan.nextLine();
                         while(!cidade.getCasas().containsKey(houseID)) {
-                            System.out.println("Invalid option!");
-                            System.out.print("Try again: ");
+                            System.out.println("Invalid option, try again!");
                             houseID = scan.nextLine();
                         }
                         clearConsole();
@@ -351,7 +350,7 @@ public class Menu implements Serializable {
 
         System.out.print("House's id: ");
         String idCasa = scan.nextLine();
-        while(!cidade.getCasas().containsKey(idCasa)) {
+        while(cidade.getCasas().containsKey(idCasa)) {
             System.out.println("This id has already been used, try again!");
             idCasa = scan.nextLine();
         }
@@ -757,7 +756,7 @@ public class Menu implements Serializable {
 
         System.out.print("SmartSpeaker ID: ");
         String id = scan.nextLine();
-        while(!casa.getDispositivos().containsKey(id)) {
+        while(casa.getDispositivos().containsKey(id)) {
             System.out.println("This id already exists, try another one!");
             id = scan.nextLine();
         }
@@ -874,7 +873,7 @@ public class Menu implements Serializable {
 
         System.out.print("SmartCamera ID: ");
         String id = scan.nextLine();
-        while(!casa.getDispositivos().containsKey(id)) {
+        while(casa.getDispositivos().containsKey(id)) {
             System.out.println("This id already exists, try another one!");
             id = scan.nextLine();
         }
@@ -974,7 +973,7 @@ public class Menu implements Serializable {
         System.out.print("Energy supplier name: ");
         String nomeFornecedor = scan.nextLine();
         while(cidade.getFornecedores().containsKey(nomeFornecedor)) {
-            System.out.println("This supplier already exits!");
+            System.out.println("This supplier already exits, try again!");
             nomeFornecedor = scan.nextLine();
         }
 
@@ -1339,7 +1338,7 @@ public class Menu implements Serializable {
                 String deviceID = scan.nextLine();
                 while(!casa.getDispositivos().containsKey(deviceID)) {
                     System.out.println("This device does not exists, try again!");
-                    newDivName = scan.nextLine();
+                    deviceID = scan.nextLine();
                 }
                 changeDevice(casa.getDispositivos().get(deviceID), divName, casa, cidade, scan);
                 break;
@@ -1352,7 +1351,7 @@ public class Menu implements Serializable {
                 deviceID = scan.nextLine();
                 while(!casa.getDispositivos().containsKey(deviceID)) {
                     System.out.println("This device does not exists, try again!");
-                    newDivName = scan.nextLine();
+                    deviceID = scan.nextLine();
                 }
                 casa.remove_DispositivoNaDivisao(deviceID, divName);
                 break;
@@ -1511,7 +1510,7 @@ public class Menu implements Serializable {
                 clearConsole();
                 System.out.print("New Id: ");
                 String novoID = scan.nextLine();
-                while(!casa.getDispositivos().containsKey(novoID)){
+                while(casa.getDispositivos().containsKey(novoID)){
                     System.out.println("This id has already been used, try again!");
                     novoID = scan.nextLine();
                 }
@@ -1951,7 +1950,6 @@ public class Menu implements Serializable {
 
                         System.out.print("House ID: ");
                         idCasa = scan.nextLine();
-
                         while(!cidade.getCasas().containsKey(idCasa)) {
                             System.out.println("Invalid ID, try again!");
                             idCasa = scan.nextLine();
@@ -1980,7 +1978,7 @@ public class Menu implements Serializable {
                         String divName = scan.nextLine();
                         while(!cidade.getCasa(idCasa).getDivisoes().containsKey(divName)) {
                             System.out.println("This division does not exists, try again!");
-                            idCasa = scan.nextLine();
+                            divName = scan.nextLine();
                         }
 
                         System.out.print("\n");
@@ -2018,9 +2016,10 @@ public class Menu implements Serializable {
                 System.out.print("House id: ");
                 String idCasa = scan.nextLine();
                 while(!cidade.getCasas().containsKey(idCasa)) {
-                            System.out.println("Invalid ID, try again!");
-                            idCasa = scan.nextLine();
-                    }
+                    System.out.println("Invalid ID, try again!");
+                    idCasa = scan.nextLine();
+                }
+
                 System.out.println("What do you want to check?");
                 System.out.println("1 - List of Devices");
                 System.out.println("2 - Information of specific Device");
@@ -2040,9 +2039,9 @@ public class Menu implements Serializable {
                         clearConsole();
                         System.out.print("Device ID: ");
                         String idDevice = scan.nextLine();
-                        while(!cidade.getCasas().containsKey(idCasa)) {
+                        while(!cidade.getCasas().containsKey(idDevice)) {
                             System.out.println("Invalid ID, try again!");
-                            idCasa = scan.nextLine();
+                            idDevice = scan.nextLine();
                         }
                         System.out.println(cidade.getCasa(idCasa).listaInfoDevice(idDevice));
                         System.out.print("\n");
