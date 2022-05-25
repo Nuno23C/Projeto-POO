@@ -1,3 +1,8 @@
+package Controller;
+
+import Model.*;
+import View.*;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Scanner;

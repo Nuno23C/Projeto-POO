@@ -1,4 +1,4 @@
-package SmartDevices;
+package Model;
 
 import java.io.Serializable;
 

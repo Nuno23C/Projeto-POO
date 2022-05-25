@@ -1,13 +1,13 @@
+package Controller;
+
+import Model.*;
+
 import java.io.IOException;
 import java.nio.charset.*;
 import java.nio.file.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import SmartDevices.SmartBulb;
-import SmartDevices.SmartCamera;
-import SmartDevices.SmartSpeaker;
 
 public class Parser {
     private int houseID = 1;

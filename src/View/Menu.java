@@ -1,3 +1,8 @@
+package View;
+
+import Model.*;
+import Controller.*;
+
 import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,11 +14,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-
-import SmartDevices.SmartBulb;
-import SmartDevices.SmartCamera;
-import SmartDevices.SmartDevice;
-import SmartDevices.SmartSpeaker;
 
 import java.util.HashMap;
 import java.util.List;
@@ -442,7 +442,7 @@ public class Menu implements Serializable {
                     cidade.getFornecedorDeCadaCasa().put(casa.getIdCasa(), fe);
                 }
                 System.out.println(cidade.listaFornecedores());
-                System.out.println("Wich one?");
+                System.out.println("Which one?");
                 System.out.print("Energy supplier name: ");
                 String nomeFornecedor = scan.nextLine();
                 while(!cidade.getFornecedores().containsKey(nomeFornecedor)) {
@@ -798,7 +798,6 @@ public class Menu implements Serializable {
 
         System.out.print("\n");
 
-
         System.out.print("Volume (0 to 100): ");
         int volume = -1;
         while(volume < 0 || volume > 100) {
@@ -1122,7 +1121,7 @@ public class Menu implements Serializable {
                 String novoNIF = scan.nextLine();
                 while(casa.getNIF().equals(novoNIF)) {
                     System.out.println("Same NIF, try again!");
-                    novoNome = scan.nextLine();
+                    novoNIF = scan.nextLine();
                 }
                 casa.setNIF(novoNIF);
 
@@ -1187,7 +1186,7 @@ public class Menu implements Serializable {
 
                     case("2"):
                         System.out.println(cidade.listaFornecedores());
-                        System.out.println("Wich one?");
+                        System.out.println("Which one?");
                         System.out.print("Energy supplier name: ");
                         String nomeFornecedor = scan.nextLine();
                         while(!cidade.getFornecedores().containsKey(nomeFornecedor)) {
@@ -1455,7 +1454,6 @@ public class Menu implements Serializable {
                     novoID = scan.nextLine();
                 }
                 cidade.getCasa(casa.getIdCasa()).setNomeDispositivo(divName, sd, novoID);
-                enterToContinue(scan);
                 break;
 
             case("2"):
@@ -1571,7 +1569,6 @@ public class Menu implements Serializable {
                     novoID = scan.nextLine();
                 }
                 cidade.getCasa(casa.getIdCasa()).setNomeDispositivo(divName, sd, novoID);
-                enterToContinue(scan);
                 break;
 
             case("2"):
@@ -1670,7 +1667,6 @@ public class Menu implements Serializable {
                     novoID = scan.nextLine();
                 }
                 cidade.getCasa(casa.getIdCasa()).setNomeDispositivo(divName, sd, novoID);
-                enterToContinue(scan);
                 break;
 
             case("2"):

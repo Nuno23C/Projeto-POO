@@ -1,4 +1,4 @@
-package SmartDevices;
+package Model;
 
 public class SmartCamera extends SmartDevice {
     private enum Estado {
