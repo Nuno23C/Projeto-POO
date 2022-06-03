@@ -273,7 +273,11 @@ public class SmartCamera extends SmartDevice {
      * @return consumoF
      */
     public double getConsumoF() {
-        return consumoF;
+        double r = 0;
+        if(estado == Estado.ON) {
+            r = this.consumoF;
+        }
+        return r;
     }
 
     /**
@@ -308,11 +312,4 @@ public class SmartCamera extends SmartDevice {
         return this.identificador;
     }
 
-    /**
-     * Método que altera o identificador da SmartCamera
-     * @param identificador
-     */
-    public void setIdentificador(){
-        this.identificador = identificador;
-    }
 }

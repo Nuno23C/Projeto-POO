@@ -281,15 +281,6 @@ public class SmartBulb extends SmartDevice {
     }
 
     /**
-     * Método que altera o identificador do tipo SmartBulb
-     * @param identificador
-     */
-    public void getIdentificador(int identificador){
-        this.identificador = identificador;
-    }
-
-
-    /**
      * Método get que retorna o valor do consumo base
      * @return consumoBase
      */
@@ -310,7 +301,11 @@ public class SmartBulb extends SmartDevice {
      * @return consumoF
      */
     public double getConsumoF() {
-        return consumoF;
+        double r = 0;
+        if(estado == Estado.ON) {
+            r = this.consumoF;
+        }
+        return r;
     }
 
     /**

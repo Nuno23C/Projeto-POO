@@ -257,7 +257,11 @@ public class SmartSpeaker extends SmartDevice {
      * @return consumoF
      */
     public double getConsumoF() {
-        return this.consumoF;
+        double r = 0;
+        if(estado == Estado.ON) {
+            r = this.consumoF;
+        }
+        return r;
     }
 
     /**
@@ -290,13 +294,5 @@ public class SmartSpeaker extends SmartDevice {
      */
     public int getIdentificador(){
         return this.identificador;
-    }
-
-    /**
-     * Método que retorna o identificador da SmartSpeacker
-     * @return identificador
-     */
-    public void setIdentificador(){
-        this.identificador = identificador;
     }
 }

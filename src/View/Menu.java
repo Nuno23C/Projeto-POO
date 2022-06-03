@@ -100,12 +100,7 @@ public class Menu implements Serializable {
         clearConsole();
         String choice;
 
-        Map<String, Casa> casas = new HashMap<>();
-        Map<String, FornecedorEnergia> fornecedorDeCadaCasa = new HashMap<>();
-        Map<String, FornecedorEnergia> fornecedores = new HashMap<>();
-        Map<String, List<Fatura>> faturas = new HashMap<>();
-
-        Cidade cidade = new Cidade(casas, fornecedorDeCadaCasa, fornecedores, faturas);
+        Cidade cidade = new Cidade();
 
         System.out.println("Menu:");
         System.out.println("1 - Create a city");
