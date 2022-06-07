@@ -1,7 +1,7 @@
 # Projeto-POO
 
-17/20
+## 17/20
 
-### Colaboradores:
+#### Colaboradores:
 ##### [Sara Fontes](https://github.com/Sarafont)
 ##### [Hugo Costa](https://github.com/Hugocrc)
